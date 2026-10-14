@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS "public"."citas" (
     "hora_cita" time without time zone NOT NULL,
     "motivo" "text",
     "estado" character varying(20) DEFAULT 'PENDIENTE'::character varying NOT NULL,
-    "created_at" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    "created_at" timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT "citas_estado_check" CHECK ((("estado")::"text" = ANY ((ARRAY['PENDIENTE'::character varying, 'CONFIRMADA'::character varying, 'CANCELADA'::character varying, 'COMPLETADA'::character varying])::"text"[])))
 );
 
@@ -89,7 +89,8 @@ CREATE TABLE IF NOT EXISTS "public"."doctores" (
     "correo" character varying(150) NOT NULL,
     "telefono" character varying(15),
     "id_especialidad" integer NOT NULL,
-    "activo" boolean DEFAULT true
+    "activo" boolean DEFAULT true NOT NULL,
+    CONSTRAINT "doctores_dni_formato_check" CHECK ((("dni")::"text" ~ '^[0-9]{8}$'::"text"))
 );
 
 
@@ -116,7 +117,7 @@ CREATE TABLE IF NOT EXISTS "public"."especialidades" (
     "id_especialidad" integer NOT NULL,
     "nombre" character varying(100) NOT NULL,
     "descripcion" "text",
-    "activo" boolean DEFAULT true
+    "activo" boolean DEFAULT true NOT NULL
 );
 
 
@@ -145,8 +146,9 @@ CREATE TABLE IF NOT EXISTS "public"."horarios" (
     "dia_semana" character varying(10) NOT NULL,
     "hora_inicio" time without time zone NOT NULL,
     "hora_fin" time without time zone NOT NULL,
-    "activo" boolean DEFAULT true,
-    CONSTRAINT "horarios_dia_semana_check" CHECK ((("dia_semana")::"text" = ANY ((ARRAY['Lunes'::character varying, 'Martes'::character varying, 'Miércoles'::character varying, 'Jueves'::character varying, 'Viernes'::character varying, 'Sábado'::character varying, 'Domingo'::character varying])::"text"[])))
+    "activo" boolean DEFAULT true NOT NULL,
+    CONSTRAINT "horarios_dia_semana_check" CHECK ((("dia_semana")::"text" = ANY ((ARRAY['Lunes'::character varying, 'Martes'::character varying, 'Miércoles'::character varying, 'Jueves'::character varying, 'Viernes'::character varying, 'Sábado'::character varying, 'Domingo'::character varying])::"text"[]))),
+    CONSTRAINT "horarios_rango_check" CHECK (("hora_fin" > "hora_inicio"))
 );
 
 
@@ -178,9 +180,11 @@ CREATE TABLE IF NOT EXISTS "public"."pacientes" (
     "telefono" character varying(15),
     "fecha_nac" "date",
     "direccion" "text",
-    "activo" boolean DEFAULT true,
+    "activo" boolean DEFAULT true NOT NULL,
     "contraseña" character varying(255) NOT NULL,
-    "rol" character varying(20) DEFAULT 'PACIENTE'::character varying NOT NULL
+    "rol" character varying(20) DEFAULT 'PACIENTE'::character varying NOT NULL,
+    CONSTRAINT "pacientes_dni_formato_check" CHECK ((("dni")::"text" ~ '^[0-9]{8,15}$'::"text")),
+    CONSTRAINT "pacientes_rol_check" CHECK ((("rol")::"text" = ANY ((ARRAY['PACIENTE'::character varying, 'ADMIN'::character varying])::"text"[])))
 );
 
 
@@ -212,7 +216,8 @@ CREATE TABLE IF NOT EXISTS "public"."pagos" (
     "fecha_pago" timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     "referencia" character varying(100),
     CONSTRAINT "pagos_estado_pago_check" CHECK ((("estado_pago")::"text" = ANY ((ARRAY['PENDIENTE'::character varying, 'COMPLETADO'::character varying, 'RECHAZADO'::character varying])::"text"[]))),
-    CONSTRAINT "pagos_metodo_pago_check" CHECK ((("metodo_pago")::"text" = ANY ((ARRAY['YAPE'::character varying, 'TARJETA'::character varying, 'EFECTIVO'::character varying])::"text"[])))
+    CONSTRAINT "pagos_metodo_pago_check" CHECK ((("metodo_pago")::"text" = ANY ((ARRAY['YAPE'::character varying, 'TARJETA'::character varying, 'EFECTIVO'::character varying])::"text"[]))),
+    CONSTRAINT "pagos_monto_positivo_check" CHECK (("monto" > (0)::numeric))
 );
 
 
@@ -240,7 +245,8 @@ CREATE TABLE IF NOT EXISTS "public"."precios" (
     "id_especialidad" integer NOT NULL,
     "descripcion" character varying(200) NOT NULL,
     "monto" numeric(10,2) NOT NULL,
-    "activo" boolean DEFAULT true
+    "activo" boolean DEFAULT true NOT NULL,
+    CONSTRAINT "precios_monto_positivo_check" CHECK (("monto" > (0)::numeric))
 );
 
 
@@ -342,12 +348,57 @@ ALTER TABLE ONLY "public"."pacientes"
 
 
 ALTER TABLE ONLY "public"."pagos"
+    ADD CONSTRAINT "pagos_id_cita_key" UNIQUE ("id_cita");
+
+
+
+ALTER TABLE ONLY "public"."pagos"
     ADD CONSTRAINT "pagos_pkey" PRIMARY KEY ("id_pago");
 
 
 
 ALTER TABLE ONLY "public"."precios"
     ADD CONSTRAINT "precios_pkey" PRIMARY KEY ("id_precio");
+
+
+
+CREATE INDEX "idx_citas_doctor_fecha" ON "public"."citas" USING "btree" ("id_doctor", "fecha_cita");
+
+
+
+CREATE INDEX "idx_citas_paciente" ON "public"."citas" USING "btree" ("id_paciente");
+
+
+
+CREATE INDEX "idx_citas_pendientes_created" ON "public"."citas" USING "btree" ("created_at") WHERE (("estado")::"text" = 'PENDIENTE'::"text");
+
+
+
+CREATE INDEX "idx_doctores_especialidad" ON "public"."doctores" USING "btree" ("id_especialidad");
+
+
+
+CREATE INDEX "idx_horarios_doctor" ON "public"."horarios" USING "btree" ("id_doctor");
+
+
+
+CREATE INDEX "idx_pagos_completados" ON "public"."pagos" USING "btree" ("id_cita") INCLUDE ("monto") WHERE (("estado_pago")::"text" = 'COMPLETADO'::"text");
+
+
+
+CREATE INDEX "idx_precios_especialidad" ON "public"."precios" USING "btree" ("id_especialidad");
+
+
+
+CREATE UNIQUE INDEX "ux_citas_doctor_fecha_hora_activa" ON "public"."citas" USING "btree" ("id_doctor", "fecha_cita", "hora_cita") WHERE (("estado")::"text" <> 'CANCELADA'::"text");
+
+
+
+CREATE UNIQUE INDEX "ux_horarios_doctor_dia_activo" ON "public"."horarios" USING "btree" ("id_doctor", "dia_semana") WHERE "activo";
+
+
+
+CREATE UNIQUE INDEX "ux_precios_especialidad_activo" ON "public"."precios" USING "btree" ("id_especialidad") WHERE "activo";
 
 
 
