@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Citas - Hospital de la Solidaridad</title>
+  <link rel="stylesheet" href="/css/estilo.css">
+  <link rel="stylesheet" href="/css/paginas.css">
+</head>
+<body>
+
+<header class="encabezado-navegacion">
+  <div class="logotipo" id="logotipo-principal">
+    <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+    <h1>Hospital de la Solidaridad</h1>
+  </div>
+
+  <nav class="menu-principal" id="menu-nav">
+    <a href="/index.html">Inicio</a>
+
+    <a href="/sobre_nosotros.html" class="nav-publico">Sobre nosotros</a>
+    <a href="/vision.html" class="nav-publico">Visión</a>
+    <a href="/mision.html" class="nav-publico">Misión</a>
+
+    <a href="/citas.html" class="nav-paciente">Sacar Cita</a>
+    <a href="/miscitas.html" class="nav-paciente enlace-activo">Mis Citas</a>
+
+    <a href="/especialidades.html" class="nav-admin oculto">Especialidades</a>
+    <a href="/doctores.html" class="nav-admin oculto">Doctores</a>
+    <a href="/horarios.html" class="nav-admin oculto">Horarios</a>
+  </nav>
+
+  <!-- Zona de botones de acceso estructurada -->
+  <div class="botones-acceso" id="zona-sesion">
+    <div id="sesion-visitante" class="botones-acceso oculto">
+      <button type="button" class="boton-blanco" id="btn-abrir-login">Iniciar Sesión</button>
+      <button type="button" class="boton-azul" id="btn-abrir-registro">Registrarse</button>
+    </div>
+    <div id="sesion-usuario" class="botones-acceso">
+      <span class="texto-azul" id="nombre-usuario-sesion"></span>
+      <button type="button" class="boton-blanco" id="btn-cerrar-sesion">Cerrar sesión</button>
+    </div>
+  </div>
+</header>
+
+<section class="contenedor-general">
+  <h1 class="titulo">Mis Citas Médicas</h1>
+  <p class="descripcion">
+    Consulta todas tus citas registradas en el sistema.
+  </p>
+
+  <!-- Contenedor donde se clonarán las plantillas -->
+  <div class="grid-citas" id="contenedor-mis-citas">
+    <div class="sin-citas celda-estado">Cargando citas médicas...</div>
+  </div>
+</section>
+
+<footer class="pie-inferior">
+  <div class="contenedor-pie">
+    <div class="columna-footer">
+      <h4>Hospital de la Solidaridad Vitarte</h4>
+      <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
+    </div>
+    <div class="columna-footer">
+      <h4>Navegación</h4>
+      <ul>
+        <li><a href="/index.html">Inicio</a></li>
+        <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
+        <li><a href="/mision.html">Misión</a></li>
+        <li><a href="/vision.html">Visión</a></li>
+      </ul>
+    </div>
+    <div class="columna-footer">
+      <h4>Ayuda</h4>
+      <p>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</p>
+      <br>
+      <p>Preguntas frecuentes</p>
+    </div>
+    <div class="columna-footer">
+      <h4>Contacto</h4>
+      <div class="item-contacto">Vitarte, Lima - Perú</div>
+      <div class="item-contacto">(01) 555-1234</div>
+      <div class="item-contacto">contacto@hospital.pe</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<!-- Plantilla tarjeta de cita -->
+<template id="tpl-tarjeta-cita">
+  <div class="tarjeta-cita">
+    <div class="encabezado-cita">
+      <h2 class="nombre-doctor col-doc"></h2>
+      <div class="estado-cita col-estado"></div>
+    </div>
+    <div class="detalle-cita"><span>Especialidad:</span> <span class="col-esp"></span></div>
+    <div class="detalle-cita"><span>Fecha:</span> <span class="col-fecha"></span></div>
+    <div class="detalle-cita"><span>Horario:</span> <span class="col-hora"></span></div>
+    <div class="detalle-cita"><span>Motivo:</span> <span class="col-motivo"></span></div>
+
+    <button type="button" class="boton-imprimir btn-pdf oculto">Imprimir Comprobante</button>
+    <button type="button" class="boton-cancelar btn-anular oculto">Cancelar cita</button>
+    <p class="mensaje-cancelado col-msg-cancelado oculto">Cita cancelada</p>
+  </div>
+</template>
+
+<!-- Plantilla estado vacío o mensajes -->
+<template id="tpl-sin-citas">
+  <div class="sin-citas celda-mensaje"></div>
+</template>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/comun/configuracion.js"></script>
+<script src="/js/comun/utilidades.js"></script>
+<script src="/js/comun/sesion.js"></script>
+<script src="/js/paginas/miscitas.js"></script>
+</body>
+</html>

@@ -1,0 +1,510 @@
+/* ==========================================================================
+   1. VARIABLES, RESET Y CONFIGURACIÓN BASE
+   ========================================================================== */
+:root {
+    --azul-institucional: #004A99;
+    --celeste-hospital: #00d4ff;
+    --blanco: #ffffff;
+    --gris-fondo: #f8f9fa;
+    --texto-oscuro: #333333;
+    --amarillo-accion: #ffcc00;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--gris-fondo);
+    color: var(--texto-oscuro);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.oculto {
+    display: none !important;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Integración SweetAlert2 (Zero CSS en JS) */
+.swal2-container {
+    z-index: 9999 !important;
+}
+
+.swal2-styled.swal2-confirm {
+    background-color: var(--azul-institucional) !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+}
+
+.swal2-styled.swal2-cancel {
+    background-color: #666666 !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+}
+
+/* ==========================================================================
+   2. ENCABEZADO Y NAVEGACIÓN GLOBAL
+   ========================================================================== */
+.encabezado-navegacion {
+    background-color: var(--celeste-hospital);
+    padding: 0.8rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logotipo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+}
+
+.logotipo img {
+    height: 50px;
+}
+
+.logotipo h1 {
+    font-size: 1.3rem;
+    color: var(--blanco);
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.menu-principal a {
+    text-decoration: none;
+    color: var(--blanco);
+    margin: 0 15px;
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+
+.menu-principal a:hover {
+    opacity: 0.8;
+}
+
+.enlace-activo {
+    opacity: 0.8;
+    border-bottom: 2px solid var(--blanco);
+    padding-bottom: 3px;
+}
+
+.botones-acceso {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* ==========================================================================
+   3. BOTONES COMUNES Y ACCIONES
+   ========================================================================== */
+.boton-blanco,
+.boton-azul,
+.boton-accion-total,
+.boton-editar,
+.boton-eliminar,
+.boton-cancelar,
+.boton-imprimir {
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: transform 0.2s, opacity 0.2s, background-color 0.2s, color 0.2s;
+}
+
+.boton-blanco {
+    background-color: var(--blanco);
+    color: var(--azul-institucional);
+    border: none;
+    padding: 10px 22px;
+}
+
+.boton-azul {
+    background-color: var(--azul-institucional);
+    color: var(--blanco);
+    border: none;
+    padding: 10px 22px;
+}
+
+.boton-blanco:hover,
+.boton-azul:hover {
+    transform: scale(1.05);
+}
+
+.boton-borde-azul {
+    border: 2px solid var(--azul-institucional) !important;
+}
+
+.boton-accion-total {
+    background-color: var(--amarillo-accion);
+    color: var(--azul-institucional);
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    width: 100%;
+}
+
+.boton-accion-total:hover {
+    opacity: 0.9;
+}
+
+.boton-editar {
+    background-color: var(--azul-institucional);
+    color: var(--blanco);
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    margin-right: 5px;
+    white-space: nowrap;
+}
+
+.boton-editar:hover {
+    opacity: 0.85;
+}
+
+.boton-eliminar {
+    background-color: var(--blanco);
+    color: #dc2626;
+    border: 1.5px solid #dc2626;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.boton-eliminar:hover {
+    background-color: #dc2626;
+    color: var(--blanco);
+}
+
+.boton-volver {
+    background: none;
+    border: none;
+    color: var(--azul-institucional);
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    margin-bottom: 15px;
+    padding: 0;
+    display: inline-block;
+}
+
+.boton-volver:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   4. MODALES Y VENTANAS EMERGENTES
+   ========================================================================== */
+.capa-fondo-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+}
+
+/* Activación semántica de modales mediante clases */
+.capa-fondo-modal.activo,
+.modal.activo {
+    display: flex !important;
+}
+
+.cuadro-emergente {
+    background-color: var(--blanco);
+    padding: 40px;
+    border-radius: 25px;
+    width: 90%;
+    max-width: 450px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.cerrar-ventana {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 35px;
+    cursor: pointer;
+    color: #999;
+}
+
+.cerrar-ventana:hover {
+    color: #333;
+}
+
+/* ==========================================================================
+   5. FORMULARIOS, INPUTS Y SELECTORES
+   ========================================================================== */
+.formulario-estandar {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.formulario-estandar input,
+.formulario-estandar textarea,
+.selector-estandar {
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+    background-color: var(--blanco);
+    width: 100%;
+    transition: border-color 0.2s;
+}
+
+.formulario-estandar textarea {
+    resize: vertical;
+}
+
+.formulario-estandar input:focus,
+.formulario-estandar textarea:focus,
+.selector-estandar:focus {
+    border-color: var(--azul-institucional);
+}
+
+.fila-input {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.fila-input input {
+    flex: 1;
+    min-width: 0;
+}
+
+.contenedor-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.etiqueta-selector {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--azul-institucional);
+    margin-left: 5px;
+}
+
+.fila-botones-formulario {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.fila-botones-formulario button {
+    flex: 1;
+    margin: 0;
+}
+
+.fila-botones-formulario .boton-blanco {
+    background-color: transparent;
+    border: 2px solid var(--azul-institucional);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.fila-botones-formulario .boton-blanco:hover {
+    background-color: var(--azul-institucional);
+    color: var(--blanco);
+}
+
+/* ==========================================================================
+   6. TABLAS Y COMPONENTES DE ESTADO
+   ========================================================================== */
+.tabla-responsiva {
+    overflow-x: auto;
+}
+
+.tabla-doctores {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.95rem;
+}
+
+.tabla-doctores th {
+    background-color: var(--azul-institucional);
+    color: var(--blanco);
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 700;
+}
+
+.tabla-doctores th:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
+.tabla-doctores th:last-child  { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
+
+.tabla-doctores td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+    vertical-align: middle;
+}
+
+.tabla-doctores tr:hover td {
+    background-color: rgba(0,74,153,0.03);
+}
+
+.tabla-doctores td:last-child,
+.tabla-doctores th:last-child {
+    white-space: nowrap;
+    width: 170px;
+    text-align: center;
+}
+
+.celda-estado {
+    text-align: center;
+    color: #888;
+    padding: 30px;
+}
+
+.celda-error {
+    text-align: center;
+    color: #dc2626;
+    font-weight: 600;
+    padding: 30px;
+}
+
+.texto-azul {
+    font-weight: bold;
+    color: var(--azul-institucional);
+}
+
+.texto-atenuado {
+    color: #aaa;
+}
+
+.badge-especialidad {
+    background-color: var(--celeste-hospital);
+    color: var(--azul-institucional);
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.badge-estado {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.badge-estado.activo {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.badge-estado.inactivo {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* ==========================================================================
+   7. PIE DE PÁGINA (FOOTER)
+   ========================================================================== */
+.pie-inferior {
+    background-color: var(--celeste-hospital);
+    color: var(--blanco);
+    padding: 60px 10% 30px;
+}
+
+.contenedor-pie {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    gap: 60px;
+    align-items: start;
+}
+
+.columna-footer {
+    display: flex;
+    flex-direction: column;
+    align-self: start;
+}
+
+.columna-footer h4 {
+    min-height: 50px;
+    margin-bottom: 25px;
+    font-size: 1.2rem;
+    border-bottom: 2px solid rgba(255,255,255,0.3);
+    display: inline-block;
+    padding-bottom: 8px;
+}
+
+.columna-footer p {
+    line-height: 1.7;
+}
+
+.columna-footer ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.columna-footer li {
+    margin-bottom: 16px;
+}
+
+.columna-footer a {
+    color: white;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.columna-footer a:hover {
+    color: #e8f9ff;
+    padding-left: 6px;
+}
+
+.item-contacto {
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-bottom {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}

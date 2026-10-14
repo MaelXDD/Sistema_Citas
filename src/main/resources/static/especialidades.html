@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital de la Solidaridad - Gestión de Especialidades</title>
+    <link rel="stylesheet" href="/css/estilo.css">
+    <link rel="stylesheet" href="/css/paginas.css">
+</head>
+<body>
+
+<header class="encabezado-navegacion">
+    <div class="logotipo" id="logotipo-principal">
+        <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+        <h1>Hospital de la Solidaridad</h1>
+    </div>
+    <nav class="menu-principal" id="menu-nav">
+        <a href="/index.html">Inicio</a>
+        <a href="/especialidades.html" class="enlace-activo">Especialidades</a>
+        <a href="/doctores.html">Doctores</a>
+        <a href="/horarios.html">Horarios</a>
+    </nav>
+    <div class="botones-acceso">
+        <button type="button" class="boton-blanco" id="btnRegresarHome">Regresar</button>
+    </div>
+</header>
+
+<main class="area-gestion-medica">
+
+    <div id="vistaTabla" class="tarjeta-panel">
+        <div class="cabecera-panel">
+            <div class="titulos-seccion">
+                <h2>Especialidades Médicas</h2>
+                <p>Lista de especialidades registradas en el sistema.</p>
+            </div>
+            <div class="fila-botones-filtro">
+                <button type="button" id="btnDescargarReporteEsp" class="boton-blanco boton-borde-azul">Descargar Reporte PDF</button>
+                <button type="button" id="btnIrEstadisticas" class="boton-blanco boton-borde-azul">Estadísticas</button>
+                <button type="button" id="btnMostrarForm" class="boton-accion-total">
+                    + Registrar Nueva Especialidad
+                </button>
+            </div>
+        </div>
+
+        <div class="tabla-responsiva">
+            <table class="tabla-doctores">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody id="tablaEspecialidadesBody">
+                <tr>
+                    <td colspan="6" class="celda-estado">Cargando especialidades...</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="vistaFormulario" class="tarjeta-panel panel-formulario oculto">
+        <div class="cabecera-formulario">
+            <h2 id="tituloFormulario">Registrar Especialidad</h2>
+            <p id="descripcionFormulario">Ingrese los datos requeridos para registrar la especialidad en el sistema.</p>
+        </div>
+
+        <form id="especialidadForm" class="formulario-estandar">
+            <input type="hidden" id="inputIdEspecialidad" name="idEspecialidad">
+            <input type="hidden" id="inputIdPrecio"       name="idPrecio">
+
+            <input
+                    type="text"
+                    id="inputNombre"
+                    name="nombre"
+                    placeholder="Nombre de la Especialidad"
+                    maxlength="100"
+                    required
+            >
+
+            <textarea
+                    id="inputDescripcion"
+                    name="descripcion"
+                    placeholder="Descripción de la especialidad"
+                    maxlength="500"
+                    rows="4"
+            ></textarea>
+
+            <input
+                    type="number"
+                    id="inputPrecio"
+                    name="precio"
+                    placeholder="Precio de consulta (S/)"
+                    min="0.01"
+                    step="0.01"
+            >
+
+            <div class="fila-botones-formulario">
+                <button type="button" id="btnCancelar" class="boton-blanco">Cancelar</button>
+                <button type="submit" id="btnGuardar" class="boton-accion-total">Guardar Especialidad</button>
+            </div>
+        </form>
+    </div>
+
+</main>
+
+<template id="tpl-fila-especialidad">
+    <tr>
+        <td class="col-id texto-azul font-bold"></td>
+        <td class="col-nombre font-bold"></td>
+        <td class="col-desc"></td>
+        <td><strong class="col-precio"></strong></td>
+        <td><span class="badge-estado col-estado"></span></td>
+        <td>
+            <button type="button" class="boton-editar btn-edit-esp">Editar</button>
+            <button type="button" class="boton-eliminar btn-toggle-esp"></button>
+        </td>
+    </tr>
+</template>
+
+<template id="tpl-msg-esp">
+    <tr>
+        <td colspan="6" class="celda-mensaje"></td>
+    </tr>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/comun/configuracion.js"></script>
+<script src="/js/comun/utilidades.js"></script>
+<script src="/js/comun/sesion.js"></script>
+<script src="/js/paginas/especialidades.js"></script>
+</body>
+</html>

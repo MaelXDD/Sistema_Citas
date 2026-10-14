@@ -1,0 +1,33 @@
+name: Auto Backup DB Schema
+
+on:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Dump Remote Database Schema
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          supabase link --project-ref hynuxxkgxzjjcpkowfhz
+          supabase db dump --linked > supabase/migrations/esquema_actualizado.sql
+
+      - name: Commit and Push changes if schema changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: auto-backup database schema from Supabase"
+          file_pattern: "supabase/migrations/*.sql"

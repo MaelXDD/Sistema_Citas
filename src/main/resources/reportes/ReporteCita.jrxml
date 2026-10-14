@@ -1,0 +1,224 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="ReporteCita" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f338dc03-e112-473b-bb71-57fa515c9922">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sistema_Citas"/>
+	<parameter name="id_cita" class="java.lang.Integer"/>
+	<parameter name="logo" class="java.io.InputStream"/>
+	<query language="SQL"><![CDATA[SELECT 
+    p.nombres || ' ' || p.apellidos AS nombre_paciente,
+    p.dni,
+    d.nombres || ' ' || d.apellidos AS nombre_doctor,
+    e.nombre AS especialidad,
+    pr.monto AS precio,
+    pa.metodo_pago,
+    c.fecha_cita,
+    c.hora_cita
+FROM citas c
+JOIN pacientes p ON c.id_paciente = p.id_paciente
+JOIN doctores d ON c.id_doctor = d.id_doctor
+JOIN especialidades e ON d.id_especialidad = e.id_especialidad
+JOIN precios pr ON e.id_especialidad = pr.id_especialidad
+JOIN pagos pa ON c.id_cita = pa.id_cita
+WHERE c.id_cita = $P{id_cita}]]></query>
+	<field name="nombre_paciente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre_paciente"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre_paciente"/>
+	</field>
+	<field name="dni" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dni"/>
+		<property name="com.jaspersoft.studio.field.label" value="dni"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pacientes"/>
+	</field>
+	<field name="nombre_doctor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre_doctor"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre_doctor"/>
+	</field>
+	<field name="especialidad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="especialidad"/>
+		<property name="com.jaspersoft.studio.field.label" value="especialidad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="especialidades"/>
+	</field>
+	<field name="precio" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="precio"/>
+		<property name="com.jaspersoft.studio.field.label" value="precio"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="precios"/>
+	</field>
+	<field name="metodo_pago" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="metodo_pago"/>
+		<property name="com.jaspersoft.studio.field.label" value="metodo_pago"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pagos"/>
+	</field>
+	<field name="fecha_cita" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha_cita"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha_cita"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="citas"/>
+	</field>
+	<field name="hora_cita" class="java.sql.Time">
+		<property name="com.jaspersoft.studio.field.name" value="hora_cita"/>
+		<property name="com.jaspersoft.studio.field.label" value="hora_cita"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="citas"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="131" splitType="Stretch">
+		<element kind="image" uuid="3c89245e-e5f8-4d83-afd9-3776513fa630" x="20" y="17" width="170" height="50">
+			<expression><![CDATA[$P{logo}]]></expression>
+		</element>
+		<element kind="staticText" uuid="d0ccd11c-ce15-4550-8d25-4ec50e28cdeb" x="220" y="27" width="280" height="30" fontSize="19.0" hTextAlign="Center">
+			<text><![CDATA[COMPROBANTE DE CITA MÉDICA]]></text>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+		</element>
+		<element kind="staticText" uuid="a23562b1-f562-4053-bd9f-0c5d04d2d2d4" x="20" y="80" width="120" height="30" fontSize="13.0">
+			<text><![CDATA[Fecha de emisión:]]></text>
+		</element>
+		<element kind="textField" uuid="ae9b56d8-b0f0-433f-a995-2c43fc2c02e0" x="160" y="80" width="110" height="30" fontSize="12.0" pattern="dd/MM/yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+		<element kind="line" uuid="44db61bc-29af-4127-88e7-26a52e675573" x="-20" y="130" width="590" height="1"/>
+	</title>
+	<pageHeader splitType="Stretch">
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	</pageHeader>
+	<columnHeader splitType="Stretch">
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	</columnHeader>
+	<detail>
+		<band height="552" splitType="Stretch">
+			<element kind="staticText" uuid="d8f327cd-5fb5-465d-809c-f4a2208bd80a" x="20" y="30" width="80" height="20" fontSize="13.0">
+				<text><![CDATA[Paciente:]]></text>
+			</element>
+			<element kind="textField" uuid="4d911ca8-6d41-4d13-a354-01618b49dc94" x="110" y="30" width="140" height="20" markup="none" fontSize="13.0">
+				<expression><![CDATA[$F{nombre_paciente}]]></expression>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="8c82d526-f6ea-4259-8b08-2ba66dda7bc1" x="290" y="30" width="80" height="20" fontSize="13.0">
+				<text><![CDATA[DNI:]]></text>
+			</element>
+			<element kind="textField" uuid="c14ec391-6349-463a-a90f-f7eb0e2e81d3" x="380" y="30" width="150" height="20" markup="none" fontSize="13.0">
+				<expression><![CDATA[$F{dni}]]></expression>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="staticText" uuid="2770bed7-0ce1-46ce-aed9-02e90511a3fd" x="20" y="70" width="80" height="20" fontSize="13.0">
+				<text><![CDATA[Doctor:]]></text>
+			</element>
+			<element kind="staticText" uuid="33d25ae7-79af-4f5a-b56b-575a8daaf6b8" x="290" y="70" width="80" height="20" fontSize="13.0">
+				<text><![CDATA[Especialidad:]]></text>
+			</element>
+			<element kind="staticText" uuid="e5e906b8-fc5d-4dac-8b69-a35fd5f70494" x="20" y="110" width="80" height="20" fontSize="13.0">
+				<text><![CDATA[Precio:]]></text>
+			</element>
+			<element kind="staticText" uuid="8079e72c-b024-4df9-bbad-9bb9a5287ce2" x="290" y="110" width="110" height="20" fontSize="13.0">
+				<text><![CDATA[Método de pago:]]></text>
+			</element>
+			<element kind="staticText" uuid="6f2822f9-608f-4312-b5d7-d2c9ca92e83b" x="20" y="150" width="100" height="20" fontSize="13.0">
+				<text><![CDATA[Fecha de la cita:]]></text>
+			</element>
+			<element kind="staticText" uuid="ea693b95-883a-44e9-99e2-854273a10c0e" x="290" y="150" width="100" height="20" fontSize="13.0">
+				<text><![CDATA[Hora de la cita:]]></text>
+			</element>
+			<element kind="textField" uuid="7705d204-e81f-450a-95eb-819423da8b36" x="110" y="70" width="140" height="20" markup="none" fontSize="13.0">
+				<expression><![CDATA[$F{nombre_doctor}]]></expression>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="3659d9f3-a27e-4c7d-825f-5e6eba644d92" x="380" y="70" width="150" height="20" markup="none" fontSize="13.0">
+				<expression><![CDATA[$F{especialidad}]]></expression>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="beb4e973-bf59-4d06-b3a9-944bdb8bda78" x="110" y="110" width="140" height="20" markup="none" fontSize="13.0" pattern="S/ #,##0.00">
+				<expression><![CDATA[$F{precio}]]></expression>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="c8803efb-5406-4859-a07b-9eddec6a07c3" x="410" y="110" width="120" height="20" markup="none" fontSize="13.0">
+				<expression><![CDATA[$F{metodo_pago}]]></expression>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="75900913-cf41-43bc-912d-f386fee32b8b" x="130" y="150" width="120" height="20" markup="none" fontSize="13.0" pattern="dd/MM/yyyy">
+				<expression><![CDATA[$F{fecha_cita}]]></expression>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="3f8b5f8e-5432-45b8-8fe7-7fbaeaf90e41" x="410" y="150" width="120" height="20" markup="none" fontSize="13.0" pattern="HH:mm">
+				<expression><![CDATA[$F{hora_cita}]]></expression>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="rectangle" uuid="3a4879c1-5943-4e78-8bb0-e3ac0923d8fe" x="2" y="210" width="550" height="150"/>
+			<element kind="staticText" uuid="f2e00891-08f1-4bb0-8004-4e3262f77060" x="11" y="220" width="188" height="30" fontSize="13.0">
+				<text><![CDATA[INDICACIONES GENERALES:]]></text>
+			</element>
+			<element kind="staticText" uuid="a00d003a-ebcc-4dd9-8f80-14c34d635fa5" x="10" y="250" width="520" height="110" fontSize="13.0">
+				<text><![CDATA[• Llegar con 15 minutos de anticipación a su cita.
+
+• Presentar DNI físico y este comprobante al ingresar.
+
+• Si necesita reprogramar, llame al (01) 123-4567 con 24h de aviso.]]></text>
+			</element>
+			<element kind="line" uuid="de8a4a72-1aab-461a-a73f-c1bd835847e4" x="65" y="490" width="110" height="1"/>
+			<element kind="line" uuid="f83a6bf4-e219-47aa-a06e-3ba942c28b0e" x="365" y="490" width="110" height="1"/>
+			<element kind="staticText" uuid="81a77cb5-10f7-419b-83ee-f3720b415746" x="60" y="500" width="120" height="30" fontSize="13.0" hTextAlign="Center">
+				<text><![CDATA[Firma del Paciente]]></text>
+			</element>
+			<element kind="staticText" uuid="ea79570c-824e-4238-89dc-05470f5db230" x="360" y="500" width="120" height="30" fontSize="13.0" hTextAlign="Center">
+				<text><![CDATA[Firma del Doctor]]></text>
+			</element>
+		</band>
+	</detail>
+	<columnFooter splitType="Stretch">
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	</columnFooter>
+	<pageFooter height="116" splitType="Stretch">
+		<element kind="staticText" uuid="1c322ad7-030b-48c4-89ea-f74d7acc1095" x="177" y="10" width="200" height="30" fontSize="13.0">
+			<text><![CDATA[Hospital de la Solidaridad de Ate]]></text>
+		</element>
+		<element kind="staticText" uuid="6433e284-1916-490f-b7fa-1efa640ec391" x="196" y="50" width="163" height="30" fontSize="13.0">
+			<text><![CDATA[¡Gracias por su preferencia!]]></text>
+		</element>
+		<element kind="textField" uuid="95a31cb5-4d6d-4a59-9aca-438b99b64801" x="360" y="80" width="100" height="30" hTextAlign="Right">
+			<expression><![CDATA["Page " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="4225b978-89be-460e-be18-6fcc3f7ed6d2" x="470" y="80" width="100" height="30" evaluationTime="Report" hTextAlign="Left">
+			<expression><![CDATA[" of " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="line" uuid="a47dceb2-5166-4139-9d82-ad121a48ac45" x="-20" y="0" width="590" height="1"/>
+	</pageFooter>
+	<summary splitType="Stretch">
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	</summary>
+</jasperReport>

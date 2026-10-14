@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sacar Cita - Hospital de la Solidaridad</title>
+    <link rel="stylesheet" href="/css/estilo.css">
+    <link rel="stylesheet" href="/css/paginas.css">
+</head>
+<body>
+
+<header class="encabezado-navegacion">
+    <div class="logotipo" id="logotipo-principal">
+        <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+        <h1>Hospital de la Solidaridad</h1>
+    </div>
+
+    <nav class="menu-principal" id="menu-nav">
+        <a href="/index.html">Inicio</a>
+
+        <a href="/sobre_nosotros.html" class="nav-publico">Sobre nosotros</a>
+        <a href="/vision.html" class="nav-publico">Visión</a>
+        <a href="/mision.html" class="nav-publico">Misión</a>
+
+        <a href="/citas.html" class="nav-paciente enlace-activo">Sacar Cita</a>
+        <a href="/miscitas.html" class="nav-paciente">Mis Citas</a>
+
+        <a href="/especialidades.html" class="nav-admin oculto">Especialidades</a>
+        <a href="/doctores.html" class="nav-admin oculto">Doctores</a>
+        <a href="/horarios.html" class="nav-admin oculto">Horarios</a>
+    </nav>
+
+    <!-- Zona de botones de acceso estructurada -->
+    <div class="botones-acceso" id="zona-sesion">
+        <div id="sesion-visitante" class="botones-acceso oculto">
+            <button type="button" class="boton-blanco" id="btn-abrir-login">Iniciar Sesión</button>
+            <button type="button" class="boton-azul" id="btn-abrir-registro">Registrarse</button>
+        </div>
+        <div id="sesion-usuario" class="botones-acceso">
+            <span class="texto-azul" id="nombre-usuario-sesion"></span>
+            <button type="button" class="boton-blanco" id="btn-cerrar-sesion">Cerrar sesión</button>
+        </div>
+    </div>
+</header>
+
+<div class="area-gestion-medica">
+    <div class="tarjeta-panel">
+
+        <div class="cabecera-panel">
+            <div class="titulos-seccion">
+                <h2>Sacar Cita</h2>
+                <p>Selecciona una especialidad, luego el doctor y el horario disponible.</p>
+            </div>
+        </div>
+
+        <!-- Indicadores de Paso -->
+        <div class="pasos-cita">
+            <div class="paso-indicador activo" id="ind-paso1">① Especialidad</div>
+            <div class="paso-indicador" id="ind-paso2">② Doctor</div>
+            <div class="paso-indicador" id="ind-paso3">③ Horario</div>
+        </div>
+
+        <!-- Paso 1: Tabla de Especialidades -->
+        <div id="paso1">
+            <div class="tabla-responsiva">
+                <table class="tabla-doctores">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Especialidad</th>
+                        <th>Descripción</th>
+                        <th>Acción</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tabla-especialidades-body">
+                    <tr>
+                        <td colspan="4" class="celda-estado">Cargando especialidades...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Paso 2: Tabla de Doctores -->
+        <div id="paso2" class="oculto">
+            <button type="button" class="boton-volver" id="btn-volver-paso1">← Volver a Especialidades</button>
+            <h3 class="subtitulo-paso">Doctores disponibles en <span id="nombre-especialidad-sel"></span></h3>
+            <div class="tabla-responsiva">
+                <table class="tabla-doctores">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>DNI</th>
+                        <th>Teléfono</th>
+                        <th>Acción</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tabla-doctores-body">
+                    <tr>
+                        <td colspan="5" class="celda-estado">Selecciona una especialidad primero.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Paso 3: Tabla de Horarios -->
+        <div id="paso3" class="oculto">
+            <button type="button" class="boton-volver" id="btn-volver-paso2">← Volver a Doctores</button>
+            <h3 class="subtitulo-paso">Horarios del Dr. <span id="nombre-doctor-sel"></span></h3>
+            <div class="tabla-responsiva">
+                <table class="tabla-doctores">
+                    <thead>
+                    <tr>
+                        <th>Día</th>
+                        <th>Hora inicio</th>
+                        <th>Hora fin</th>
+                        <th>Acción</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tabla-horarios-body">
+                    <tr>
+                        <td colspan="4" class="celda-estado">Cargando horarios...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal para confirmar turno y motivo -->
+<div id="modal-confirmar-cita" class="capa-fondo-modal">
+    <div class="cuadro-emergente">
+        <span class="cerrar-ventana" id="btn-cerrar-modal-cita">&times;</span>
+        <h3>Confirmar Cita</h3>
+        <div class="resumen-cita">
+            <p><strong>Especialidad:</strong> <span id="res-especialidad"></span></p>
+            <p><strong>Doctor:</strong> <span id="res-doctor"></span></p>
+            <p><strong>Día:</strong> <span id="res-dia"></span></p>
+            <p><strong>Horario:</strong> <span id="res-horario"></span></p>
+            <div class="contenedor-selector">
+                <label class="etiqueta-selector">Elige tu hora de atención:</label>
+                <div id="slots-horario" class="grilla-slots"></div>
+            </div>
+        </div>
+        <div class="formulario-estandar">
+            <label class="etiqueta-selector" for="input-motivo">Motivo (opcional)</label>
+            <textarea id="input-motivo" placeholder="Describe brevemente tu motivo de consulta..." rows="3"></textarea>
+            <button type="button" class="boton-accion-total" id="btnConfirmarCita">Ir al Pago →</button>
+        </div>
+    </div>
+</div>
+
+<footer class="pie-inferior">
+    <div class="contenedor-pie">
+        <div class="columna-footer">
+            <h4>Hospital de la Solidaridad Vitarte</h4>
+            <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
+        </div>
+        <div class="columna-footer">
+            <h4>Navegación</h4>
+            <ul>
+                <li><a href="/index.html">Inicio</a></li>
+                <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
+                <li><a href="/mision.html">Misión</a></li>
+                <li><a href="/vision.html">Visión</a></li>
+            </ul>
+        </div>
+        <div class="columna-footer">
+            <h4>Ayuda</h4>
+            <p>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</p>
+            <br>
+            <p>Preguntas frecuentes</p>
+        </div>
+        <div class="columna-footer">
+            <h4>Contacto</h4>
+            <div class="item-contacto">Vitarte, Lima - Perú</div>
+            <div class="item-contacto">(01) 555-1234</div>
+            <div class="item-contacto">contacto@hospital.pe</div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+<!-- Modales de autenticación reutilizables -->
+<div id="modal-login" class="capa-fondo-modal">
+    <div class="cuadro-emergente">
+        <span class="cerrar-ventana" data-cerrar="modal-login">&times;</span>
+        <h3>Iniciar Sesión</h3>
+        <form id="loginForm" class="formulario-estandar">
+            <input type="email" name="correo" placeholder="Ingresa tu correo" required>
+            <input type="password" name="password" placeholder="Ingresa tu contraseña" required>
+            <button type="submit" class="boton-accion-total">Iniciar Sesión</button>
+        </form>
+    </div>
+</div>
+
+<div id="modal-registro" class="capa-fondo-modal">
+    <div class="cuadro-emergente">
+        <span class="cerrar-ventana" data-cerrar="modal-registro">&times;</span>
+        <h3>Registro</h3>
+        <form id="registerForm" class="formulario-estandar">
+            <div class="fila-input">
+                <input type="text" id="reg-nombres" name="nombres" placeholder="Nombres" maxlength="50" required>
+                <input type="text" id="reg-apellidos" name="apellidos" placeholder="Apellidos" maxlength="50" required>
+            </div>
+            <input type="email" name="correo" placeholder="Correo" maxlength="100" required>
+            <input type="text" id="reg-dni" name="dni" placeholder="DNI" maxlength="8" required>
+            <input type="text" id="reg-telefono" name="telefono" placeholder="Teléfono" maxlength="9">
+            <input type="date" name="fechaNac" required>
+            <input type="text" name="direccion" placeholder="Dirección" maxlength="150" required>
+            <input type="password" name="password" placeholder="Contraseña" maxlength="50" required>
+            <button type="submit" class="boton-accion-total">Crear cuenta</button>
+        </form>
+    </div>
+</div>
+
+<!-- ======================================================================
+     PLANTILLAS HTML
+     ====================================================================== -->
+<!-- Plantilla fila especialidades (Paso 1) -->
+<template id="tpl-fila-esp">
+    <tr>
+        <td class="col-indice"></td>
+        <td><strong class="col-nombre"></strong></td>
+        <td class="col-descripcion"></td>
+        <td><button type="button" class="boton-editar btn-seleccionar">Seleccionar →</button></td>
+    </tr>
+</template>
+
+<!-- Plantilla fila doctores (Paso 2) -->
+<template id="tpl-fila-doc">
+    <tr>
+        <td class="col-indice"></td>
+        <td><strong class="col-nombre"></strong></td>
+        <td class="col-dni"></td>
+        <td class="col-telefono"></td>
+        <td><button type="button" class="boton-editar btn-seleccionar">Seleccionar →</button></td>
+    </tr>
+</template>
+
+<!-- Plantilla fila turnos (Paso 3) -->
+<template id="tpl-fila-horario">
+    <tr>
+        <td><strong class="col-dia uppercase"></strong></td>
+        <td class="col-inicio"></td>
+        <td class="col-fin"></td>
+        <td><button type="button" class="boton-editar btn-reservar">Reservar →</button></td>
+    </tr>
+</template>
+
+<!-- Plantilla botón de intervalo horario (slot) -->
+<template id="tpl-boton-slot">
+    <button type="button" class="slot-horario"></button>
+</template>
+
+<!-- Plantilla para mensajes de estado o error en tablas -->
+<template id="tpl-mensaje-tabla">
+    <tr>
+        <td colspan="5" class="celda-mensaje"></td>
+    </tr>
+</template>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/comun/configuracion.js"></script>
+<script src="/js/comun/utilidades.js"></script>
+<script src="/js/comun/sesion.js"></script>
+<script src="/js/paginas/citas.js"></script>
+</body>
+</html>

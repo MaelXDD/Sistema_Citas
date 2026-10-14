@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"utp.citas.citas"},{"l":"utp.citas.citas.config"},{"l":"utp.citas.citas.controller"},{"l":"utp.citas.citas.exception"},{"l":"utp.citas.citas.model"},{"l":"utp.citas.citas.repository"},{"l":"utp.citas.citas.service"},{"l":"utp.citas.citas.service.impl"}];updateSearchResults();

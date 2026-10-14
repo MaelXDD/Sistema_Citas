@@ -1,0 +1,175 @@
+<!-- Created with Jaspersoft Studio version 7.0.6.final using JasperReports Library version 7.0.0  -->
+<jasperReport name="reporte_doctores" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="eb02c529-5478-494f-a896-5a6b5bb424fc">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Supabase Hospital Citas"/>
+	<parameter name="logo" class="java.io.InputStream"/>
+	<query language="SQL"><![CDATA[SELECT d.dni, d.nombres, d.apellidos, d.telefono, d.correo, e.nombre as especialidad 
+FROM doctores d 
+JOIN especialidades e ON d.id_especialidad = e.id_especialidad 
+WHERE d.activo = true]]></query>
+	<field name="nombres" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombres"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombres"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="doctores"/>
+	</field>
+	<field name="apellidos" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="apellidos"/>
+		<property name="com.jaspersoft.studio.field.label" value="apellidos"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="doctores"/>
+	</field>
+	<field name="dni" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dni"/>
+		<property name="com.jaspersoft.studio.field.label" value="dni"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="doctores"/>
+	</field>
+	<field name="telefono" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="telefono"/>
+		<property name="com.jaspersoft.studio.field.label" value="telefono"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="doctores"/>
+	</field>
+	<field name="correo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="correo"/>
+		<property name="com.jaspersoft.studio.field.label" value="correo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="doctores"/>
+	</field>
+	<field name="especialidad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="especialidad"/>
+		<property name="com.jaspersoft.studio.field.label" value="especialidad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="especialidades"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch">
+		<element kind="staticText" uuid="79bae0c5-8b75-4109-abf6-15cecaf2e442" x="280" y="12" width="274" height="55" fontSize="19.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Directorio de Especialistas]]></text>
+		</element>
+		<element kind="image" uuid="38defb50-d8fa-4899-a756-a15eeb376bd3" x="0" y="0" width="260" height="60">
+			<expression><![CDATA[$P{logo}]]></expression>
+		</element>
+	</title>
+	<columnHeader height="45" splitType="Stretch">
+		<element kind="staticText" uuid="6d8324b6-f2ed-4bb4-87a5-6ec1d0cfb657" mode="Opaque" x="20" y="25" width="55" height="20" forecolor="#FFFFFF" backcolor="#004A99" fontSize="13.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[DNI]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="b4d5879a-8023-4c99-a864-de5f9888bac4" mode="Opaque" x="75" y="25" width="82" height="20" forecolor="#FFFFFF" backcolor="#004A99" fontSize="13.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[NOMBRE]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="c740aeb7-1644-436c-9153-fd3bf3152011" mode="Opaque" x="157" y="25" width="102" height="20" forecolor="#FFFFFF" backcolor="#004A99" fontSize="13.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[APELLIDOS]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="25e1a233-d039-43ff-ace9-610e77274c17" mode="Opaque" x="259" y="25" width="98" height="20" forecolor="#FFFFFF" backcolor="#004A99" fontSize="13.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[TELÉFONO]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="10253a84-f029-4d2d-888d-86506df5a644" mode="Opaque" x="357" y="25" width="90" height="20" forecolor="#FFFFFF" backcolor="#004A99" fontSize="13.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[CORREO]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="b92decce-0079-4847-b2b6-e40f0da0032a" mode="Opaque" x="447" y="25" width="115" height="20" forecolor="#FFFFFF" backcolor="#004A99" fontSize="13.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[ESPECIALIDAD]]></text>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.y" value="px"/>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<element kind="textField" uuid="27debead-34d6-4d92-8a3d-d334b83c76ae" x="20" y="0" width="54" height="30">
+				<expression><![CDATA[$F{dni}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cb948841-a684-47e3-baaa-a62bf6d8b77d"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="419abf5e-222c-4d7f-86c2-f0f05e4dcbcd" x="74" y="0" width="82" height="30">
+				<expression><![CDATA[$F{nombres}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a7af8a60-9563-442e-ac8b-6634b43b1423"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="4e7597b0-0abd-45b1-914a-794b7658cb8b" x="156" y="0" width="102" height="30">
+				<expression><![CDATA[$F{apellidos}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="958bd8d9-6ee8-4215-8a92-5e9f9a31a458"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="f58fe8ed-64c2-472e-a3e4-e933ea76c53e" x="258" y="0" width="98" height="30">
+				<expression><![CDATA[$F{telefono}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6af04e21-0ef2-4f8c-80a2-ee11e8dfffe9"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="ab4de8a1-2362-4dce-b343-701972455bee" x="356" y="0" width="90" height="30">
+				<expression><![CDATA[$F{correo}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="567f8bcc-84b5-4390-b090-adc3a747b4cc"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="054c80e9-3459-48e3-aa1b-5a3fe4bf693c" x="446" y="0" width="116" height="30">
+				<expression><![CDATA[$F{especialidad}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d146ac2a-30e1-4f00-a388-c11dc98033ae"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+		</band>
+		<band>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</detail>
+	<pageFooter height="50">
+		<element kind="staticText" uuid="cc56a7ea-7fee-4ffa-97af-4871dbd91ac1" x="0" y="13" width="210" height="24" fontSize="11.0" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Hospital de la Solidaridad - Vitarte]]></text>
+			<box>
+				<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+	</pageFooter>
+</jasperReport>

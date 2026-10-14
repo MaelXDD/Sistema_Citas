@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago - Hospital de la Solidaridad</title>
+    <link rel="stylesheet" href="/css/estilo.css">
+    <link rel="stylesheet" href="/css/paginas.css">
+</head>
+<body>
+
+<header class="encabezado-navegacion">
+    <div class="logotipo" id="logotipo-principal">
+        <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+        <h1>Hospital de la Solidaridad</h1>
+    </div>
+    <nav class="menu-principal" id="menu-nav">
+        <a href="/index.html">Inicio</a>
+        <a href="/citas.html">Sacar Cita</a>
+        <a href="/miscitas.html">Mis Citas</a>
+    </nav>
+    <div class="botones-acceso" id="zona-sesion"></div>
+</header>
+
+<div class="area-gestion-medica">
+    <div class="tarjeta-panel panel-formulario">
+
+        <div class="cabecera-formulario">
+            <h2>Confirmar Pago</h2>
+            <p>Revisa el resumen de tu cita y elige el método de pago.</p>
+            <p id="temporizador-pago" class="alerta-temporizador">
+                La reserva expira en: <span id="tiempo-restante">05:00</span>
+            </p>
+        </div>
+
+        <div class="resumen-pago">
+            <div class="fila-resumen"><span>Especialidad</span><strong id="pago-especialidad">—</strong></div>
+            <div class="fila-resumen"><span>Doctor</span><strong id="pago-doctor">—</strong></div>
+            <div class="fila-resumen"><span>Fecha</span><strong id="pago-fecha">—</strong></div>
+            <div class="fila-resumen"><span>Hora</span><strong id="pago-hora">—</strong></div>
+            <div class="fila-resumen total"><span>Total a pagar</span><strong id="pago-monto-total">—</strong></div>
+        </div>
+
+        <div class="metodos-pago">
+            <p class="etiqueta-selector">Selecciona tu método de pago</p>
+            <div class="grilla-metodos" id="contenedor-metodos-pago">
+                <div class="tarjeta-metodo" data-metodo="YAPE">
+                    <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/Icono_Yape.png" alt="Yape">
+                    <span>Yape</span>
+                </div>
+                <div class="tarjeta-metodo" data-metodo="TARJETA">
+                    <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/TarjetaPago.png" alt="Tarjeta">
+                    <span>Tarjeta</span>
+                </div>
+                <div class="tarjeta-metodo" data-metodo="EFECTIVO">
+                    <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/Efectivo_icono.png" alt="Efectivo">
+                    <span>Efectivo</span>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" id="metodo-seleccionado" value="">
+
+        <div class="contenedor-acciones-pago">
+            <button type="button" class="boton-accion-total" id="btnConfirmarPago">
+                Confirmar y Pagar
+            </button>
+            <button type="button" class="boton-volver boton-volver-pago" id="btnCancelarPago">
+                ← Volver y cancelar reserva
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<footer class="pie-inferior">
+    <div class="contenedor-pie">
+        <div class="columna-footer">
+            <h4>Hospital de la Solidaridad Vitarte</h4>
+            <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
+        </div>
+        <div class="columna-footer">
+            <h4>Navegación</h4>
+            <ul>
+                <li><a href="/index.html">Inicio</a></li>
+                <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
+                <li><a href="/mision.html">Misión</a></li>
+                <li><a href="/vision.html">Visión</a></li>
+            </ul>
+        </div>
+        <div class="columna-footer">
+            <h4>Ayuda</h4>
+            <p>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</p>
+            <br>
+            <p>Preguntas frecuentes</p>
+        </div>
+        <div class="columna-footer">
+            <h4>Contacto</h4>
+            <div class="item-contacto">Vitarte, Lima - Perú</div>
+            <div class="item-contacto">(01) 555-1234</div>
+            <div class="item-contacto">contacto@hospital.pe</div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+<!-- Modal Pasarela de Pago con Tarjeta (Emulador Stripe Test) -->
+<div id="modal-stripe" class="capa-fondo-modal oculto">
+    <div class="cuadro-emergente">
+        <span class="cerrar-ventana" data-cerrar="modal-stripe">&times;</span>
+        <h3 class="texto-azul">Pasarela de Pago Segura</h3>
+
+        <form id="form-tarjeta-stripe" class="formulario-estandar">
+            <!-- 1. Número de Tarjeta -->
+            <div class="contenedor-selector">
+                <label class="etiqueta-selector">Número de Tarjeta</label>
+                <input type="text" id="stripe-num-tarjeta" placeholder="4242 4242 4242 4242" maxlength="19" required autocomplete="off">
+            </div>
+
+            <!-- 2. Vencimiento y CVC en paralelo -->
+            <div class="fila-input">
+                <div class="contenedor-selector">
+                    <label class="etiqueta-selector">Vencimiento (MM/AA)</label>
+                    <input type="text" id="stripe-exp" placeholder="MM/AA" maxlength="5" required autocomplete="off">
+                </div>
+                <div class="contenedor-selector">
+                    <label class="etiqueta-selector">CVV</label>
+                    <input type="password" id="stripe-cvc" placeholder="123" maxlength="3" minlength="3" required autocomplete="off">
+                </div>
+            </div>
+
+            <!-- 3. Titular de la Tarjeta en su propia fila -->
+            <div class="contenedor-selector">
+                <label class="etiqueta-selector">Titular de la Tarjeta</label>
+                <input type="text" id="stripe-titular" placeholder="Nombre completo" required autocomplete="off">
+            </div>
+
+            <!-- 4. Botones de acción alineados al pie -->
+            <div class="fila-botones-formulario">
+                <button type="button" class="boton-blanco" data-cerrar="modal-stripe">Cancelar</button>
+                <button type="submit" class="boton-azul" id="btn-procesar-cargo-stripe">Confirmar pago</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Scripts organizados -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/comun/configuracion.js"></script>
+<script src="/js/comun/utilidades.js"></script>
+<script src="/js/comun/sesion.js"></script>
+<script src="/js/paginas/pago.js"></script>
+</body>
+</html>

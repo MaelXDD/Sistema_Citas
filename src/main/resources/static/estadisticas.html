@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas - Hospital de la Solidaridad</title>
+    <link rel="stylesheet" href="/css/estilo.css">
+    <link rel="stylesheet" href="/css/paginas.css">
+</head>
+<body>
+
+<header class="encabezado-navegacion">
+    <div class="logotipo" id="logotipo-principal">
+        <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+        <h1>Hospital de la Solidaridad</h1>
+    </div>
+    <nav class="menu-principal" id="menu-nav">
+        <a href="/index.html">Inicio</a>
+        <a href="/especialidades.html">Especialidades</a>
+        <a href="/doctores.html">Doctores</a>
+        <a href="/horarios.html">Horarios</a>
+        <a href="/estadisticas.html" class="enlace-activo">Estadísticas</a>
+    </nav>
+    <div class="botones-acceso">
+        <button type="button" class="boton-blanco" id="btnRegresarHome">Regresar</button>
+    </div>
+</header>
+
+<main class="area-gestion-medica">
+    <div class="contenedor-estadisticas">
+
+        <!-- ====================== REPORTE 1 ====================== -->
+        <div class="tarjeta-panel">
+            <div class="cabecera-panel">
+                <div class="titulos-seccion">
+                    <h2>Estadísticas de Citas por Doctor</h2>
+                    <p>Consulta el rendimiento de cada médico según especialidad y estado de cita.</p>
+                </div>
+            </div>
+
+            <div class="filtros-estadisticas">
+                <div class="contenedor-selector">
+                    <label class="etiqueta-selector" for="filtroEspecialidad">Especialidad:</label>
+                    <select id="filtroEspecialidad" class="selector-estandar">
+                        <option value="">Todas las especialidades</option>
+                    </select>
+                </div>
+
+                <div class="contenedor-selector">
+                    <label class="etiqueta-selector" for="filtroEstado">Estado de Cita:</label>
+                    <select id="filtroEstado" class="selector-estandar">
+                        <option value="">Todos los estados</option>
+                        <option value="CONFIRMADA">Confirmada</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="COMPLETADA">Completada</option>
+                    </select>
+                </div>
+
+                <div class="fila-botones-filtro">
+                    <button type="button" class="boton-azul" id="btnBuscarEstadisticas">Buscar</button>
+                    <button type="button" class="boton-blanco boton-borde-azul" id="btnDescargarReporteDocs">Descargar PDF</button>
+                    <button type="button" class="boton-blanco" id="btnLimpiarFiltrosDocs">↺ Limpiar</button>
+                </div>
+            </div>
+
+            <div class="tabla-responsiva">
+                <table class="tabla-doctores">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Doctor</th>
+                        <th>Especialidad</th>
+                        <th class="text-center">Total Citas</th>
+                        <th class="text-center">Ingresos</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tablaEstadisticasBody">
+                    <tr>
+                        <td colspan="5" class="celda-estado">Aplica los filtros y haz clic en Buscar.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ====================== REPORTE 2 ====================== -->
+        <div class="tarjeta-panel">
+            <div class="cabecera-panel">
+                <div class="titulos-seccion">
+                    <h2>Pacientes por Especialidad</h2>
+                    <p>Selecciona una especialidad para ver los pacientes registrados, el total pagado y la cantidad de citas realizadas.</p>
+                </div>
+            </div>
+
+            <div class="filtros-estadisticas">
+                <div class="contenedor-selector">
+                    <label class="etiqueta-selector" for="filtroEspecialidadPacientes">Especialidad:</label>
+                    <select id="filtroEspecialidadPacientes" class="selector-estandar">
+                        <option value="">Selecciona una especialidad</option>
+                    </select>
+                </div>
+
+                <div class="fila-botones-filtro">
+                    <button type="button" class="boton-azul" id="btnBuscarPacientesEspecialidad">Buscar</button>
+                    <button type="button" class="boton-blanco boton-borde-azul" id="btnDescargarReportePac">Descargar PDF</button>
+                    <button type="button" class="boton-blanco" id="btnLimpiarFiltroPacientes">↺ Limpiar</button>
+                </div>
+            </div>
+
+            <div class="tabla-responsiva">
+                <table class="tabla-doctores">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Paciente</th>
+                        <th class="text-center">Cantidad de Citas</th>
+                        <th class="text-center">Total Pagado</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tablaIngresosBody">
+                    <tr>
+                        <td colspan="4" class="celda-estado">Selecciona una especialidad y haz clic en Buscar.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ====================== REPORTE 3 ====================== -->
+        <div class="tarjeta-panel">
+            <div class="cabecera-panel">
+                <div class="titulos-seccion">
+                    <h2>Control de Flujo y Horarios Críticos</h2>
+                    <p>Filtra por día y turno. Haz clic en cualquier fila para expandir y ver las especialidades atendidas en ese horario.</p>
+                </div>
+            </div>
+
+            <div class="filtros-estadisticas">
+                <div class="contenedor-selector">
+                    <label class="etiqueta-selector" for="filtroDiaSemana">Día de la Semana:</label>
+                    <select id="filtroDiaSemana" class="selector-estandar">
+                        <option value="">Todos los días</option>
+                        <option value="Lunes">Lunes</option>
+                        <option value="Martes">Martes</option>
+                        <option value="Miércoles">Miércoles</option>
+                        <option value="Jueves">Jueves</option>
+                        <option value="Viernes">Viernes</option>
+                        <option value="Sábado">Sábado</option>
+                        <option value="Domingo">Domingo</option>
+                    </select>
+                </div>
+
+                <div class="contenedor-selector">
+                    <label class="etiqueta-selector" for="filtroTurno">Turno Horario:</label>
+                    <select id="filtroTurno" class="selector-estandar">
+                        <option value="">Todos los turnos</option>
+                        <option value="Mañana">Mañana</option>
+                        <option value="Tarde">Tarde</option>
+                    </select>
+                </div>
+
+                <div class="fila-botones-filtro">
+                    <button type="button" class="boton-azul" id="btnFiltrarAfluencia">Filtrar Consulta</button>
+                    <button type="button" class="boton-blanco boton-borde-azul" id="btnDescargarReporteAfluencia">Descargar PDF</button>
+                    <button type="button" class="boton-blanco" id="btnLimpiarAfluencia">↺ Restablecer</button>
+                </div>
+            </div>
+
+            <div class="tabla-responsiva">
+                <table class="tabla-doctores">
+                    <thead>
+                    <tr>
+                        <th>Día de la Semana</th>
+                        <th>Turno Horario</th>
+                        <th class="text-center">Citas Totales</th>
+                        <th class="text-right">Ingresos del Turno</th>
+                        <th class="text-center">Detalles</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tablaAfluenciaBody">
+                    <tr>
+                        <td colspan="5" class="celda-estado">Cargando análisis de afluencia...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<template id="tpl-fila-reporte-doc">
+    <tr>
+        <td class="col-num texto-azul text-center font-bold"></td>
+        <td class="col-nombre"></td>
+        <td><span class="badge-especialidad col-esp"></span></td>
+        <td class="col-total text-center font-bold"></td>
+        <td class="col-ingresos text-center font-bold"></td>
+    </tr>
+</template>
+
+<template id="tpl-fila-reporte-pac">
+    <tr>
+        <td class="col-num texto-azul text-center font-bold"></td>
+        <td class="col-nombre"></td>
+        <td class="col-citas text-center font-bold"></td>
+        <td class="col-total text-center font-bold"></td>
+    </tr>
+</template>
+
+<template id="tpl-fila-afluencia">
+    <tr class="fila-clicable">
+        <td class="col-dia font-bold"></td>
+        <td><span class="badge-turno col-turno"></span></td>
+        <td class="col-citas text-center font-bold"></td>
+        <td class="col-ingresos text-right"></td>
+        <td class="text-center texto-azul font-bold">Ver ▼</td>
+    </tr>
+</template>
+
+<template id="tpl-detalle-afluencia">
+    <tr class="fila-detalle oculto">
+        <td colspan="5" class="celda-detalle-acordeon">
+            <div class="contenedor-acordeon">
+                <span class="titulo-acordeon">Especialidades en este horario:</span>
+                <div class="contenedor-badges-acordeon"></div>
+            </div>
+        </td>
+    </tr>
+</template>
+
+<template id="tpl-msg-estadisticas">
+    <tr>
+        <td colspan="5" class="celda-mensaje"></td>
+    </tr>
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/comun/configuracion.js"></script>
+<script src="/js/comun/utilidades.js"></script>
+<script src="/js/comun/sesion.js"></script>
+<script src="/js/paginas/estadisticas.js"></script>
+</body>
+</html>

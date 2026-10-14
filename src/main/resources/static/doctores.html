@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital de la Solidaridad - Gestión de Staff Médico</title>
+    <link rel="stylesheet" href="/css/estilo.css">
+    <link rel="stylesheet" href="/css/paginas.css">
+</head>
+<body>
+
+<header class="encabezado-navegacion">
+    <div class="logotipo" id="logotipo-principal">
+        <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+        <h1>Hospital de la Solidaridad</h1>
+    </div>
+    <nav class="menu-principal" id="menu-nav">
+        <a href="/index.html">Inicio</a>
+        <a href="/especialidades.html">Especialidades</a>
+        <a href="/doctores.html" class="enlace-activo">Doctores</a>
+        <a href="/horarios.html">Horarios</a>
+    </nav>
+    <div class="botones-acceso">
+        <button type="button" class="boton-blanco" id="btnRegresarHome">Regresar</button>
+    </div>
+</header>
+
+<main class="area-gestion-medica">
+    <div id="vistaTabla" class="tarjeta-panel">
+        <div class="cabecera-panel">
+            <div class="titulos-seccion">
+                <h2>Staff Médico Actual</h2>
+                <p>Lista de especialistas conectados desde Supabase.</p>
+            </div>
+            <div class="fila-botones-filtro">
+                <button type="button" id="btnDescargarReporte" class="boton-blanco boton-borde-azul">Descargar Reporte PDF</button>
+                <button type="button" id="btnIrEstadisticas" class="boton-blanco boton-borde-azul">Estadísticas</button>
+                <button type="button" id="btnMostrarForm" class="boton-accion-total">+ Registrar Nuevo Doctor</button>
+            </div>
+        </div>
+
+        <div class="tabla-responsiva">
+            <table class="tabla-doctores">
+                <thead>
+                <tr>
+                    <th>DNI</th>
+                    <th>Doctor</th>
+                    <th>Especialidad</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody id="tablaDoctoresBody">
+                <tr>
+                    <td colspan="6" class="celda-estado">Cargando personal médico...</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="vistaFormulario" class="tarjeta-panel panel-formulario oculto">
+        <div class="cabecera-formulario">
+            <h2 id="tituloFormulario">Registrar Especialista</h2>
+            <p id="descripcionFormulario">Ingrese los datos requeridos para dar de alta al médico en el sistema.</p>
+        </div>
+        <form id="doctorForm" class="formulario-estandar">
+            <input type="hidden" id="inputIdDoctor" name="idDoctor">
+            <div class="fila-input">
+                <input type="text" id="inputNombres" name="nombres" placeholder="Nombres del Doctor" maxlength="100" required>
+                <input type="text" id="inputApellidos" name="apellidos" placeholder="Apellidos del Doctor" maxlength="100" required>
+            </div>
+            <div class="fila-input">
+                <input type="text" id="inputDni" name="dni" placeholder="DNI" maxlength="8" required>
+                <input type="text" id="inputTelefono" name="telefono" placeholder="Teléfono" maxlength="9">
+            </div>
+            <input type="email" id="inputCorreo" name="correo" placeholder="Correo Electrónico Institucional" maxlength="150" required>
+            <div class="contenedor-selector">
+                <label class="etiqueta-selector" for="selectEspecialidad">Seleccione Especialidad:</label>
+                <select id="selectEspecialidad" class="selector-estandar" required>
+                    <option value="" disabled selected>Cargando especialidades...</option>
+                </select>
+            </div>
+            <div class="fila-botones-formulario">
+                <button type="button" id="btnCancelar" class="boton-blanco">Cancelar</button>
+                <button type="submit" id="btnGuardar" class="boton-accion-total">Guardar Médico</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<template id="tpl-fila-doctor">
+    <tr>
+        <td class="col-dni texto-azul"></td>
+        <td class="col-nombre"></td>
+        <td><span class="badge-especialidad col-esp"></span></td>
+        <td class="col-correo"></td>
+        <td class="col-telefono"></td>
+        <td>
+            <button type="button" class="boton-editar btn-edit">Editar</button>
+            <button type="button" class="boton-eliminar btn-del">Eliminar</button>
+        </td>
+    </tr>
+</template>
+
+<template id="tpl-msg-doctor">
+    <tr>
+        <td colspan="6" class="celda-mensaje"></td>
+    </tr>
+</template>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/comun/configuracion.js"></script>
+<script src="/js/comun/utilidades.js"></script>
+<script src="/js/comun/sesion.js"></script>
+<script src="/js/paginas/doctores.js"></script>
+</body>
+</html>

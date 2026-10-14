@@ -1,0 +1,167 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="Consulta3" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df189ed1-01ba-47c5-af3f-dc415c9db851">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sistema_Citas"/>
+	<parameter name="logo" class="java.io.InputStream"/>
+	<parameter name="p_dia_semana" class="java.lang.String"/>
+	<parameter name="p_turno" class="java.lang.String"/>
+	<parameter name="p_especialidad" class="java.lang.String"/>
+	<query language="SQL"><![CDATA[SELECT 
+  v.dia_semana AS diaSemana, 
+  v.turno, 
+  v.total_citas AS totalCitas, 
+  v.ingresos_turno AS ingresosTurno, 
+  ( 
+    SELECT STRING_AGG(DISTINCT e.nombre, ', ') 
+    FROM citas c 
+    JOIN doctores d ON c.id_doctor = d.id_doctor 
+    JOIN especialidades e ON d.id_especialidad = e.id_especialidad 
+    WHERE c.estado != 'CANCELADA' 
+      AND TO_CHAR(c.fecha_cita, 'TMDay') = v.dia_semana
+      AND (
+        (v.turno LIKE 'Mañana%' AND c.hora_cita < '12:00:00') OR 
+        (v.turno LIKE 'Tarde%' AND c.hora_cita >= '12:00:00')
+      )
+      AND ($P{p_especialidad} = 'Todos' OR e.nombre = $P{p_especialidad})
+  ) AS especialidades 
+FROM public.vista_reporte_afluencia v 
+WHERE ($P{p_dia_semana} = 'Todos' OR v.dia_semana = $P{p_dia_semana})
+  AND ($P{p_turno} = 'Todos' OR v.turno LIKE CONCAT($P{p_turno}, '%'))
+ORDER BY v.dia_semana, v.turno DESC]]></query>
+	<field name="diasemana" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="diasemana"/>
+		<property name="com.jaspersoft.studio.field.label" value="diasemana"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vista_reporte_afluencia"/>
+	</field>
+	<field name="turno" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="turno"/>
+		<property name="com.jaspersoft.studio.field.label" value="turno"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vista_reporte_afluencia"/>
+	</field>
+	<field name="totalcitas" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="totalcitas"/>
+		<property name="com.jaspersoft.studio.field.label" value="totalcitas"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vista_reporte_afluencia"/>
+	</field>
+	<field name="ingresosturno" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="ingresosturno"/>
+		<property name="com.jaspersoft.studio.field.label" value="ingresosturno"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vista_reporte_afluencia"/>
+	</field>
+	<field name="especialidades" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="especialidades"/>
+		<property name="com.jaspersoft.studio.field.label" value="especialidades"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="110" splitType="Stretch">
+		<element kind="image" uuid="f178bbc4-1b54-49e9-bc7d-cd1d4d55bb74" x="-10" y="17" width="130" height="43">
+			<expression><![CDATA[$P{logo}]]></expression>
+		</element>
+		<element kind="staticText" uuid="7769021f-3535-4925-ae9d-73b341480104" x="20" y="80" width="120" height="20" fontSize="13.0">
+			<text><![CDATA[Fecha de emisión:]]></text>
+		</element>
+		<element kind="textField" uuid="c87bc56a-ba71-44da-bb47-e02e74be76c3" x="160" y="80" width="110" height="20" fontSize="12.0" pattern="dd/MM/yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+		<element kind="staticText" uuid="a05e725f-8d99-4e72-978c-bca045cae0d0" x="130" y="12" width="430" height="61" forecolor="#1E3A8A" fontSize="22.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[CONTROL DE FLUJO Y HORARIOS CRITICOS]]></text>
+		</element>
+		<element kind="line" uuid="08aa01b7-fdc0-418a-ad60-7fb0ecd0e23c" x="-20" y="100" width="590" height="1"/>
+	</title>
+	<pageHeader splitType="Stretch">
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	</pageHeader>
+	<columnHeader height="24" splitType="Stretch">
+		<element kind="staticText" uuid="4a20bce3-1d21-48f6-bc7b-353e15ec02b4" mode="Opaque" x="-13" y="0" width="166" height="24" forecolor="#FFFFFF" backcolor="#004A99" fontSize="16.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Día de la Semana]]></text>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="02657a26-c9df-4886-873c-1fc4c9cee850" mode="Opaque" x="153" y="0" width="130" height="24" forecolor="#FFFFFF" backcolor="#004A99" fontSize="16.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Turno Horario]]></text>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="1dcb6d38-c1cc-4abb-b680-910d48f13ecf" mode="Opaque" x="283" y="0" width="130" height="24" forecolor="#FFFFFF" backcolor="#004A99" fontSize="16.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Citas Totales]]></text>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="fd3aa07d-d5d1-4803-ab22-0b0776c36d99" mode="Opaque" x="413" y="0" width="154" height="24" forecolor="#FFFFFF" backcolor="#004A99" fontSize="16.0" removeLineWhenBlank="true" bold="true" hTextAlign="Center">
+			<text><![CDATA[Ingresos del Turno]]></text>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<element kind="textField" uuid="dc28743c-3273-424e-ba47-5b890f059e88" x="-13" y="0" width="166" height="30" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{diasemana}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6a7968b3-b28e-4978-8f7e-b1d2f89ebfd0"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="1320bfe2-75e4-49fa-a80c-020fb11c87bb" x="153" y="0" width="130" height="30" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{turno}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a8c26e68-4c90-4fbc-b4b2-9c05917dacd3"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="f2e2892d-659c-4745-aa11-14df1efaae3c" x="283" y="0" width="130" height="30" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{totalcitas}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="aa4df0ca-7d46-4aec-9abe-b7a64685ca05"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="e4656bb4-6fe6-4e7f-b42a-5bcdf84cf54f" x="413" y="0" width="154" height="30" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{ingresosturno}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="434a4e9e-8743-4498-aee0-6287ad05700e"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</element>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</detail>
+	<columnFooter splitType="Stretch">
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	</columnFooter>
+	<pageFooter height="110" splitType="Stretch">
+		<element kind="staticText" uuid="068be376-8b88-4745-bd6f-0cb4deb6158e" x="177" y="10" width="200" height="30" fontSize="13.0">
+			<text><![CDATA[Hospital de la Solidaridad de Ate]]></text>
+		</element>
+		<element kind="staticText" uuid="05f8cb2b-9c61-4521-a79e-0d232c22eafe" x="196" y="50" width="163" height="30" fontSize="13.0">
+			<text><![CDATA[¡Gracias por su preferencia!]]></text>
+		</element>
+		<element kind="textField" uuid="4142f9cd-2316-4b38-8ab6-3e82d09f4b78" x="360" y="80" width="100" height="30" hTextAlign="Right">
+			<expression><![CDATA["Page " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="1feea034-7c4a-490f-93bf-38f307db277c" x="470" y="80" width="100" height="30" evaluationTime="Report" hTextAlign="Left">
+			<expression><![CDATA[" of " + $V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="line" uuid="4e94e53e-25b0-4579-ac42-f63f43ec7626" x="-20" y="0" width="590" height="1"/>
+	</pageFooter>
+	<summary splitType="Stretch">
+		<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	</summary>
+</jasperReport>

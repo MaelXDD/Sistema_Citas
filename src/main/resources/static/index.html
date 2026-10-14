@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital de la Solidaridad - Sistema de Citas</title>
+    <link rel="stylesheet" href="/css/estilo.css">
+    <link rel="stylesheet" href="/css/paginas.css">
+</head>
+<body>
+
+<header class="encabezado-navegacion">
+    <div class="logotipo" id="logotipo-hospital">
+        <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+        <h1>Hospital de la Solidaridad</h1>
+    </div>
+
+    <!-- Barra de Navegación -->
+    <nav class="menu-principal" id="menu-nav">
+        <a href="/index.html" class="enlace-activo">Inicio</a>
+
+        <!-- Enlaces públicos (Visitantes) -->
+        <a href="/sobre_nosotros.html" class="enlace-nav nav-publico">Sobre nosotros</a>
+        <a href="/vision.html" class="enlace-nav nav-publico">Visión</a>
+        <a href="/mision.html" class="enlace-nav nav-publico">Misión</a>
+
+        <!-- Enlaces para Pacientes (Autenticados) -->
+        <a href="/citas.html" class="enlace-nav nav-paciente oculto">Sacar Cita</a>
+        <a href="/miscitas.html" class="enlace-nav nav-paciente oculto">Mis Citas</a>
+
+        <!-- Enlaces para Administradores -->
+        <a href="/especialidades.html" class="enlace-nav nav-admin oculto">Especialidades</a>
+        <a href="/doctores.html" class="enlace-nav nav-admin oculto">Doctores</a>
+        <a href="/horarios.html" class="enlace-nav nav-admin oculto">Horarios</a>
+        <a href="/estadisticas.html" class="enlace-nav nav-admin oculto">Estadísticas</a>
+    </nav>
+
+    <!-- Zona de sesión con markup propio en el HTML -->
+    <div class="botones-acceso" id="zona-sesion">
+        <div id="caja-sesion-invitado">
+            <button class="boton-blanco" id="btn-abrir-login">Iniciar Sesión</button>
+            <button class="boton-azul" id="btn-abrir-registro">Registrarse</button>
+        </div>
+        <div id="caja-sesion-usuario" class="oculto">
+            <span class="texto-azul" id="nombre-usuario-sesion"></span>
+            <button class="boton-blanco" id="btn-cerrar-sesion">Cerrar sesión</button>
+        </div>
+    </div>
+</header>
+
+<section class="bloque-bienvenida">
+    <div class="texto-bienvenida">
+        <h2>Comprometidos con tu salud</h2>
+        <p>Brindamos atención médica de calidad con los mejores especialistas de Lima, facilitando tu acceso a la salud con nuestro nuevo sistema de citas en línea.</p>
+    </div>
+    <div class="imagen-bienvenida">
+        <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/hospital2.jpg" alt="Personal médico">
+    </div>
+</section>
+
+<section id="especialidadesdest" class="contenedor-especialidades">
+    <h3>Nuestras Especialidades Destacadas</h3>
+    <div class="rejilla-iconos">
+
+        <div class="tarjeta-icono" data-especialidad="cardiología">
+            <div class="circulo-blanco">
+                <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/cardiologia.png" alt="Cardiología">
+            </div>
+            <p>Cardiología</p>
+        </div>
+
+        <div class="tarjeta-icono" data-especialidad="pediatría">
+            <div class="circulo-blanco">
+                <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/pediatria.png" alt="Pediatría">
+            </div>
+            <p>Pediatría</p>
+        </div>
+
+        <div class="tarjeta-icono" data-especialidad="traumatología">
+            <div class="circulo-blanco">
+                <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/traumatologia.png" alt="Traumatología">
+            </div>
+            <p>Traumatología</p>
+        </div>
+
+        <div class="tarjeta-icono" data-especialidad="dermatología">
+            <div class="circulo-blanco">
+                <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/dermatologia.png" alt="Dermatología">
+            </div>
+            <p>Dermatología</p>
+        </div>
+
+        <div class="tarjeta-icono" data-especialidad="neurología">
+            <div class="circulo-blanco">
+                <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/neurologia.png" alt="Neurología">
+            </div>
+            <p>Neurología</p>
+        </div>
+
+    </div>
+</section>
+
+<section class="seccion-pasos">
+    <h3>Pasos para tu cita</h3>
+
+    <div class="bloque-paso">
+        <div class="icono-paso">
+            <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/usuario.png" alt="Paso 1">
+        </div>
+        <div class="texto-paso">
+            <strong>Paso 1:</strong>
+            <p>Primero, crear una cuenta con tus datos (nombres, apellidos, dni, correo, etc), para acceder a nuestros servicios médicos.</p>
+        </div>
+    </div>
+
+    <div class="bloque-paso">
+        <div class="icono-paso">
+            <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/reloj.png" alt="Paso 2">
+        </div>
+        <div class="texto-paso">
+            <strong>Paso 2:</strong>
+            <p>Luego, elige tu especialidad, el doctor de tu preferencia y el horario que mejor se acomode a tu persona.</p>
+        </div>
+    </div>
+
+    <div class="bloque-paso">
+        <div class="icono-paso">
+            <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/pago.png" alt="Paso 3">
+        </div>
+        <div class="texto-paso">
+            <strong>Paso 3:</strong>
+            <p>Después, elige tu método de pago (Yape, tarjeta o efectivo), para así confirmar tu cita de manera instantánea.</p>
+        </div>
+    </div>
+
+    <div class="bloque-paso">
+        <div class="icono-paso">
+            <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/check.png" alt="Paso 4">
+        </div>
+        <div class="texto-paso">
+            <strong>Paso 4:</strong>
+            <p>Finalmente, preséntate en el hospital en la fecha programada y entrega tu DNI en caja para entrar a tu cita.</p>
+        </div>
+    </div>
+</section>
+
+<footer class="pie-inferior">
+    <div class="contenedor-pie">
+        <div class="columna-footer">
+            <h4>Hospital de la Solidaridad Vitarte</h4>
+            <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
+        </div>
+        <div class="columna-footer">
+            <h4>Navegación</h4>
+            <ul>
+                <li><a href="/index.html">Inicio</a></li>
+                <li><a href="#especialidadesdest">Especialidades</a></li>
+                <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
+                <li><a href="/mision.html">Misión</a></li>
+                <li><a href="/vision.html">Visión</a></li>
+            </ul>
+        </div>
+        <div class="columna-footer">
+            <h4>Ayuda</h4>
+            <p>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</p>
+            <br>
+            <p>Preguntas frecuentes</p>
+        </div>
+        <div class="columna-footer">
+            <h4>Contacto</h4>
+            <div class="item-contacto">Vitarte, Lima - Perú</div>
+            <div class="item-contacto">(01) 555-1234</div>
+            <div class="item-contacto">contacto@hospital.pe</div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+<div id="modal-login" class="capa-fondo-modal oculto">
+    <div class="cuadro-emergente">
+        <span class="cerrar-ventana" id="btn-cerrar-login">&times;</span>
+        <h3>Iniciar Sesión</h3>
+        <form id="loginForm" class="formulario-estandar">
+            <input type="email" name="correo" placeholder="Ingresa tu correo" required>
+            <input type="password" name="password" placeholder="Ingresa tu contraseña" required>
+            <button type="submit" class="boton-accion-total">Iniciar Sesión</button>
+        </form>
+    </div>
+</div>
+
+<div id="modal-registro" class="capa-fondo-modal oculto">
+    <div class="cuadro-emergente">
+        <span class="cerrar-ventana" id="btn-cerrar-registro">&times;</span>
+        <h3>Registro</h3>
+        <form id="registerForm" class="formulario-estandar">
+            <div class="fila-input">
+                <input type="text" id="reg-nombres" name="nombres" placeholder="Nombres" maxlength="50" required>
+                <input type="text" id="reg-apellidos" name="apellidos" placeholder="Apellidos" maxlength="50" required>
+            </div>
+            <input type="email" name="correo" placeholder="Correo" maxlength="100" required>
+            <input type="text" id="reg-dni" name="dni" placeholder="DNI" maxlength="8" required>
+            <input type="text" id="reg-telefono" name="telefono" placeholder="Teléfono" maxlength="9">
+            <input type="date" name="fechaNac" required>
+            <input type="text" name="direccion" placeholder="Dirección" maxlength="150" required>
+            <input type="password" name="password" placeholder="Contraseña" maxlength="50" required>
+            <button type="submit" class="boton-accion-total">Crear cuenta</button>
+        </form>
+    </div>
+</div>
+
+<div id="modalEspecialidad" class="modal">
+    <div class="modal-contenido">
+        <span class="cerrar-modal" id="btn-cerrar-especialidad">&times;</span>
+        <h2 id="tituloEspecialidad"></h2>
+        <div class="seccion-info">
+            <h4>Descripción</h4>
+            <p id="descripcionEspecialidad"></p>
+        </div>
+        <div class="seccion-info">
+            <h4>Enfermedades que trata</h4>
+            <ul id="enfermedadesEspecialidad"></ul>
+        </div>
+        <div class="seccion-info">
+            <h4>¿Cuándo acudir?</h4>
+            <p id="cuandoAcudir"></p>
+        </div>
+    </div>
+</div>
+
+<template id="tpl-item-enfermedad">
+    <li class="item-enfermedad"></li>
+</template>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/comun/configuracion.js"></script>
+<script src="/js/comun/utilidades.js"></script>
+<script src="/js/comun/sesion.js"></script>
+<script src="/js/paginas/index.js"></script>
+</body>
+</html>

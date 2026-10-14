@@ -1,0 +1,8 @@
+utp.citas.citas
+utp.citas.citas.config
+utp.citas.citas.controller
+utp.citas.citas.exception
+utp.citas.citas.model
+utp.citas.citas.repository
+utp.citas.citas.service
+utp.citas.citas.service.impl

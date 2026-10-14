@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital de la Solidaridad - Nuestra Visión</title>
+    <link rel="stylesheet" href="/css/estilo.css">
+    <link rel="stylesheet" href="/css/paginas.css">
+</head>
+<body>
+
+<header class="encabezado-navegacion">
+    <div class="logotipo" id="logotipo-principal">
+        <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+        <h1>Hospital de la Solidaridad</h1>
+    </div>
+
+    <nav class="menu-principal" id="menu-nav">
+        <a href="/index.html">Inicio</a>
+        <a href="/sobre_nosotros.html" class="nav-publico">Sobre nosotros</a>
+        <a href="/vision.html" class="nav-publico enlace-activo">Visión</a>
+        <a href="/mision.html" class="nav-publico">Misión</a>
+
+        <a href="/citas.html" class="nav-paciente oculto">Sacar Cita</a>
+        <a href="/miscitas.html" class="nav-paciente oculto">Mis Citas</a>
+
+        <a href="/especialidades.html" class="nav-admin oculto">Especialidades</a>
+        <a href="/doctores.html" class="nav-admin oculto">Doctores</a>
+        <a href="/horarios.html" class="nav-admin oculto">Horarios</a>
+    </nav>
+
+    <!-- Zona de botones de acceso estructurada -->
+    <div class="botones-acceso" id="zona-sesion">
+        <div id="sesion-visitante" class="botones-acceso">
+            <button type="button" class="boton-blanco" id="btn-abrir-login">Iniciar Sesión</button>
+            <button type="button" class="boton-azul" id="btn-abrir-registro">Registrarse</button>
+        </div>
+        <div id="sesion-usuario" class="botones-acceso oculto">
+            <span class="texto-azul" id="nombre-usuario-sesion"></span>
+            <button type="button" class="boton-blanco" id="btn-cerrar-sesion">Cerrar sesión</button>
+        </div>
+    </div>
+</header>
+
+<main class="contenedor-vision-unico">
+    <div class="tarjeta-vision-flotante">
+        <h2>Nuestra Visión</h2>
+        <p class="resaltado-vision">Consolidarnos como el hospital municipal líder y referente en la zona este de Lima para el año 2028...</p>
+
+        <p>Reconocidos firmemente por la excelencia de nuestros servicios clínico-quirúrgicos y la continua modernización de nuestra infraestructura asistencial. Aspiramos a expandir la cobertura de nuestras especialidades de alta demanda y optimizar los flujos de atención ambulatoria.</p>
+
+        <p>Nuestra meta fundamental es ser identificados por toda la comunidad de Vitarte como la primera y más confiable opción en salud, destacando por la calidez y empatía de nuestro personal médico, la efectividad de nuestros tratamientos y un sólido compromiso con el desarrollo saludable de la sociedad.</p>
+    </div>
+</main>
+
+<footer class="pie-inferior">
+    <div class="contenedor-pie">
+        <div class="columna-footer">
+            <h4>Hospital de la Solidaridad Vitarte</h4>
+            <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
+        </div>
+        <div class="columna-footer">
+            <h4>Navegación</h4>
+            <ul>
+                <li><a href="/index.html">Inicio</a></li>
+                <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
+                <li><a href="/mision.html">Misión</a></li>
+                <li><a href="/vision.html">Visión</a></li>
+            </ul>
+        </div>
+        <div class="columna-footer">
+            <h4>Ayuda</h4>
+            <p>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</p>
+            <br>
+            <p>Preguntas frecuentes</p>
+        </div>
+        <div class="columna-footer">
+            <h4>Contacto</h4>
+            <div class="item-contacto">Vitarte, Lima - Perú</div>
+            <div class="item-contacto">(01) 555-1234</div>
+            <div class="item-contacto">contacto@hospital.pe</div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+<!-- Modales reutilizables de autenticación -->
+<div id="modal-login" class="capa-fondo-modal">
+    <div class="cuadro-emergente">
+        <span class="cerrar-ventana" data-cerrar="modal-login">&times;</span>
+        <h3>Iniciar Sesión</h3>
+        <form id="loginForm" class="formulario-estandar">
+            <input type="email" name="correo" placeholder="Ingresa tu correo" required>
+            <input type="password" name="password" placeholder="Ingresa tu contraseña" required>
+            <button type="submit" class="boton-accion-total">Iniciar Sesión</button>
+        </form>
+    </div>
+</div>
+
+<div id="modal-registro" class="capa-fondo-modal">
+    <div class="cuadro-emergente">
+        <span class="cerrar-ventana" data-cerrar="modal-registro">&times;</span>
+        <h3>Registro</h3>
+        <form id="registerForm" class="formulario-estandar">
+            <div class="fila-input">
+                <input type="text" id="reg-nombres" name="nombres" placeholder="Nombres" maxlength="50" required>
+                <input type="text" id="reg-apellidos" name="apellidos" placeholder="Apellidos" maxlength="50" required>
+            </div>
+            <input type="email" name="correo" placeholder="Correo" maxlength="100" required>
+            <input type="text" id="reg-dni" name="dni" placeholder="DNI" maxlength="8" required>
+            <input type="text" id="reg-telefono" name="telefono" placeholder="Teléfono" maxlength="9">
+            <input type="date" name="fechaNac" required>
+            <input type="text" name="direccion" placeholder="Dirección" maxlength="150" required>
+            <input type="password" name="password" placeholder="Contraseña" maxlength="50" required>
+            <button type="submit" class="boton-accion-total">Crear cuenta</button>
+        </form>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/comun/configuracion.js"></script>
+<script src="/js/comun/utilidades.js"></script>
+<script src="/js/comun/sesion.js"></script>
+</body>
+</html>

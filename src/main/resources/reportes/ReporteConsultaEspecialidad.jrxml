@@ -1,0 +1,163 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="ReporteConsultaEspecialidad" language="java" columnCount="1" pageWidth="618" pageHeight="842" orientation="Landscape" columnWidth="578" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e9b7e006-f9cb-4799-84ce-457c2bcdc0e1">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SistemaCitas"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="idEspecialidad" class="java.lang.Integer"/>
+	<parameter name="estado" class="java.lang.String"/>
+	<parameter name="logo" class="java.io.InputStream"/>
+	<query language="SQL"><![CDATA[SELECT * FROM (
+    SELECT
+        e.nombre AS especialidad,
+        d.id_doctor,
+        d.nombres,
+        d.apellidos,
+        COUNT(DISTINCT c.id_cita) AS total_citas,
+        SUM(pa.monto) AS ingresos,
+        ROW_NUMBER() OVER (
+            PARTITION BY e.id_especialidad
+            ORDER BY COUNT(DISTINCT c.id_cita) DESC
+        ) AS rn
+    FROM especialidades e
+    JOIN doctores d ON d.id_especialidad = e.id_especialidad
+    JOIN citas c ON c.id_doctor = d.id_doctor
+    JOIN pagos pa ON pa.id_cita = c.id_cita
+    WHERE c.estado != 'CANCELADA'
+      AND pa.estado_pago = 'COMPLETADO'
+      AND ($P{idEspecialidad} IS NULL OR e.id_especialidad = $P{idEspecialidad})
+      AND ($P{estado} IS NULL OR c.estado = $P{estado})
+    GROUP BY e.id_especialidad, e.nombre, d.id_doctor, d.nombres, d.apellidos
+) t
+WHERE rn = 1
+ORDER BY ingresos DESC]]></query>
+	<field name="especialidad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="especialidad"/>
+		<property name="com.jaspersoft.studio.field.label" value="especialidad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="especialidades"/>
+	</field>
+	<field name="id_doctor" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id_doctor"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_doctor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="doctores"/>
+	</field>
+	<field name="nombres" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombres"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombres"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="doctores"/>
+	</field>
+	<field name="apellidos" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="apellidos"/>
+		<property name="com.jaspersoft.studio.field.label" value="apellidos"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="doctores"/>
+	</field>
+	<field name="total_citas" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_citas"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_citas"/>
+	</field>
+	<field name="ingresos" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="ingresos"/>
+		<property name="com.jaspersoft.studio.field.label" value="ingresos"/>
+	</field>
+	<field name="rn" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="rn"/>
+		<property name="com.jaspersoft.studio.field.label" value="rn"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="35" splitType="Stretch">
+		<element kind="staticText" uuid="ac3f964e-6583-4a0c-9ccf-ff136437fbc8" x="144" y="2" width="430" height="30" forecolor="#1E3A8A" fontSize="22.0" bold="true">
+			<text><![CDATA[ESTADÍSTICAS DE CITAS POR DOCTOR]]></text>
+		</element>
+		<element kind="image" uuid="eba65ba4-1ee2-4b80-b5cd-e2c360656200" x="0" y="0" width="260" height="32">
+			<expression><![CDATA[$P{logo}]]></expression>
+		</element>
+	</title>
+	<pageHeader height="30" splitType="Stretch">
+		<element kind="staticText" uuid="74ab6907-029c-4ee2-950a-1c43784d6ad6" x="170" y="5" width="410" height="20" forecolor="#6B7280" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Consulta el rendimiento de cada médico según especialidad y estado de cita.]]></text>
+		</element>
+	</pageHeader>
+	<columnHeader height="24" splitType="Stretch">
+		<element kind="staticText" uuid="0d5a2e97-dfd0-4710-bfa5-eab8a7d859e6" mode="Opaque" x="10" y="0" width="70" height="24" forecolor="#FFFFFF" backcolor="#004A99" fontSize="16.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[#]]></text>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="cfd237ab-6014-49c0-ab51-835651d50df3" mode="Opaque" x="80" y="0" width="140" height="24" forecolor="#FFFFFF" backcolor="#004A99" fontSize="16.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Doctor]]></text>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="a464a44c-0188-4686-a755-3bc0bdb1f9c1" mode="Opaque" x="220" y="0" width="130" height="24" forecolor="#FFFFFF" backcolor="#004A99" fontSize="16.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Especialidad]]></text>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="a56e6b7a-d81a-42ef-b28c-53bbe37cd4e8" mode="Opaque" x="350" y="0" width="120" height="24" forecolor="#FFFFFF" backcolor="#004A99" fontSize="16.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[Total Citas]]></text>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="2b713eda-5089-47af-ba44-9715b9eac663" mode="Opaque" x="470" y="0" width="104" height="24" forecolor="#FFFFFF" backcolor="#004A99" fontSize="16.0" removeLineWhenBlank="true" bold="true" hTextAlign="Center">
+			<text><![CDATA[Pagos]]></text>
+			<box>
+				<pen lineWidth="0.5" lineColor="#030303"/>
+			</box>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<element kind="textField" uuid="d909635e-511c-49be-b212-f49724905ca3" x="10" y="0" width="70" height="30" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$V{REPORT_COUNT}]]></expression>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="ebe0db19-ce78-421c-968c-611d2bac8686" x="80" y="0" width="140" height="30" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{apellidos} + ", " + $F{nombres}]]></expression>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="ca1c2138-e132-41ff-a274-d48910568403" x="220" y="0" width="130" height="30" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{especialidad}]]></expression>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="7d11e99a-aef8-44cf-acad-b6d555488e20" x="350" y="0" width="120" height="30" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{total_citas}]]></expression>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+			</element>
+			<element kind="textField" uuid="296d272f-85d3-41ad-9ad0-fcbc088ef495" x="470" y="0" width="104" height="30" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{ingresos}]]></expression>
+				<box>
+					<pen lineWidth="0.5"/>
+				</box>
+			</element>
+		</band>
+	</detail>
+	<columnFooter splitType="Stretch"/>
+	<pageFooter height="60" splitType="Stretch">
+		<element kind="staticText" uuid="27b677a4-e7a4-4d35-a094-cdc7b65fd660" x="0" y="20" width="210" height="24" fontSize="11.0" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Hospital de la Solidaridad - Vitarte]]></text>
+			<box>
+				<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			</box>
+		</element>
+	</pageFooter>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>
