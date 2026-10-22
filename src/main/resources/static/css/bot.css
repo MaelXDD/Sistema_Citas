@@ -1,0 +1,60 @@
+/* Widget del asistente (js/bot/bot-widget.js). Usa las variables de estilo.css. */
+.bot-root { position: fixed; right: 20px; bottom: 20px; z-index: 1050; font-family: inherit; }
+.bot-root[hidden] { display: none; }
+
+.bot-launcher {
+    background: var(--azul-institucional, #004a99); color: #fff; border: 0; border-radius: 999px;
+    padding: 12px 20px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+}
+.bot-launcher:hover { filter: brightness(1.1); }
+.bot-launcher:focus-visible, .bot-btn:focus-visible, .bot-head button:focus-visible {
+    outline: 3px solid var(--amarillo-accion, #ffcc00); outline-offset: 2px;
+}
+
+.bot-panel {
+    position: absolute; right: 0; bottom: 56px; width: 360px; max-width: calc(100vw - 40px);
+    height: 480px; max-height: calc(100vh - 110px); display: flex; flex-direction: column;
+    background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+}
+.bot-panel[hidden] { display: none; }
+
+.bot-head {
+    display: flex; align-items: center; gap: 6px; padding: 10px 12px;
+    background: var(--azul-institucional, #004a99); color: #fff;
+}
+.bot-head h2 { flex: 1; margin: 0; font-size: 1rem; color: #fff; }
+.bot-head button {
+    background: rgba(255, 255, 255, .15); color: #fff; border: 0; border-radius: 6px;
+    padding: 4px 8px; font-size: .75rem; cursor: pointer;
+}
+.bot-head button:hover { background: rgba(255, 255, 255, .3); }
+
+.bot-log { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; background: var(--gris-fondo, #f8f9fa); }
+.bot-msg {
+    max-width: 85%; padding: 8px 12px; border-radius: 12px; background: #fff; color: var(--texto-oscuro, #333);
+    border: 1px solid #e3e6ea; white-space: pre-wrap; overflow-wrap: anywhere; align-self: flex-start;
+}
+.bot-msg.yo { align-self: flex-end; background: var(--azul-institucional, #004a99); color: #fff; border-color: transparent; }
+.bot-msg.espera { color: #777; font-style: italic; }
+.bot-msg.error { background: #fdecea; color: #8a1c13; border-color: #f5c2bd; }
+
+.bot-accion { align-self: stretch; background: #fff; border: 1px solid var(--azul-institucional, #004a99); border-radius: 12px; padding: 10px 12px; }
+.bot-accion p { margin: 0 0 8px; }
+.bot-accion .fila { display: flex; gap: 8px; }
+
+.bot-form { display: flex; gap: 8px; padding: 10px; border-top: 1px solid #e3e6ea; background: #fff; align-items: flex-end; }
+.bot-form textarea {
+    flex: 1; resize: none; border: 1px solid #ccd1d6; border-radius: 8px; padding: 8px 10px;
+    font: inherit; max-height: 90px;
+}
+.bot-btn {
+    background: var(--azul-institucional, #004a99); color: #fff; border: 0; border-radius: 8px;
+    padding: 8px 14px; font-weight: 600; cursor: pointer;
+}
+.bot-btn.sec { background: #e9ecef; color: var(--texto-oscuro, #333); }
+.bot-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+@media (max-width: 480px) {
+    .bot-root { right: 10px; bottom: 10px; }
+    .bot-panel { width: calc(100vw - 20px); }
+}

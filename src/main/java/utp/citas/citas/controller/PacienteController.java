@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import utp.citas.citas.model.Paciente;
+import utp.citas.citas.security.JwtService;
 import utp.citas.citas.service.PacienteService;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +44,9 @@ public class PacienteController {
      * Servicio que contiene la lógica de negocio relacionada con pacientes.
      */
     private final PacienteService pacienteService;
+
+    /** Emite el JWT que usa el bot. */
+    private final JwtService jwtService;
 
     /**
      * Endpoint para listar todos los pacientes registrados.
@@ -82,7 +87,22 @@ public class PacienteController {
             String correo = credenciales.get("correo");
             String password = credenciales.get("password");
             Paciente paciente = pacienteService.login(correo, password);
-            return ResponseEntity.ok(paciente);
+
+            // Misma forma que antes (los campos del paciente) + "token" para el bot.
+            // Si bot.jwt.secret no está configurado, token = null y todo sigue como antes.
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("idPaciente", paciente.getIdPaciente());
+            body.put("nombres", paciente.getNombres());
+            body.put("apellidos", paciente.getApellidos());
+            body.put("correo", paciente.getCorreo());
+            body.put("dni", paciente.getDni());
+            body.put("telefono", paciente.getTelefono());
+            body.put("fechaNac", paciente.getFechaNac());
+            body.put("direccion", paciente.getDireccion());
+            body.put("activo", paciente.getActivo());
+            body.put("rol", paciente.getRol());
+            body.put("token", jwtService.emitir(paciente));
+            return ResponseEntity.ok(body);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("mensaje", e.getMessage()));
         }
