@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### bot-core (Python) ###
+bot-core/.env
+bot-core/.venv/
+bot-core/venv/
+__pycache__/
+*.pyc
+.pytest_cache/

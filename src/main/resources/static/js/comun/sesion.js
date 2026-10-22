@@ -12,6 +12,10 @@ function obtenerPacienteSesion() {
 function cerrarSesion() {
     sessionStorage.removeItem('paciente');
     sessionStorage.removeItem('citaPendiente');
+    sessionStorage.removeItem('botToken');
+    sessionStorage.removeItem('botConv');
+    sessionStorage.removeItem('botLog');
+    sessionStorage.removeItem('botOpen');
     window.location.href = '/index.html';
 }
 
@@ -94,10 +98,14 @@ function inicializarAutenticacion() {
 
                 if (res.ok) {
                     const paciente = await res.json();
+                    // El JWT va aparte: no se guarda dentro del objeto paciente.
+                    if (paciente.token) sessionStorage.setItem('botToken', paciente.token);
+                    delete paciente.token;
                     sessionStorage.setItem('paciente', JSON.stringify(paciente));
                     toggleModal('modal-login');
                     formLogin.reset();
                     renderizarHeaderSesion();
+                    window.BotWidget?.refresh();
 
                     await Swal.fire({
                         icon: 'success',
