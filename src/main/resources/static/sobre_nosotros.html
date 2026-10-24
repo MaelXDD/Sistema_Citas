@@ -3,58 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospital de la Solidaridad - Sobre Nosotros</title>
+    <title>Sobre Nosotros - Hospital de la Solidaridad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/estilo.css">
-    <link rel="stylesheet" href="/css/paginas.css">
+    <link rel="stylesheet" href="/css/paginas/sobre_nosotros.css">
     <link rel="stylesheet" href="/css/bot.css">
 </head>
 <body>
 
 <header class="encabezado-navegacion">
-    <div class="logotipo" id="logotipo-principal">
+    <div class="logotipo" id="logotipo-hospital">
         <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
         <h1>Hospital de la Solidaridad</h1>
     </div>
 
+    <!-- Barra de Navegación -->
     <nav class="menu-principal" id="menu-nav">
         <a href="/index.html">Inicio</a>
-        <a href="/sobre_nosotros.html" class="nav-publico enlace-activo">Sobre nosotros</a>
-        <a href="/vision.html" class="nav-publico">Visión</a>
-        <a href="/mision.html" class="nav-publico">Misión</a>
 
-        <a href="/citas.html" class="nav-paciente oculto">Sacar Cita</a>
-        <a href="/miscitas.html" class="nav-paciente oculto">Mis Citas</a>
+        <!-- Enlaces públicos (Visitantes) -->
+        <a href="/sobre_nosotros.html" class="enlace-nav nav-publico enlace-activo">Sobre nosotros</a>
+        <a href="/vision.html" class="enlace-nav nav-publico">Visión</a>
+        <a href="/mision.html" class="enlace-nav nav-publico">Misión</a>
 
-        <a href="/especialidades.html" class="nav-admin oculto">Especialidades</a>
-        <a href="/doctores.html" class="nav-admin oculto">Doctores</a>
-        <a href="/horarios.html" class="nav-admin oculto">Horarios</a>
+        <!-- Enlaces para Pacientes (Autenticados) -->
+        <a href="/citas.html" class="enlace-nav nav-paciente oculto">Sacar Cita</a>
+        <a href="/miscitas.html" class="enlace-nav nav-paciente oculto">Mis Citas</a>
+
+        <!-- Enlaces para Administradores -->
+        <a href="/especialidades.html" class="enlace-nav nav-admin oculto">Especialidades</a>
+        <a href="/doctores.html" class="enlace-nav nav-admin oculto">Doctores</a>
+        <a href="/horarios.html" class="enlace-nav nav-admin oculto">Horarios</a>
+        <a href="/estadisticas.html" class="enlace-nav nav-admin oculto">Estadísticas</a>
     </nav>
 
-    <!-- Zona de botones de acceso estructurada -->
+    <!-- Zona de sesión -->
     <div class="botones-acceso" id="zona-sesion">
-        <div id="sesion-visitante" class="botones-acceso">
-            <button type="button" class="boton-blanco" id="btn-abrir-login">Iniciar Sesión</button>
-            <button type="button" class="boton-azul" id="btn-abrir-registro">Registrarse</button>
+        <div id="caja-sesion-invitado">
+            <button class="boton-blanco" id="btn-abrir-login">Iniciar Sesión</button>
+            <button class="boton-azul" id="btn-abrir-registro">Registrarse</button>
         </div>
-        <div id="sesion-usuario" class="botones-acceso oculto">
+        <div id="caja-sesion-usuario" class="oculto">
             <span class="texto-azul" id="nombre-usuario-sesion"></span>
-            <button type="button" class="boton-blanco" id="btn-cerrar-sesion">Cerrar sesión</button>
+            <button class="boton-blanco" id="btn-cerrar-sesion">Cerrar sesión</button>
         </div>
     </div>
 </header>
 
-<main class="contenedor-nosotros-unico">
-    <div class="banner-institucional">
-        <h2>Nuestra Institución</h2>
-    </div>
+<main class="contenido-pagina">
 
-    <div class="bloque-texto-completo">
-        <p>El <strong>Hospital de la Solidaridad de Vitarte</strong> es un referente de salud en el distrito de Ate, dedicado a brindar servicios médicos especializados con un alto sentido de compromiso social. Nuestra sede se distingue por ofrecer una atención integral que combina tecnología médica moderna con un equipo de profesionales altamente calificados.</p>
+    <!-- ===== Presentación ===== -->
+    <section class="nosotros-portada seccion fondo-suave">
+        <div class="contenedor-seccion dos-columnas">
+            <div class="nosotros-texto">
+                <span class="etiqueta">Conoce nuestra institución</span>
+                <h1>Sobre Nosotros</h1>
+                <p class="nosotros-subtitulo">Hospital de la Solidaridad · Sede Vitarte</p>
+                <p>El Hospital de la Solidaridad de Vitarte es un referente de salud en el distrito de Ate. Brindamos servicios médicos especializados con un equipo de profesionales altamente calificados.</p>
+                <p>Trabajamos de la mano con la comunidad para ser el aliado de tu salud y la de tu familia, con seguridad y confianza en cada consulta.</p>
 
-        <p>Nos enfocamos en facilitar el acceso a la salud para todas las familias de la zona este de Lima, garantizando tarifas sociales y una amplia gama de especialidades. Nuestra infraestructura está diseñada para atender de manera eficiente la alta demanda local, priorizando siempre la calidez humana y la prontitud en el diagnóstico y tratamiento de nuestros pacientes.</p>
+                <ul class="rejilla col-3 rejilla-datos">
+                    <li class="nosotros-dato tarjeta">
+                        <span class="icono-caja"><img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/pacientes_icon.png" alt=""></span>
+                        <div>
+                            <strong>+150,000 Pacientes</strong>
+                            <p>Atendidos anualmente con trato digno y solidario en Ate.</p>
+                        </div>
+                    </li>
+                    <li class="nosotros-dato tarjeta">
+                        <span class="icono-caja"><img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/especialidades_icon.png" alt=""></span>
+                        <div>
+                            <strong>Más de 25 Especialidades</strong>
+                            <p>Consultas médicas, laboratorio y diagnóstico por imágenes.</p>
+                        </div>
+                    </li>
+                    <li class="nosotros-dato tarjeta">
+                        <span class="icono-caja"><img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/atencion_icon.png" alt=""></span>
+                        <div>
+                            <strong>Atención Preferente</strong>
+                            <p>Ventanilla única para adultos mayores.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
 
-        <p>Desde nuestra fundación, trabajamos de la mano con la comunidad para mejorar los indicadores de bienestar, convirtiéndonos en el aliado estratégico de tu salud y la de los tuyos, brindando seguridad y confianza en cada consulta.</p>
-    </div>
+            <figure class="nosotros-foto tarjeta tarjeta-sombra">
+                <img class="foto" src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/sobrenosotros1.jpeg" alt="Personal de farmacia atendiendo a un paciente">
+                <figcaption>
+                    <strong>Farmacia y Tópico Continuo</strong>
+                    Medicamentos genéricos de calidad y atención rápida para cada vecino.
+                </figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- ===== ¿Por qué elegirnos? ===== -->
+    <section class="seccion fondo-claro">
+        <div class="contenedor-seccion">
+            <div class="nosotros-titulo">
+                <span class="sobretitulo">Nuestros pilares</span>
+                <h2>¿Por qué elegirnos?</h2>
+                <p>Comprometidos día a día con la salud preventiva, oportuna y al alcance de todas las familias de Vitarte.</p>
+            </div>
+
+            <ul class="rejilla col-3">
+                <li class="nosotros-pilar tarjeta-relleno tarjeta-vertical tarjeta tarjeta-animada">
+                    <span class="icono-caja icono-grande"><i class="bi bi-people" aria-hidden="true"></i></span>
+                    <h3>Atención cercana</h3>
+                    <p>Trato humano, empático y prioritario para vecinos y adultos mayores, asegurando una experiencia cálida en cada etapa.</p>
+                    <strong class="nota-tarjeta">Sin trámites engorrosos</strong>
+                </li>
+                <li class="nosotros-pilar tarjeta-relleno tarjeta-vertical tarjeta tarjeta-animada">
+                    <span class="icono-caja icono-grande"><i class="bi bi-person-badge" aria-hidden="true"></i></span>
+                    <h3>Profesionales calificados</h3>
+                    <p>Médicos colegiados especialistas con amplia trayectoria clínica en hospitales del país y actualización científica continua.</p>
+                    <strong class="nota-tarjeta">Colegiatura verificada</strong>
+                </li>
+                <li class="nosotros-pilar tarjeta-relleno tarjeta-vertical tarjeta tarjeta-animada">
+                    <span class="icono-caja icono-grande"><i class="bi bi-house-heart" aria-hidden="true"></i></span>
+                    <h3>Compromiso con la comunidad</h3>
+                    <p>Salud accesible, citas oportunas y vocación social constante en beneficio directo de la población de Ate Vitarte.</p>
+                    <strong class="nota-tarjeta">Tarifas solidarias</strong>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ===== Nuestro compromiso ===== -->
+    <section class="seccion">
+        <div class="contenedor-seccion">
+            <div class="nosotros-titulo">
+                <h2>Nuestro compromiso</h2>
+                <p>Infraestructura adecuada y vocación de servicio para proteger la salud de quienes más lo necesitan.</p>
+            </div>
+
+            <div class="nosotros-calidad tarjeta tarjeta-sombra">
+                <div class="nosotros-calidad-texto">
+                    <span class="etiqueta">Calidad asistencial</span>
+                    <h3>Atención médica de calidad</h3>
+                    <p>Brindamos servicios médicos especializados, con enfoque preventivo y humano, pensados para las familias de la zona este de Lima.</p>
+                    <ul class="nosotros-lista">
+                        <li>Acceso equitativo a la salud</li>
+                        <li>Atención cercana y humana</li>
+                        <li>Ética profesional en cada atención</li>
+                    </ul>
+                </div>
+                <figure class="nosotros-calidad-foto">
+                    <img class="foto" src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/sobrenosotros2.jpeg" alt="Sala del tópico de urgencias de la sede Vitarte">
+                    <figcaption>
+                        <strong>Sede Vitarte · Tópico de Urgencias y Consultorios</strong>
+                        <span>Carretera Central Km. 7.5</span>
+                    </figcaption>
+                </figure>
+            </div>
+
+            <ul class="rejilla col-2">
+                <li class="tarjeta-relleno tarjeta-vertical tarjeta tarjeta-animada">
+                    <span class="icono-caja"><i class="bi bi-heart-pulse" aria-hidden="true"></i></span>
+                    <h3>Salud para todos</h3>
+                    <p>Creemos en una salud accesible y equitativa. Nuestro trabajo se guía por el compromiso social con la comunidad de Vitarte.</p>
+                    <strong class="nota-tarjeta">Precios justos aprobados por el Concejo Metropolitano</strong>
+                </li>
+                <li class="tarjeta-relleno tarjeta-vertical tarjeta tarjeta-animada">
+                    <span class="icono-caja"><i class="bi bi-calendar2-check" aria-hidden="true"></i></span>
+                    <h3>Innovamos para ti</h3>
+                    <p>Ahora puedes agendar tu cita desde casa, de forma simple y sin hacer colas. Nuestro sistema de citas en línea está pensado para que todos puedan usarlo, especialmente los adultos mayores.</p>
+                    <strong class="nota-tarjeta">Sin traslados innecesarios ni esperas en ventanilla</strong>
+                </li>
+            </ul>
+        </div>
+    </section>
+
 </main>
 
 <footer class="pie-inferior">
@@ -67,6 +189,7 @@
             <h4>Navegación</h4>
             <ul>
                 <li><a href="/index.html">Inicio</a></li>
+                <li><a href="/index.html#especialidadesdest">Especialidades</a></li>
                 <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
                 <li><a href="/mision.html">Misión</a></li>
                 <li><a href="/vision.html">Visión</a></li>
@@ -90,10 +213,9 @@
     </div>
 </footer>
 
-<!-- Modales de autenticación -->
-<div id="modal-login" class="capa-fondo-modal">
+<div id="modal-login" class="capa-fondo-modal oculto">
     <div class="cuadro-emergente">
-        <span class="cerrar-ventana" data-cerrar="modal-login">&times;</span>
+        <span class="cerrar-ventana" id="btn-cerrar-login">&times;</span>
         <h3>Iniciar Sesión</h3>
         <form id="loginForm" class="formulario-estandar">
             <input type="email" name="correo" placeholder="Ingresa tu correo" required>
@@ -103,9 +225,9 @@
     </div>
 </div>
 
-<div id="modal-registro" class="capa-fondo-modal">
+<div id="modal-registro" class="capa-fondo-modal oculto">
     <div class="cuadro-emergente">
-        <span class="cerrar-ventana" data-cerrar="modal-registro">&times;</span>
+        <span class="cerrar-ventana" id="btn-cerrar-registro">&times;</span>
         <h3>Registro</h3>
         <form id="registerForm" class="formulario-estandar">
             <div class="fila-input">

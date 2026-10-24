@@ -3,56 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospital de la Solidaridad - Nuestra Misión</title>
+    <title>Misión - Hospital de la Solidaridad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/estilo.css">
-    <link rel="stylesheet" href="/css/paginas.css">
+    <link rel="stylesheet" href="/css/paginas/mision.css">
     <link rel="stylesheet" href="/css/bot.css">
 </head>
 <body>
 
 <header class="encabezado-navegacion">
-    <div class="logotipo" id="logotipo-principal">
+    <div class="logotipo" id="logotipo-hospital">
         <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
         <h1>Hospital de la Solidaridad</h1>
     </div>
 
+    <!-- Barra de Navegación -->
     <nav class="menu-principal" id="menu-nav">
         <a href="/index.html">Inicio</a>
-        <a href="/sobre_nosotros.html" class="nav-publico">Sobre nosotros</a>
-        <a href="/vision.html" class="nav-publico">Visión</a>
-        <a href="/mision.html" class="nav-publico enlace-activo">Misión</a>
 
-        <a href="/citas.html" class="nav-paciente oculto">Sacar Cita</a>
-        <a href="/miscitas.html" class="nav-paciente oculto">Mis Citas</a>
+        <!-- Enlaces públicos (Visitantes) -->
+        <a href="/sobre_nosotros.html" class="enlace-nav nav-publico">Sobre nosotros</a>
+        <a href="/vision.html" class="enlace-nav nav-publico">Visión</a>
+        <a href="/mision.html" class="enlace-nav nav-publico enlace-activo">Misión</a>
 
-        <a href="/especialidades.html" class="nav-admin oculto">Especialidades</a>
-        <a href="/doctores.html" class="nav-admin oculto">Doctores</a>
-        <a href="/horarios.html" class="nav-admin oculto">Horarios</a>
+        <!-- Enlaces para Pacientes (Autenticados) -->
+        <a href="/citas.html" class="enlace-nav nav-paciente oculto">Sacar Cita</a>
+        <a href="/miscitas.html" class="enlace-nav nav-paciente oculto">Mis Citas</a>
+
+        <!-- Enlaces para Administradores -->
+        <a href="/especialidades.html" class="enlace-nav nav-admin oculto">Especialidades</a>
+        <a href="/doctores.html" class="enlace-nav nav-admin oculto">Doctores</a>
+        <a href="/horarios.html" class="enlace-nav nav-admin oculto">Horarios</a>
+        <a href="/estadisticas.html" class="enlace-nav nav-admin oculto">Estadísticas</a>
     </nav>
 
-    <!-- Zona de botones de acceso estructurada -->
+    <!-- Zona de sesión -->
     <div class="botones-acceso" id="zona-sesion">
-        <div id="sesion-visitante" class="botones-acceso">
-            <button type="button" class="boton-blanco" id="btn-abrir-login">Iniciar Sesión</button>
-            <button type="button" class="boton-azul" id="btn-abrir-registro">Registrarse</button>
+        <div id="caja-sesion-invitado">
+            <button class="boton-blanco" id="btn-abrir-login">Iniciar Sesión</button>
+            <button class="boton-azul" id="btn-abrir-registro">Registrarse</button>
         </div>
-        <div id="sesion-usuario" class="botones-acceso oculto">
+        <div id="caja-sesion-usuario" class="oculto">
             <span class="texto-azul" id="nombre-usuario-sesion"></span>
-            <button type="button" class="boton-blanco" id="btn-cerrar-sesion">Cerrar sesión</button>
+            <button class="boton-blanco" id="btn-cerrar-sesion">Cerrar sesión</button>
         </div>
     </div>
 </header>
 
-<section class="bloque-bienvenida bloque-mision-invertido">
-    <div class="imagen-bienvenida">
-        <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/hospital2.jpg" alt="Atención médica Hospital de la Solidaridad Vitarte">
-    </div>
-    <div class="texto-bienvenida">
-        <h2>Nuestra Misión</h2>
-        <p>Somos una institución de salud descentralizada comprometida en brindar atención médica especializada y oportuna a la población del distrito de Ate y sus alrededores. Nuestra misión es garantizar un acceso equitativo a servicios médicos de calidad, promoviendo la prevención, el diagnóstico oportuno y el tratamiento eficiente de las enfermedades bajo un esquema de tarifas sociales y un trato profundamente humano.</p>
-        <p>Buscamos aliviar la carga de la salud pública local trabajando con ética profesional, optimizando la gestión de nuestras especialidades médicas y asegurando que cada paciente reciba una atención digna que proteja su bienestar integral.</p>
-    </div>
-</section>
+<main class="contenido-pagina">
+
+    <!-- ===== Presentación ===== -->
+    <section class="seccion">
+        <div class="contenedor-seccion dos-columnas">
+            <div class="mision-texto">
+                <span class="etiqueta">Hospital de la Solidaridad · Sede Vitarte</span>
+                <h1>Nuestra Misión Institucional</h1>
+                <blockquote class="mision-frase">“Garantizar un acceso equitativo a servicios médicos de calidad para la población de Ate y sus alrededores.”</blockquote>
+                <p>Somos una institución de salud comprometida con brindar atención médica especializada y oportuna. Promovemos la prevención, el diagnóstico oportuno y el tratamiento eficiente de las enfermedades, siempre con un trato profundamente humano.</p>
+
+                <ul class="rejilla col-3 rejilla-datos">
+                    <li class="mision-dato tarjeta">
+                        <strong>35+</strong>
+                        <span>Especialidades Médicas</span>
+                    </li>
+                    <li class="mision-dato tarjeta">
+                        <strong>100%</strong>
+                        <span>Vocación Solidaria</span>
+                    </li>
+                    <li class="mision-dato tarjeta">
+                        <strong>Ate</strong>
+                        <span>Y Lima Este Integral</span>
+                    </li>
+                </ul>
+            </div>
+
+            <figure class="mision-foto">
+                <div class="mision-foto-marco tarjeta tarjeta-sombra">
+                    <img class="foto" src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/mision_vista.jpeg" alt="Equipo de tomografía de la Unidad de Diagnóstico por Imágenes">
+                    <p class="mision-foto-sello"><i class="bi bi-activity" aria-hidden="true"></i> Unidad de Diagnóstico por Imágenes de Alta Resolución</p>
+                </div>
+                <figcaption>Equipamiento de última generación al alcance de toda la comunidad en Vitarte.</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- ===== Pilares ===== -->
+    <section class="seccion fondo-suave">
+        <div class="contenedor-seccion">
+            <div class="cabecera-seccion">
+                <div>
+                    <span class="sobretitulo">Fundamento del servicio</span>
+                    <h2>Nuestros 4 Pilares Fundamentales</h2>
+                </div>
+                <p>Cada servicio que ofrecemos se sostiene en directrices claras que priorizan la dignidad y recuperación del paciente.</p>
+            </div>
+
+            <ul class="rejilla col-2">
+                <li class="mision-pilar tarjeta-relleno tarjeta tarjeta-animada">
+                    <span class="icono-caja icono-redondo"><i class="bi bi-shield-plus" aria-hidden="true"></i></span>
+                    <div>
+                        <span class="sobretitulo">Pilar 01</span>
+                        <h3>Prevención</h3>
+                        <p>Cuidamos tu salud antes de que aparezca la enfermedad, con chequeos preventivos, vacunación y orientación para ti y tu familia.</p>
+                    </div>
+                </li>
+                <li class="mision-pilar tarjeta-relleno tarjeta tarjeta-animada">
+                    <span class="icono-caja icono-redondo"><i class="bi bi-clipboard2-pulse" aria-hidden="true"></i></span>
+                    <div>
+                        <span class="sobretitulo">Pilar 02</span>
+                        <h3>Diagnóstico Oportuno</h3>
+                        <p>Detectamos a tiempo para tratar mejor. Contamos con laboratorio clínico automatizado, ecografía y tomografía de alta resolución.</p>
+                    </div>
+                </li>
+                <li class="mision-pilar tarjeta-relleno tarjeta tarjeta-animada">
+                    <span class="icono-caja icono-redondo"><i class="bi bi-prescription2" aria-hidden="true"></i></span>
+                    <div>
+                        <span class="sobretitulo">Pilar 03</span>
+                        <h3>Tratamiento Eficiente</h3>
+                        <p>Atención efectiva con médicos especialistas debidamente certificados y farmacia institucional con medicamentos esenciales a tarifas sociales justas.</p>
+                    </div>
+                </li>
+                <li class="mision-pilar tarjeta-relleno tarjeta tarjeta-animada">
+                    <span class="icono-caja icono-redondo"><i class="bi bi-person-hearts" aria-hidden="true"></i></span>
+                    <div>
+                        <span class="sobretitulo">Pilar 04</span>
+                        <h3>Trato Humano</h3>
+                        <p>Te atendemos con respeto, paciencia, calidez y empatía desde tu llegada. Nuestro personal asiste activamente a adultos mayores y personas vulnerables.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ===== Valores ===== -->
+    <section class="seccion">
+        <div class="contenedor-seccion">
+            <div class="cabecera-seccion">
+                <div>
+                    <span class="sobretitulo">Ética y conducta</span>
+                    <h2>Nuestros Valores Institucionales</h2>
+                </div>
+            </div>
+
+            <ul class="rejilla col-2">
+                <li class="mision-valor tarjeta-relleno tarjeta">
+                    <span class="icono-caja icono-redondo"><i class="bi bi-person-heart" aria-hidden="true"></i></span>
+                    <div>
+                        <h3>Respeto</h3>
+                        <p>Cada paciente es escuchado, valorado y tratado con la más alta dignidad humana sin ninguna distinción.</p>
+                    </div>
+                </li>
+                <li class="mision-valor tarjeta-relleno tarjeta">
+                    <span class="icono-caja icono-redondo"><i class="bi bi-chat-heart" aria-hidden="true"></i></span>
+                    <div>
+                        <h3>Empatía</h3>
+                        <p>Entendemos lo que sientes y te acompañamos con comprensión y serenidad durante todo tu proceso médico.</p>
+                    </div>
+                </li>
+                <li class="mision-valor tarjeta-relleno tarjeta">
+                    <span class="icono-caja icono-redondo"><i class="bi bi-shield-check" aria-hidden="true"></i></span>
+                    <div>
+                        <h3>Responsabilidad</h3>
+                        <p>Cuidamos tu salud con máxima rigurosidad técnica, puntualidad en citas y estricta confidencialidad médica.</p>
+                    </div>
+                </li>
+                <li class="mision-valor tarjeta-relleno tarjeta">
+                    <span class="icono-caja icono-redondo"><i class="bi bi-patch-check" aria-hidden="true"></i></span>
+                    <div>
+                        <h3>Ética Profesional</h3>
+                        <p>Actuamos siempre con honestidad, transparencia en costos y apego a las buenas prácticas sanitarias mundiales.</p>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="mision-cita tarjeta tarjeta-sombra">
+                <span class="icono-caja icono-redondo"><i class="bi bi-quote" aria-hidden="true"></i></span>
+                <blockquote>“Trabajamos para aliviar la carga de la salud pública local, optimizando nuestras especialidades para que cada paciente reciba una atención digna que proteja su bienestar integral.”</blockquote>
+                <p>Municipalidad Metropolitana de Lima · SISOL Salud Sede Vitarte</p>
+            </div>
+
+            <!-- Llamado a la acción -->
+            <div class="mision-cta panel-oscuro">
+                <div>
+                    <span class="sobretitulo">¿Listo para atenderte hoy?</span>
+                    <h2>Agenda tu cita médica con nuestros especialistas</h2>
+                    <p>Atención preferente por orden de llegada o cita reservada en línea para mayor comodidad de tu familia.</p>
+                </div>
+                <div class="mision-cta-botones">
+                    <a class="btn-celeste" href="/citas.html"><i class="bi bi-calendar-check" aria-hidden="true"></i> Reservar Cita Médica</a>
+                    <a class="btn-blanco" href="/vision.html">Conocer Nuestra Visión <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
 
 <footer class="pie-inferior">
     <div class="contenedor-pie">
@@ -64,6 +212,7 @@
             <h4>Navegación</h4>
             <ul>
                 <li><a href="/index.html">Inicio</a></li>
+                <li><a href="/index.html#especialidadesdest">Especialidades</a></li>
                 <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
                 <li><a href="/mision.html">Misión</a></li>
                 <li><a href="/vision.html">Visión</a></li>
@@ -87,10 +236,9 @@
     </div>
 </footer>
 
-<!-- Modales de autenticación -->
-<div id="modal-login" class="capa-fondo-modal">
+<div id="modal-login" class="capa-fondo-modal oculto">
     <div class="cuadro-emergente">
-        <span class="cerrar-ventana" data-cerrar="modal-login">&times;</span>
+        <span class="cerrar-ventana" id="btn-cerrar-login">&times;</span>
         <h3>Iniciar Sesión</h3>
         <form id="loginForm" class="formulario-estandar">
             <input type="email" name="correo" placeholder="Ingresa tu correo" required>
@@ -100,9 +248,9 @@
     </div>
 </div>
 
-<div id="modal-registro" class="capa-fondo-modal">
+<div id="modal-registro" class="capa-fondo-modal oculto">
     <div class="cuadro-emergente">
-        <span class="cerrar-ventana" data-cerrar="modal-registro">&times;</span>
+        <span class="cerrar-ventana" id="btn-cerrar-registro">&times;</span>
         <h3>Registro</h3>
         <form id="registerForm" class="formulario-estandar">
             <div class="fila-input">

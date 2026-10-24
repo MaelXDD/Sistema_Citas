@@ -1,60 +1,164 @@
-/* Widget del asistente (js/bot/bot-widget.js). Usa las variables de estilo.css. */
+/* ===== CONTENEDOR GENERAL ===== */
 .bot-root { position: fixed; right: 20px; bottom: 20px; z-index: 1050; font-family: inherit; }
 .bot-root[hidden] { display: none; }
 
+/* ===== BOTÓN FLOTANTE ===== */
 .bot-launcher {
-    background: var(--azul-institucional, #004a99); color: #fff; border: 0; border-radius: 999px;
-    padding: 12px 20px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+    position: relative;
+    background: var(--azul-noche, #022c44); color: #fff;
+    border: 2px solid var(--azul-noche, #022c44); border-radius: 999px;
+    padding: 14px 24px; font-size: 1rem; font-weight: 800; cursor: pointer;
+    box-shadow: 4px 4px 0 var(--celeste-hospital, #00d4ff);
+    transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
 }
-.bot-launcher:hover { filter: brightness(1.1); }
-.bot-launcher:focus-visible, .bot-btn:focus-visible, .bot-head button:focus-visible {
+.bot-launcher:hover {
+    background: var(--azul-institucional, #004a99); border-color: var(--azul-institucional, #004a99);
+    transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--celeste-hospital, #00d4ff);
+}
+
+/* ===== BOTÓN FLOTANTE: ICONO DE CHAT ===== */
+.bot-launcher::before {
+    content: ""; display: inline-block; width: 18px; height: 18px; margin-right: 8px; vertical-align: -3px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3E%3Cpath d='M2 1a1 1 0 0 0-1 1v13l3-3h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* ===== BOTÓN FLOTANTE: ANILLO QUE PULSA ===== */
+.bot-launcher::after {
+    content: ""; position: absolute; inset: -2px; border-radius: 999px; pointer-events: none;
+    border: 2px solid var(--celeste-hospital, #00d4ff); opacity: 0;
+    animation: bot-anillo 2s ease-out 1s 3;
+}
+@keyframes bot-anillo {
+    0% { opacity: .9; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.18, 1.6); }
+}
+
+/* ===== FOCO DE BOTONES (ACCESIBILIDAD) ===== */
+.bot-launcher:focus-visible, .bot-btn:focus-visible {
     outline: 3px solid var(--amarillo-accion, #ffcc00); outline-offset: 2px;
 }
 
+/* ===== PANEL DEL CHAT ===== */
 .bot-panel {
-    position: absolute; right: 0; bottom: 56px; width: 360px; max-width: calc(100vw - 40px);
-    height: 480px; max-height: calc(100vh - 110px); display: flex; flex-direction: column;
-    background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+    position: absolute; right: 0; bottom: 62px; width: 380px; max-width: calc(100vw - 40px);
+    height: 520px; max-height: calc(100vh - 110px); display: flex; flex-direction: column;
+    background: #fff; border: 2px solid var(--celeste-borde, #bfe9f5); border-radius: 12px; overflow: hidden;
+    box-shadow: 6px 6px 0 var(--celeste-hospital, #00d4ff), 0 12px 30px rgba(2, 44, 68, .25);
+    animation: bot-abrir .2s ease;
 }
 .bot-panel[hidden] { display: none; }
 
-.bot-head {
-    display: flex; align-items: center; gap: 6px; padding: 10px 12px;
-    background: var(--azul-institucional, #004a99); color: #fff;
+@keyframes bot-abrir {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-.bot-head h2 { flex: 1; margin: 0; font-size: 1rem; color: #fff; }
-.bot-head button {
-    background: rgba(255, 255, 255, .15); color: #fff; border: 0; border-radius: 6px;
-    padding: 4px 8px; font-size: .75rem; cursor: pointer;
-}
-.bot-head button:hover { background: rgba(255, 255, 255, .3); }
 
-.bot-log { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; background: var(--gris-fondo, #f8f9fa); }
-.bot-msg {
-    max-width: 85%; padding: 8px 12px; border-radius: 12px; background: #fff; color: var(--texto-oscuro, #333);
-    border: 1px solid #e3e6ea; white-space: pre-wrap; overflow-wrap: anywhere; align-self: flex-start;
+/* ===== CABECERA ===== */
+.bot-head {
+    display: flex; align-items: center; gap: 6px; padding: 12px 14px;
+    background: var(--azul-noche, #022c44); color: #fff;
+    border-bottom: 3px solid var(--celeste-hospital, #00d4ff);
 }
-.bot-msg.yo { align-self: flex-end; background: var(--azul-institucional, #004a99); color: #fff; border-color: transparent; }
-.bot-msg.espera { color: #777; font-style: italic; }
+.bot-head h2 {
+    flex: 1; min-width: 0; margin: 0; font-size: .95rem; font-weight: 800; line-height: 1.25; color: #fff;
+    display: flex; align-items: center; gap: 8px;
+}
+
+/* ===== CABECERA: PUNTITO EN LÍNEA ===== */
+.bot-head h2::before {
+    content: ""; flex-shrink: 0; width: 9px; height: 9px; border-radius: 50%;
+    background: var(--celeste-hospital, #00d4ff); box-shadow: 0 0 0 3px rgba(0, 212, 255, .28);
+}
+
+/* ===== CABECERA: BOTONES OCULTOS (NUEVA, BORRAR DATOS, CERRAR) ===== */
+.bot-head button { display: none; }
+
+/* ===== ÁREA DE MENSAJES (FONDO CON CRUCES) ===== */
+.bot-log {
+    flex: 1; overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 10px;
+    background: var(--celeste-suave, #eafaff); scrollbar-width: thin; scrollbar-color: var(--celeste-borde, #bfe9f5) transparent;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 18v12M18 24h12' stroke='%2300d4ff' stroke-opacity='.16' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-size: 48px 48px;
+}
+
+/* ===== BURBUJAS DE MENSAJE ===== */
+.bot-msg {
+    max-width: 85%; padding: 10px 14px; border-radius: 14px 14px 14px 4px; background: #fff;
+    color: var(--azul-noche, #022c44); font-size: 1rem; line-height: 1.5;
+    border: 1.5px solid var(--celeste-borde, #bfe9f5); white-space: pre-wrap; overflow-wrap: anywhere; align-self: flex-start;
+}
+.bot-msg.yo {
+    align-self: flex-end; border-radius: 14px 14px 4px 14px;
+    background: var(--azul-noche, #022c44); color: #fff; border-color: transparent;
+}
+.bot-msg.espera { color: #5b6b78; font-style: italic; }
 .bot-msg.error { background: #fdecea; color: #8a1c13; border-color: #f5c2bd; }
 
-.bot-accion { align-self: stretch; background: #fff; border: 1px solid var(--azul-institucional, #004a99); border-radius: 12px; padding: 10px 12px; }
-.bot-accion p { margin: 0 0 8px; }
+/* ===== ETIQUETAS "TÚ" Y "AVISO" ===== */
+.bot-msg.yo::before,
+.bot-msg.error::before {
+    display: block; margin-bottom: 2px;
+    font-size: .7rem; font-weight: 800; letter-spacing: .5px; text-transform: uppercase;
+}
+.bot-msg.yo::before { content: "Tú"; color: var(--celeste-hospital, #00d4ff); }
+.bot-msg.error::before { content: "Aviso"; color: #8a1c13; }
+
+/* ===== AVATAR DEL ASISTENTE (CARITA FELIZ) ===== */
+.bot-msg:not(.yo):not(.error) {
+    position: relative; margin-left: 36px;
+}
+.bot-msg:not(.yo):not(.error)::before {
+    content: ""; position: absolute; left: -36px; top: 0; width: 28px; height: 28px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%2300d4ff'/%3E%3Ccircle cx='11' cy='13' r='2.2' fill='%23022c44'/%3E%3Ccircle cx='21' cy='13' r='2.2' fill='%23022c44'/%3E%3Cpath d='M9 19c1.6 4.2 12.4 4.2 14 0' stroke='%23022c44' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* ===== CONFIRMACIONES DE ACCIONES (RESERVAR / CANCELAR) ===== */
+.bot-accion {
+    align-self: stretch; background: #fff; border: 2px solid var(--azul-noche, #022c44); border-radius: 12px;
+    padding: 12px 14px; color: var(--azul-noche, #022c44); font-size: 1rem; line-height: 1.5;
+    box-shadow: 4px 4px 0 var(--celeste-hospital, #00d4ff);
+}
+.bot-accion p { margin: 0 0 10px; }
 .bot-accion .fila { display: flex; gap: 8px; }
 
-.bot-form { display: flex; gap: 8px; padding: 10px; border-top: 1px solid #e3e6ea; background: #fff; align-items: flex-end; }
+/* ===== CAJA DE ESCRITURA ===== */
+.bot-form {
+    display: flex; gap: 8px; padding: 12px; border-top: 2px solid var(--celeste-borde, #bfe9f5);
+    background: #fff; align-items: flex-end;
+}
 .bot-form textarea {
-    flex: 1; resize: none; border: 1px solid #ccd1d6; border-radius: 8px; padding: 8px 10px;
-    font: inherit; max-height: 90px;
+    flex: 1; resize: none; border: 2px solid var(--celeste-borde, #bfe9f5); border-radius: 10px; padding: 9px 12px;
+    font: inherit; font-size: 1rem; color: var(--azul-noche, #022c44); max-height: 90px; transition: border-color .2s, box-shadow .2s;
 }
+.bot-form textarea::placeholder { color: #6b7c8a; }
+.bot-form textarea:focus {
+    outline: 2px solid transparent;
+    border-color: var(--azul-noche, #022c44); box-shadow: 0 0 0 3px var(--celeste-claro, #d6f5fc);
+}
+
+/* ===== BOTONES (ENVIAR, CONFIRMAR, CANCELAR) ===== */
 .bot-btn {
-    background: var(--azul-institucional, #004a99); color: #fff; border: 0; border-radius: 8px;
-    padding: 8px 14px; font-weight: 600; cursor: pointer;
+    background: var(--azul-noche, #022c44); color: #fff; border: 2px solid var(--azul-noche, #022c44); border-radius: 8px;
+    padding: 8px 16px; font-weight: 800; cursor: pointer; transition: background-color .2s, border-color .2s, color .2s;
 }
-.bot-btn.sec { background: #e9ecef; color: var(--texto-oscuro, #333); }
+.bot-btn:hover { background: var(--azul-institucional, #004a99); border-color: var(--azul-institucional, #004a99); }
+.bot-btn.sec { background: #fff; color: var(--azul-noche, #022c44); }
+.bot-btn.sec:hover { background: var(--celeste-claro, #d6f5fc); border-color: var(--azul-noche, #022c44); }
 .bot-btn:disabled { opacity: .55; cursor: not-allowed; }
 
+/* ===== BOTÓN ENVIAR: FLECHA ===== */
+.bot-form .bot-btn::after { content: "\2192"; margin-left: 6px; }
+
+/* ===== CELULAR ===== */
 @media (max-width: 480px) {
     .bot-root { right: 10px; bottom: 10px; }
-    .bot-panel { width: calc(100vw - 20px); }
+    .bot-panel { width: calc(100vw - 20px); box-shadow: 4px 4px 0 var(--celeste-hospital, #00d4ff), 0 12px 30px rgba(2, 44, 68, .25); }
+}
+
+/* ===== SIN ANIMACIONES (PREFERENCIA DEL USUARIO) ===== */
+@media (prefers-reduced-motion: reduce) {
+    .bot-panel { animation: none; }
+    .bot-launcher::after { animation: none; }
+    .bot-launcher, .bot-btn, .bot-form textarea { transition: none; }
+    .bot-launcher:hover { transform: none; }
 }

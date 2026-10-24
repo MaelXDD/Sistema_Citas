@@ -6,28 +6,51 @@
 	<parameter name="p_dia_semana" class="java.lang.String"/>
 	<parameter name="p_turno" class="java.lang.String"/>
 	<parameter name="p_especialidad" class="java.lang.String"/>
-	<query language="SQL"><![CDATA[SELECT 
-  v.dia_semana AS diaSemana, 
-  v.turno, 
-  v.total_citas AS totalCitas, 
-  v.ingresos_turno AS ingresosTurno, 
-  ( 
-    SELECT STRING_AGG(DISTINCT e.nombre, ', ') 
-    FROM citas c 
-    JOIN doctores d ON c.id_doctor = d.id_doctor 
-    JOIN especialidades e ON d.id_especialidad = e.id_especialidad 
-    WHERE c.estado != 'CANCELADA' 
-      AND TO_CHAR(c.fecha_cita, 'TMDay') = v.dia_semana
-      AND (
-        (v.turno LIKE 'Mañana%' AND c.hora_cita < '12:00:00') OR 
-        (v.turno LIKE 'Tarde%' AND c.hora_cita >= '12:00:00')
-      )
+	<query language="SQL"><![CDATA[SELECT
+  v.dia_semana AS diaSemana,
+  v.turno,
+  v.total_citas AS totalCitas,
+  v.ingresos_turno AS ingresosTurno,
+  (
+    SELECT STRING_AGG(DISTINCT e.nombre, ', ')
+    FROM citas c
+    JOIN doctores d ON c.id_doctor = d.id_doctor
+    JOIN especialidades e ON d.id_especialidad = e.id_especialidad
+    WHERE c.estado != 'CANCELADA'
+      AND (CASE EXTRACT(DOW FROM c.fecha_cita)
+             WHEN 0 THEN 'Domingo' WHEN 1 THEN 'Lunes' WHEN 2 THEN 'Martes'
+             WHEN 3 THEN 'Miércoles' WHEN 4 THEN 'Jueves' WHEN 5 THEN 'Viernes'
+             WHEN 6 THEN 'Sábado'
+           END) = v.dia_semana
+      AND (CASE WHEN c.hora_cita < TIME '12:00:00' THEN 'Mañana' ELSE 'Tarde' END) = v.turno
       AND ($P{p_especialidad} = 'Todos' OR e.nombre = $P{p_especialidad})
-  ) AS especialidades 
-FROM public.vista_reporte_afluencia v 
+  ) AS especialidades
+FROM (
+  SELECT
+    CASE EXTRACT(DOW FROM c2.fecha_cita)
+      WHEN 0 THEN 'Domingo' WHEN 1 THEN 'Lunes' WHEN 2 THEN 'Martes'
+      WHEN 3 THEN 'Miércoles' WHEN 4 THEN 'Jueves' WHEN 5 THEN 'Viernes'
+      WHEN 6 THEN 'Sábado'
+    END AS dia_semana,
+    CASE WHEN c2.hora_cita < TIME '12:00:00' THEN 'Mañana' ELSE 'Tarde' END AS turno,
+    COUNT(c2.id_cita) AS total_citas,
+    COALESCE(SUM(pa.monto), 0) AS ingresos_turno
+  FROM citas c2
+  LEFT JOIN pagos pa
+         ON pa.id_cita = c2.id_cita
+        AND pa.estado_pago = 'COMPLETADO'
+  WHERE c2.estado != 'CANCELADA'
+  GROUP BY 1, 2
+) v
 WHERE ($P{p_dia_semana} = 'Todos' OR v.dia_semana = $P{p_dia_semana})
   AND ($P{p_turno} = 'Todos' OR v.turno LIKE CONCAT($P{p_turno}, '%'))
-ORDER BY v.dia_semana, v.turno DESC]]></query>
+ORDER BY
+  CASE v.dia_semana
+    WHEN 'Lunes' THEN 1 WHEN 'Martes' THEN 2 WHEN 'Miércoles' THEN 3
+    WHEN 'Jueves' THEN 4 WHEN 'Viernes' THEN 5 WHEN 'Sábado' THEN 6
+    WHEN 'Domingo' THEN 7
+  END,
+  v.turno DESC]]></query>
 	<field name="diasemana" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="diasemana"/>
 		<property name="com.jaspersoft.studio.field.label" value="diasemana"/>
