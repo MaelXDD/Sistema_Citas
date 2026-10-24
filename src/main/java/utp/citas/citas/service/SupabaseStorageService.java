@@ -14,19 +14,16 @@ public class SupabaseStorageService {
     @Value("${supabase.key}")
     private String supabaseKey;
 
-    // ESTE ES EL MÉTODO QUE FALTA O TIENE OTRO NOMBRE
     public String subirReporte(String nombreArchivo, byte[] archivoBytes) {
         RestTemplate restTemplate = new RestTemplate();
         // Endpoint para el bucket "recursos"
         String url = supabaseUrl + "/storage/v1/object/recursos/" + nombreArchivo;
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + supabaseKey);
         headers.set("apikey", supabaseKey);
-        headers.setContentType(MediaType.parseMediaType("application/pdf"));
-
+        headers.set("Authorization", "Bearer " + supabaseKey);
+        headers.setContentType(MediaType.APPLICATION_PDF);
         headers.set("x-upsert", "true");
-
         HttpEntity<byte[]> entity = new HttpEntity<>(archivoBytes, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
