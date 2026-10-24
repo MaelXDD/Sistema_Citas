@@ -14,7 +14,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 html {
@@ -113,6 +113,13 @@ body {
     display: flex;
     gap: 12px;
     align-items: center;
+}
+
+/* Saludo + botón de cerrar sesión */
+#caja-sesion-usuario {
+    display: flex;
+    align-items: center;
+    gap: 18px;
 }
 
 /* ==========================================================================
@@ -507,4 +514,525 @@ body {
     text-align: center;
     font-size: 0.9rem;
     opacity: 0.9;
+}
+
+/* ==========================================================================
+   8. COMPONENTES COMPARTIDOS (colores nuevos, botones y tarjetas)
+   ========================================================================== */
+:root {
+    --azul-noche: #022c44;
+    --celeste-suave: #eafaff;
+    --celeste-claro: #d6f5fc;
+    --celeste-borde: #bfe9f5;
+    --texto-suave: #3f4f5e;
+}
+
+/* ---------- Botones ---------- */
+.btn-oscuro,
+.btn-claro,
+.btn-celeste,
+.btn-blanco {
+    display: inline-block;
+    padding: 14px 26px;
+    border-radius: 8px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn-oscuro {
+    background-color: var(--azul-noche);
+    color: var(--blanco);
+    border: 2px solid var(--azul-noche);
+}
+
+.btn-oscuro:hover {
+    background-color: var(--azul-institucional);
+    border-color: var(--azul-institucional);
+}
+
+.btn-claro {
+    background-color: transparent;
+    color: var(--azul-noche);
+    border: 2px solid var(--azul-noche);
+}
+
+.btn-claro:hover {
+    background-color: var(--azul-noche);
+    color: var(--blanco);
+}
+
+/* Botones para usar sobre fondos oscuros */
+.btn-celeste {
+    background-color: var(--celeste-hospital);
+    color: var(--azul-noche);
+    border: 2px solid var(--celeste-hospital);
+}
+
+.btn-celeste:hover {
+    background-color: var(--blanco);
+    border-color: var(--blanco);
+}
+
+.btn-blanco {
+    background-color: var(--blanco);
+    color: var(--azul-noche);
+    border: 2px solid var(--blanco);
+}
+
+.btn-blanco:hover {
+    background-color: var(--celeste-hospital);
+    border-color: var(--celeste-hospital);
+}
+
+/* ---------- Tarjetas ----------
+   .tarjeta            base (borde suave, esquinas poco redondeadas)
+   .tarjeta-sombra     sombra celeste sólida fija
+   .tarjeta-animada    al pasar el cursor sube y aparece la sombra
+   .tarjeta-destacada  fondo celeste claro y borde oscuro                  */
+.tarjeta {
+    background-color: var(--blanco);
+    border: 2px solid var(--celeste-borde);
+    border-radius: 10px;
+}
+
+.tarjeta-sombra {
+    box-shadow: 8px 8px 0 var(--celeste-hospital);
+}
+
+.tarjeta-destacada {
+    background-color: var(--celeste-claro);
+    border-color: var(--azul-noche);
+}
+
+.tarjeta-animada {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.tarjeta-animada:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 8px 8px 0 var(--celeste-hospital);
+    border-color: var(--azul-noche);
+}
+
+/* Sin animaciones si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+    .btn-oscuro,
+    .btn-claro,
+    .btn-celeste,
+    .btn-blanco,
+    .tarjeta-animada {
+        transition: none;
+    }
+
+    .tarjeta-animada:hover {
+        transform: none;
+    }
+}
+
+/* En celular no se levanta la tarjeta, solo cambia la sombra */
+@media (max-width: 640px) {
+    .tarjeta-animada:hover {
+        transform: none;
+        box-shadow: 6px 6px 0 var(--celeste-hospital);
+    }
+}
+
+/* ==========================================================================
+   9. MODAL DE INFORMACIÓN (INDEX Y ESPECIALIDADES)
+   ========================================================================== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-contenido {
+    width: 80%;
+    max-width: 700px;
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    position: relative;
+    animation: aparecer 0.3s ease;
+}
+
+.cerrar-modal {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 32px;
+    cursor: pointer;
+    color: #18c3e6;
+    font-weight: bold;
+}
+
+.cerrar-modal:hover {
+    color: #0ea7c7;
+}
+
+.modal-contenido h2 {
+    text-align: center;
+    color: #18c3e6;
+    margin-bottom: 25px;
+}
+
+.seccion-info {
+    margin-bottom: 20px;
+}
+
+.seccion-info h4 {
+    color: #18c3e6;
+    margin-bottom: 10px;
+}
+
+.seccion-info p,
+.seccion-info li {
+    color: #444;
+    line-height: 1.6;
+}
+
+.seccion-info ul {
+    padding-left: 20px;
+}
+
+.seccion-info li {
+    margin-bottom: 8px;
+}
+
+@keyframes aparecer {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-acciones {
+    margin-top: 24px;
+    text-align: center;
+}
+
+/* ==========================================================================
+   10. CONTENEDOR Y ENCABEZADO COMÚN
+   ========================================================================== */
+.contenedor-seccion {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.encabezado-navegacion .boton-azul {
+    background-color: var(--azul-noche);
+}
+
+/* ==========================================================================
+   11. PÁGINAS DE CONTENIDO (INICIO, SOBRE NOSOTROS, MISIÓN, VISIÓN)
+   ========================================================================== */
+.contenido-pagina {
+    color: var(--texto-suave);
+}
+
+.contenido-pagina :focus-visible {
+    outline: 3px solid var(--azul-noche);
+    outline-offset: 3px;
+}
+
+:where(.contenido-pagina) :where(h1, h2, h3, strong) {
+    font-weight: 800;
+    color: var(--azul-noche);
+}
+
+:where(.contenido-pagina) h1 {
+    margin-bottom: 20px;
+    font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+    line-height: 1.1;
+}
+
+:where(.contenido-pagina) h2 {
+    margin-bottom: 8px;
+    font-size: clamp(1.8rem, 3.4vw, 2.5rem);
+    line-height: 1.2;
+}
+
+:where(.contenido-pagina) h3 {
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+    line-height: 1.3;
+}
+
+:where(.contenido-pagina .tarjeta) p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+/* ---------- Secciones y fondos ---------- */
+.seccion {
+    padding: 64px 0 72px;
+}
+
+.fondo-suave {
+    background-color: var(--celeste-suave);
+}
+
+.fondo-claro {
+    background-color: var(--celeste-claro);
+}
+
+/* Título a la izquierda y texto o botón a la derecha */
+.cabecera-seccion {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+    margin-bottom: 36px;
+}
+
+.cabecera-seccion p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.cabecera-seccion > p {
+    flex: 1 1 300px;
+    max-width: 460px;
+}
+
+/* Panel azul oscuro con textos claros */
+.panel-oscuro {
+    background-color: var(--azul-noche);
+    color: #d6eaf3;
+}
+
+.panel-oscuro .sobretitulo {
+    color: var(--celeste-hospital);
+}
+
+.panel-oscuro h2 {
+    color: var(--blanco);
+}
+
+/* ---------- Distribución en columnas ---------- */
+.rejilla {
+    display: grid;
+    gap: 24px;
+    list-style: none;
+}
+
+.col-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.col-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.col-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* Cifras o datos cortos, en tarjetas pequeñas */
+.rejilla-datos {
+    gap: 20px;
+    margin-top: 32px;
+}
+
+/* Texto en una columna y imagen en la otra */
+.dos-columnas {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 56px;
+    align-items: center;
+}
+
+/* ---------- Piezas de tarjeta ---------- */
+.tarjeta-relleno {
+    padding: 28px;
+}
+
+.tarjeta-vertical {
+    display: flex;
+    flex-direction: column;
+}
+
+.tarjeta > p {
+    flex: 1;
+}
+
+/* Frase corta al pie de una tarjeta */
+.nota-tarjeta {
+    display: block;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1.5px solid var(--celeste-borde);
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--azul-institucional);
+}
+
+/* ---------- Etiquetas, imágenes e íconos ---------- */
+/* Etiqueta tipo píldora */
+.etiqueta {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background-color: var(--celeste-claro);
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--azul-noche);
+}
+
+/* Texto pequeño en mayúsculas sobre un título */
+.sobretitulo {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--azul-institucional);
+}
+
+/* Imagen que llena su espacio (la altura la pone cada página) */
+.foto {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    background-color: var(--celeste-claro);
+}
+
+/* Caja de ícono: lleva un <i class="bi bi-..."> o una <img>.
+   .icono-redondo la hace circular y .icono-grande la agranda. */
+.icono-caja {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    background-color: var(--celeste-hospital);
+    transition: transform 0.2s ease;
+}
+
+.icono-caja img {
+    display: block;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.icono-caja i {
+    font-size: 28px;
+    line-height: 1;
+    color: var(--azul-noche);
+}
+
+.icono-redondo {
+    border-radius: 50%;
+}
+
+.icono-grande {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+}
+
+.icono-grande img {
+    width: 36px;
+    height: 36px;
+}
+
+.icono-grande i {
+    font-size: 34px;
+}
+
+.tarjeta-animada:hover .icono-caja {
+    transform: scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .icono-caja {
+        transition: none;
+    }
+
+    .tarjeta-animada:hover .icono-caja {
+        transform: none;
+    }
+}
+
+/* ==========================================================================
+   12. RESPONSIVE COMPARTIDO
+   ========================================================================== */
+@media (max-width: 1050px) {
+    .col-3,
+    .col-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rejilla-datos {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 860px) {
+    .col-2,
+    .dos-columnas {
+        grid-template-columns: 1fr;
+    }
+
+    .dos-columnas {
+        gap: 36px;
+    }
+}
+
+@media (max-width: 768px) {
+    .encabezado-navegacion {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .menu-principal {
+        margin-bottom: 10px;
+    }
+
+    .contenedor-pie {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .fila-input {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 640px) {
+    .contenedor-seccion {
+        padding: 0 16px;
+    }
+
+    .seccion {
+        padding: 40px 0 48px;
+    }
+
+    .col-2,
+    .col-3,
+    .col-4 {
+        grid-template-columns: 1fr;
+    }
+
+    .tarjeta-relleno {
+        padding: 22px;
+    }
 }

@@ -1,0 +1,183 @@
+/* ==========================================================================
+   SOBRE_NOSOTROS.HTML
+   ========================================================================== */
+
+/* ---------- Presentación ---------- */
+.nosotros-portada h1 {
+    margin-bottom: 8px;
+}
+
+.nosotros-subtitulo {
+    margin-bottom: 24px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--azul-institucional);
+}
+
+.nosotros-texto > p {
+    margin-bottom: 18px;
+    font-size: 1.2rem;
+    line-height: 1.7;
+}
+
+.nosotros-dato {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px;
+}
+
+.nosotros-dato strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 1.05rem;
+}
+
+.nosotros-dato p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.nosotros-foto {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+}
+
+.nosotros-foto img {
+    height: 460px;
+}
+
+.nosotros-foto figcaption {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 56px 24px 22px;
+    background: linear-gradient(to top, var(--azul-noche), transparent);
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: var(--blanco);
+}
+
+.nosotros-foto figcaption strong {
+    display: block;
+    color: var(--celeste-hospital);
+}
+
+/* ---------- Títulos centrados de sección ---------- */
+.nosotros-titulo {
+    max-width: 680px;
+    margin: 0 auto 40px;
+    text-align: center;
+}
+
+.nosotros-titulo p {
+    font-size: 1.15rem;
+    line-height: 1.6;
+}
+
+/* ---------- ¿Por qué elegirnos? ---------- */
+.nosotros-pilar {
+    align-items: center;
+    text-align: center;
+}
+
+.nosotros-pilar .nota-tarjeta {
+    align-self: stretch;
+}
+
+/* ---------- Nuestro compromiso ---------- */
+.nosotros-calidad {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    margin-bottom: 40px;
+    padding: 36px;
+}
+
+.nosotros-calidad-texto h3 {
+    margin-bottom: 12px;
+    font-size: 1.8rem;
+    line-height: 1.2;
+}
+
+.nosotros-calidad-texto > p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.nosotros-calidad-texto .etiqueta {
+    margin-bottom: 14px;
+}
+
+.nosotros-lista {
+    margin-top: 22px;
+    list-style: none;
+}
+
+.nosotros-lista li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--azul-noche);
+}
+
+.nosotros-lista li::before {
+    content: "";
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--celeste-hospital);
+}
+
+.nosotros-calidad-foto {
+    margin: 0;
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: var(--celeste-suave);
+}
+
+.nosotros-calidad-foto img {
+    height: 300px;
+}
+
+.nosotros-calidad-foto figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 18px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.nosotros-calidad-foto strong {
+    color: var(--azul-noche);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+    .nosotros-calidad {
+        grid-template-columns: 1fr;
+    }
+
+    .nosotros-foto img {
+        height: 340px;
+    }
+}
+
+@media (max-width: 640px) {
+    .nosotros-calidad {
+        padding: 22px;
+    }
+
+    .nosotros-calidad-foto figcaption {
+        flex-direction: column;
+        gap: 4px;
+    }
+}

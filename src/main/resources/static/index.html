@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hospital de la Solidaridad - Sistema de Citas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/estilo.css">
-    <link rel="stylesheet" href="/css/paginas.css">
+    <link rel="stylesheet" href="/css/paginas/index.css">
     <link rel="stylesheet" href="/css/bot.css">
 </head>
-<body>
+<body class="pagina-inicio">
 
 <header class="encabezado-navegacion">
     <div class="logotipo" id="logotipo-hospital">
@@ -36,7 +39,7 @@
         <a href="/estadisticas.html" class="enlace-nav nav-admin oculto">Estadísticas</a>
     </nav>
 
-    <!-- Zona de sesión con markup propio en el HTML -->
+    <!-- Zona de sesión -->
     <div class="botones-acceso" id="zona-sesion">
         <div id="caja-sesion-invitado">
             <button class="boton-blanco" id="btn-abrir-login">Iniciar Sesión</button>
@@ -49,101 +52,211 @@
     </div>
 </header>
 
-<section class="bloque-bienvenida">
-    <div class="texto-bienvenida">
-        <h2>Comprometidos con tu salud</h2>
-        <p>Brindamos atención médica de calidad con los mejores especialistas de Lima, facilitando tu acceso a la salud con nuestro nuevo sistema de citas en línea.</p>
-    </div>
-    <div class="imagen-bienvenida">
-        <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/hospital2.jpg" alt="Personal médico">
-    </div>
-</section>
+<main class="inicio contenido-pagina">
 
-<section id="especialidadesdest" class="contenedor-especialidades">
-    <h3>Nuestras Especialidades Destacadas</h3>
-    <div class="rejilla-iconos">
+    <!-- ===== Aviso para personas mayores ===== -->
+    <div class="contenedor-seccion">
 
-        <div class="tarjeta-icono" data-especialidad="cardiología">
-            <div class="circulo-blanco">
-                <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/cardiologia.png" alt="Cardiología">
+        <aside class="aviso-mayores">
+            <p><strong>Atención preferencial a personas mayores.</strong> Si prefiere reservar por llamada directa o tiene dudas, un orientador de Vitarte le asiste de inmediato.</p>
+            <a class="btn-oscuro btn-llamar" href="tel:08004442222">Llamar al 0800-444-2222</a>
+        </aside>
+
+        <section class="portada seccion">
+            <div class="portada-tarjeta tarjeta tarjeta-sombra">
+                <div class="portada-cuerpo dos-columnas">
+                    <div class="portada-texto">
+                        <h1>Comprometidos con tu salud</h1>
+                        <p>En el <strong>Hospital de la Solidaridad Vitarte</strong> brindamos atención médica de calidad con los mejores especialistas y facilidad para agendar tu cita en línea o por teléfono.</p>
+
+                        <div class="portada-botones">
+                            <a class="btn-oscuro" href="/citas.html" id="btn-reservar-ahora">Reservar Cita Médica Ahora</a>
+                            <a class="btn-claro" href="#sede-vitarte">Ver Teléfonos de Ayuda</a>
+                        </div>
+                    </div>
+
+                    <figure class="portada-foto">
+                        <!-- Carrusel para cambiar las fotos -->
+                        <div class="carrusel">
+                            <div class="carrusel">
+                                <img class="foto" src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/hospital2.jpg" alt="Personal médico del Hospital de la Solidaridad" fetchpriority="high" decoding="async">
+                                <img class="foto" src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/hospital1.jpg" alt="" decoding="async">
+                                <img class="foto" src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/hospital3.jpeg" alt="" decoding="async">
+                            </div>
+                        </div>
+                        <figcaption>
+                            <strong>Médicos especialistas al cuidado de tu familia.</strong>
+                            Trato humano, digno y sin esperas excesivas en Vitarte.
+                        </figcaption>
+                    </figure>
+                </div>
+
+                <ul class="garantias">
+                    <li>Atención con DNI</li>
+                    <li>Rampa y ascensor</li>
+                    <li>Pago en caja o Yape</li>
+                </ul>
             </div>
-            <p>Cardiología</p>
-        </div>
+        </section>
+    </div>
 
-        <div class="tarjeta-icono" data-especialidad="pediatría">
-            <div class="circulo-blanco">
-                <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/pediatria.png" alt="Pediatría">
+    <!-- ===== Pasos para reservar ===== -->
+    <section class="guia seccion" id="como-reservar">
+        <div class="contenedor-seccion">
+            <div class="cabecera-seccion">
+                <div>
+                    <h2>¿Cómo reservar tu cita médica? Solo 4 pasos sencillos</h2>
+                    <p>Siga estos pasos para que usted o su familiar reserven sin complicaciones.</p>
+                </div>
+                <a class="btn-claro" href="#" id="btn-videos-ayuda">Ver videos explicativos</a>
             </div>
-            <p>Pediatría</p>
-        </div>
 
-        <div class="tarjeta-icono" data-especialidad="traumatología">
-            <div class="circulo-blanco">
-                <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/traumatologia.png" alt="Traumatología">
+            <ol class="rejilla col-4">
+                <li class="tarjeta-relleno tarjeta-vertical tarjeta tarjeta-animada">
+                    <span class="icono-caja icono-grande"><img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/usuario.png" alt=""></span>
+                    <span class="sobretitulo">Paso 1</span>
+                    <h3>Crea tu cuenta o ingresa con tu DNI</h3>
+                    <p>Primero ingresa tus datos (nombres, apellidos, DNI y teléfono) para acceder a los servicios de manera rápida y segura.</p>
+                    <strong class="nota-tarjeta">Solo requiere tu DNI</strong>
+                </li>
+
+                <li class="tarjeta-relleno tarjeta-vertical tarjeta tarjeta-animada">
+                    <span class="icono-caja icono-grande"><img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/reloj.png" alt=""></span>
+                    <span class="sobretitulo">Paso 2</span>
+                    <h3>Elige tu especialidad y doctor</h3>
+                    <p>Selecciona la especialidad médica, el doctor de tu preferencia y el horario que mejor te acomode según tu tiempo libre.</p>
+                    <strong class="nota-tarjeta">Mañanas y tardes</strong>
+                </li>
+
+                <li class="tarjeta-relleno tarjeta-vertical tarjeta tarjeta-animada">
+                    <span class="icono-caja icono-grande"><img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/pago.png" alt=""></span>
+                    <span class="sobretitulo">Paso 3</span>
+                    <h3>Elige cómo pagar (Yape, tarjeta o en caja)</h3>
+                    <p>Paga en línea con Yape o tarjeta, o si prefieres, selecciona la opción <strong>"Pagar en efectivo en el hospital"</strong>.</p>
+                    <strong class="nota-tarjeta">Cero complicaciones</strong>
+                </li>
+
+                <li class="tarjeta-relleno tarjeta-vertical tarjeta tarjeta-animada tarjeta-destacada">
+                    <span class="icono-caja icono-grande"><img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/check.png" alt=""></span>
+                    <span class="sobretitulo">Paso 4</span>
+                    <h3>Asiste a tu cita médica</h3>
+                    <p>Preséntate en la sede Vitarte con tu DNI físico en la fecha programada. Nuestro equipo estará listo para atenderte. ¡Te esperamos!</p>
+                    <strong class="nota-tarjeta">Sede Vitarte (Av. Central)</strong>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- ===== Especialidades ===== -->
+    <section id="especialidadesdest" class="seccion fondo-suave">
+        <div class="contenedor-seccion">
+            <div class="cabecera-seccion">
+                <div>
+                    <h2>Nuestras Especialidades</h2>
+                    <p>Atención personalizada y doctores colegiados con amplia experiencia en adultos y familias.</p>
+                </div>
+                <a class="enlace-listado" href="/especialidades.html">Ver listado completo de servicios</a>
             </div>
-            <p>Traumatología</p>
-        </div>
 
-        <div class="tarjeta-icono" data-especialidad="dermatología">
-            <div class="circulo-blanco">
-                <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/dermatologia.png" alt="Dermatología">
+            <div class="rejilla col-3">
+
+                <article class="especialidad tarjeta-relleno tarjeta-vertical tarjeta-icono tarjeta tarjeta-animada" data-especialidad="cardiología">
+                    <span class="icono-caja icono-grande"><img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/cardiologia.png" alt=""></span>
+                    <div class="especialidad-info">
+                        <h3>Cardiología</h3>
+                        <p>Salud del corazón, control de presión arterial, arritmias y prevención cardiovascular.</p>
+                    </div>
+                    <div class="especialidad-acciones">
+                        <span class="especialidad-etiqueta">Atención diaria</span>
+                        <button type="button" class="enlace-boton">Ver doctores</button>
+                    </div>
+                </article>
+
+                <article class="especialidad tarjeta-relleno tarjeta-vertical tarjeta-icono tarjeta tarjeta-animada" data-especialidad="pediatría">
+                    <span class="icono-caja icono-grande"><img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/pediatria.png" alt=""></span>
+                    <div class="especialidad-info">
+                        <h3>Pediatría</h3>
+                        <p>Atención infantil, vacunas, crecimiento, nutrición y cuidado integral de nietos y niños.</p>
+                    </div>
+                    <div class="especialidad-acciones">
+                        <span class="especialidad-etiqueta">Disponible hoy</span>
+                        <button type="button" class="enlace-boton">Ver doctores</button>
+                    </div>
+                </article>
+
+                <article class="especialidad tarjeta-relleno tarjeta-vertical tarjeta-icono tarjeta tarjeta-animada" data-especialidad="traumatología">
+                    <span class="icono-caja icono-grande"><img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/traumatologia.png" alt=""></span>
+                    <div class="especialidad-info">
+                        <h3>Traumatología y Huesos</h3>
+                        <p>Dolor articular, rodillas, cadera, fracturas, artrosis y recuperación física.</p>
+                    </div>
+                    <div class="especialidad-acciones">
+                        <span class="especialidad-etiqueta">Atención diaria</span>
+                        <button type="button" class="enlace-boton">Ver doctores</button>
+                    </div>
+                </article>
+
+                <article class="especialidad tarjeta-relleno tarjeta-vertical tarjeta-icono tarjeta tarjeta-animada" data-especialidad="dermatología">
+                    <span class="icono-caja icono-grande"><img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/dermatologia.png" alt=""></span>
+                    <div class="especialidad-info">
+                        <h3>Dermatología</h3>
+                        <p>Cuidado de la piel, manchas solares, alergias, heridas y tratamiento dermatológico.</p>
+                    </div>
+                    <div class="especialidad-acciones">
+                        <span class="especialidad-etiqueta">Lunes a Sábado</span>
+                        <button type="button" class="enlace-boton">Ver doctores</button>
+                    </div>
+                </article>
+
+                <article class="especialidad tarjeta-relleno tarjeta-vertical tarjeta-icono tarjeta tarjeta-animada" data-especialidad="neurología">
+                    <span class="icono-caja icono-grande"><img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/neurologia.png" alt=""></span>
+                    <div class="especialidad-info">
+                        <h3>Neurología</h3>
+                        <p>Sistema nervioso, cefaleas, memoria, mareos, neuropatías y salud cerebral.</p>
+                    </div>
+                    <div class="especialidad-acciones">
+                        <span class="especialidad-etiqueta">Atención especializada</span>
+                        <button type="button" class="enlace-boton">Ver doctores</button>
+                    </div>
+                </article>
+
+                <article class="especialidad tarjeta-relleno tarjeta-vertical tarjeta-icono tarjeta tarjeta-animada tarjeta-destacada" data-especialidad="geriatría">
+                    <span class="icono-caja icono-grande"><img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/geriatria.png" alt=""></span>
+                    <div class="especialidad-info">
+                        <h3>Geriatría y Medicina Integral</h3>
+                        <p>Atención especializada para adultos mayores, control de medicamentos y bienestar general.</p>
+                    </div>
+                    <div class="especialidad-acciones">
+                        <span class="especialidad-etiqueta">Atención prioritaria</span>
+                        <button type="button" class="enlace-boton">Ver doctores</button>
+                    </div>
+                </article>
+
             </div>
-            <p>Dermatología</p>
         </div>
+    </section>
 
-        <div class="tarjeta-icono" data-especialidad="neurología">
-            <div class="circulo-blanco">
-                <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/neurologia.png" alt="Neurología">
+    <!-- ===== Sede y horario ===== -->
+    <section class="seccion" id="sede-vitarte">
+        <div class="contenedor-seccion">
+            <div class="sede-card tarjeta tarjeta-sombra">
+                <div class="sede-horario panel-oscuro">
+                    <span class="sobretitulo">Sede Vitarte</span>
+                    <h2>Horario de atención continuada</h2>
+                    <p class="sede-horas">Lunes a Sábado<br>7:00 a.m. a 7:00 p.m.</p>
+                    <p>Atención en ventanilla, consultorios médicos, triaje, laboratorio y farmacia en horario corrido.</p>
+                </div>
+
+                <ul class="sede-datos">
+                    <li><strong>Dirección</strong>Av. Nicolás de Ayllón (Carretera Central) Km. 7.5, Vitarte - Lima.</li>
+                    <li><strong>Accesibilidad</strong>Rampas de ingreso, ascensores y personal de apoyo en puerta.</li>
+                    <li><strong>Teléfonos de ayuda</strong><a href="tel:08004442222">0800-444-2222</a> · <a href="tel:015551234">(01) 555-1234</a></li>
+                </ul>
             </div>
-            <p>Neurología</p>
         </div>
+    </section>
 
-    </div>
-</section>
-
-<section class="seccion-pasos">
-    <h3>Pasos para tu cita</h3>
-
-    <div class="bloque-paso">
-        <div class="icono-paso">
-            <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/usuario.png" alt="Paso 1">
-        </div>
-        <div class="texto-paso">
-            <strong>Paso 1:</strong>
-            <p>Primero, crear una cuenta con tus datos (nombres, apellidos, dni, correo, etc), para acceder a nuestros servicios médicos.</p>
-        </div>
-    </div>
-
-    <div class="bloque-paso">
-        <div class="icono-paso">
-            <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/reloj.png" alt="Paso 2">
-        </div>
-        <div class="texto-paso">
-            <strong>Paso 2:</strong>
-            <p>Luego, elige tu especialidad, el doctor de tu preferencia y el horario que mejor se acomode a tu persona.</p>
-        </div>
-    </div>
-
-    <div class="bloque-paso">
-        <div class="icono-paso">
-            <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/pago.png" alt="Paso 3">
-        </div>
-        <div class="texto-paso">
-            <strong>Paso 3:</strong>
-            <p>Después, elige tu método de pago (Yape, tarjeta o efectivo), para así confirmar tu cita de manera instantánea.</p>
-        </div>
-    </div>
-
-    <div class="bloque-paso">
-        <div class="icono-paso">
-            <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/check.png" alt="Paso 4">
-        </div>
-        <div class="texto-paso">
-            <strong>Paso 4:</strong>
-            <p>Finalmente, preséntate en el hospital en la fecha programada y entrega tu DNI en caja para entrar a tu cita.</p>
-        </div>
-    </div>
-</section>
+</main>
 
 <footer class="pie-inferior">
     <div class="contenedor-pie">
@@ -226,6 +339,9 @@
         <div class="seccion-info">
             <h4>¿Cuándo acudir?</h4>
             <p id="cuandoAcudir"></p>
+        </div>
+        <div class="modal-acciones">
+            <a class="btn-oscuro" href="/citas.html">Reservar una cita</a>
         </div>
     </div>
 </div>

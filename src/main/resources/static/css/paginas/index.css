@@ -1,0 +1,351 @@
+/* ==========================================================================
+   INDEX.HTML
+   ========================================================================== */
+.pagina-inicio {
+    background-color: var(--blanco);
+}
+
+/* ---------- Aviso para personas mayores ---------- */
+.aviso-mayores {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 24px;
+    padding: 18px 24px;
+    background-color: var(--celeste-claro);
+    border-left: 6px solid var(--azul-noche);
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: var(--azul-noche);
+}
+
+.aviso-mayores p {
+    flex: 1;
+}
+
+/* ---------- Portada ---------- */
+.portada {
+    padding-top: 40px;
+}
+
+.portada-tarjeta {
+    overflow: hidden;
+}
+
+.portada-cuerpo {
+    grid-template-columns: 1.25fr 0.75fr;
+    padding: 52px 48px;
+}
+
+.portada-texto p {
+    font-size: 1.25rem;
+    line-height: 1.65;
+}
+
+.portada-botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 30px;
+}
+
+.garantias {
+    display: flex;
+    list-style: none;
+    background-color: var(--celeste-claro);
+    border-top: 2px solid var(--celeste-borde);
+}
+
+.garantias li {
+    flex: 1;
+    padding: 18px 12px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--azul-noche);
+}
+
+.garantias li + li {
+    border-left: 2px solid var(--celeste-borde);
+}
+
+.portada-foto {
+    margin: 0;
+}
+
+.portada-foto figcaption {
+    margin-top: 12px;
+    line-height: 1.5;
+}
+
+.portada-foto figcaption strong {
+    display: block;
+}
+
+/* Carrusel donde cada foto dura 5 segundos */
+.carrusel {
+    position: relative;
+    height: 340px;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: var(--celeste-claro);
+}
+
+.carrusel img {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    opacity: 0;
+    animation: pasar-foto 15s infinite;
+    will-change: opacity;
+}
+
+.carrusel img:nth-child(1) {
+    animation-delay: -1s;
+}
+
+.carrusel img:nth-child(2) {
+    animation-delay: 4s;
+}
+
+.carrusel img:nth-child(3) {
+    animation-delay: 9s;
+}
+
+.carrusel:hover img {
+    animation-play-state: paused;
+}
+
+@keyframes pasar-foto {
+    0%      { opacity: 0; z-index: 2; }
+    6.67%   { opacity: 1; z-index: 2; }
+    33.33%  { opacity: 1; z-index: 1; }
+    40%     { opacity: 1; z-index: 1; }
+    40.01%  { opacity: 0; z-index: 0; }
+    100%    { opacity: 0; z-index: 0; }
+}
+
+/* ---------- Pasos para reservar ---------- */
+.guia {
+    border-top: 1.5px solid var(--celeste-borde);
+}
+
+/* ---------- Especialidades ---------- */
+.especialidad {
+    cursor: pointer;
+}
+
+.especialidad .icono-caja {
+    background-color: var(--blanco);
+    border: 1.5px solid var(--celeste-borde);
+}
+
+.especialidad-info {
+    flex: 1;
+}
+
+.especialidad-acciones {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1.5px solid var(--celeste-borde);
+}
+
+.especialidad-etiqueta {
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: #00728f;
+}
+
+.enlace-listado,
+.enlace-boton {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--azul-noche);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.enlace-boton {
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.enlace-boton::after {
+    content: "\2192";
+    display: inline-block;
+    margin-left: 6px;
+    transition: transform 0.2s ease;
+}
+
+.enlace-listado:hover,
+.especialidad:hover .enlace-boton {
+    color: var(--azul-institucional);
+}
+
+.especialidad:hover .enlace-boton::after {
+    transform: translateX(5px);
+}
+
+/* ---------- Sede y horario ---------- */
+.sede-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    border-color: var(--azul-noche);
+}
+
+.sede-horario {
+    padding: 48px 44px;
+}
+
+.sede-horario h2 {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.2;
+}
+
+.sede-horas {
+    margin: 20px 0;
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    line-height: 1.25;
+    font-weight: 800;
+    color: var(--celeste-hospital);
+}
+
+.sede-datos {
+    align-self: center;
+    padding: 36px 44px;
+    list-style: none;
+}
+
+.sede-datos li {
+    padding: 18px 0;
+    border-bottom: 1.5px solid var(--celeste-borde);
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.sede-datos li:first-child {
+    padding-top: 0;
+}
+
+.sede-datos li:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.sede-datos strong {
+    display: block;
+}
+
+.sede-datos a {
+    color: var(--azul-institucional);
+    font-weight: 700;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .inicio a[href^="tel:"] {
+        pointer-events: none;
+        cursor: default;
+        text-decoration: none;
+    }
+
+    .inicio .btn-llamar {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--azul-noche);
+        font-size: 1.2rem;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .inicio .sede-datos a[href^="tel:"] {
+        color: var(--azul-noche);
+    }
+}
+
+/* ---------- Sin animaciones si el usuario lo prefiere ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .carrusel img {
+        animation: none;
+    }
+
+    .carrusel img:first-child {
+        opacity: 1;
+    }
+
+    .enlace-boton::after {
+        transition: none;
+    }
+
+    .especialidad:hover .enlace-boton::after {
+        transform: none;
+    }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+    .portada-cuerpo {
+        grid-template-columns: 1fr;
+    }
+
+    .aviso-mayores {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .aviso-mayores .btn-oscuro {
+        width: 100%;
+    }
+
+    .sede-card {
+        grid-template-columns: 1fr;
+    }
+
+    .sede-horario {
+        padding: 32px 28px;
+    }
+
+    .sede-datos {
+        padding: 28px;
+    }
+}
+
+@media (max-width: 640px) {
+    .carrusel {
+        height: 280px;
+    }
+
+    .portada {
+        padding-top: 28px;
+    }
+
+    .portada-cuerpo {
+        padding: 28px 20px;
+    }
+
+    .portada-botones .btn-oscuro,
+    .portada-botones .btn-claro,
+    .cabecera-seccion .btn-claro {
+        width: 100%;
+    }
+
+    .garantias {
+        flex-direction: column;
+    }
+
+    .garantias li + li {
+        border-left: 0;
+        border-top: 2px solid var(--celeste-borde);
+    }
+}
