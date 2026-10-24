@@ -7,9 +7,6 @@
 
     const KEY_TOKEN = 'botToken';
     const KEY_CONV = 'botConv';
-    const KEY_LOG = 'botLog';        // mensajes ya mostrados: sobreviven al cambiar de página
-    const KEY_OPEN = 'botOpen';      // panel abierto o cerrado
-    const MAX_LOG = 60;
     const botUrl = () => ((typeof CONFIG !== 'undefined' && CONFIG.BOT_URL) || 'http://localhost:8090').replace(/\/$/, '');
     const token = () => sessionStorage.getItem(KEY_TOKEN);
     const paciente = () => { try { return JSON.parse(sessionStorage.getItem('paciente')); } catch { return null; } };
@@ -47,31 +44,11 @@
 
     function scrollAbajo() { log.scrollTop = log.scrollHeight; }
 
-    function leerLog() {
-        try { const a = JSON.parse(sessionStorage.getItem(KEY_LOG)); return Array.isArray(a) ? a : []; } catch { return []; }
-    }
-    function guardarMensaje(texto, tipo) {
-        try {
-            const a = leerLog();
-            a.push({ t: texto, k: tipo || '' });
-            sessionStorage.setItem(KEY_LOG, JSON.stringify(a.slice(-MAX_LOG)));
-        } catch { /* almacenamiento no disponible: el chat sigue funcionando sin persistir */ }
-    }
-    function olvidarLog() {
-        try { sessionStorage.removeItem(KEY_LOG); sessionStorage.removeItem(KEY_OPEN); } catch { /* nada */ }
-    }
-
-    function burbuja(texto, tipo, persistir = true) {
+    function burbuja(texto, tipo) {
         const b = el('div', 'bot-msg' + (tipo ? ' ' + tipo : ''), texto);
         log.appendChild(b);
         scrollAbajo();
-        // Solo se guardan los mensajes normales y los del usuario (no "Escribiendo…" ni errores).
-        if (persistir && (!tipo || tipo === 'yo')) guardarMensaje(texto, tipo);
         return b;
-    }
-
-    function restaurar() {
-        leerLog().forEach(m => burbuja(m.t, m.k, false));
     }
 
     function tarjetaPendiente(accion) {
@@ -104,7 +81,9 @@
         if (ui.type !== 'open_checkout' || !ui.citaPendiente) return;
         const card = el('div', 'bot-accion');
         const c = ui.citaPendiente;
-        card.appendChild(el('p', null, `Reserva lista: ${c.fechaCita}, ${String(c.horaCita).slice(0, 5)}. La cita se registra al completar el pago.`));
+        // Datos reales del sistema (doctor, especialidad, fecha, hora, precio): no lo que haya escrito el modelo.
+        const detalle = ui.resumen || `${c.fechaCita}, ${String(c.horaCita).slice(0, 5)}`;
+        card.appendChild(el('p', null, `Reserva lista: ${detalle}. La cita se registra al completar el pago.`));
         const ir = el('button', 'bot-btn', ui.label || 'Ir a pagar');
         ir.addEventListener('click', () => {
             sessionStorage.setItem('citaPendiente', JSON.stringify(c));   // mismo contrato que citas.js
@@ -144,7 +123,6 @@
 
     function nueva() {
         sessionStorage.removeItem(KEY_CONV);
-        olvidarLog();
         log.replaceChildren();
         saludo();
     }
@@ -165,15 +143,10 @@
         input.style.height = Math.min(input.scrollHeight, 90) + 'px';
     }
 
-    function abrir(v, enfocar = true) {
+    function abrir(v) {
         panel.hidden = !v;
         launcher.setAttribute('aria-expanded', String(v));
-        try { sessionStorage.setItem(KEY_OPEN, v ? '1' : '0'); } catch { /* nada */ }
-        if (v) {
-            if (!log.children.length) saludo();
-            scrollAbajo();
-            if (enfocar) input.focus();
-        } else if (enfocar) { launcher.focus(); }
+        if (v) { if (!log.children.length) saludo(); input.focus(); } else { launcher.focus(); }
     }
 
     function construir() {
@@ -220,9 +193,6 @@
             if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); }
         });
         root.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) abrir(false); });
-
-        restaurar();
-        if (sessionStorage.getItem(KEY_OPEN) === '1') abrir(true, false);   // sin robar el foco al cargar la página
     }
 
     function refresh() {
@@ -230,7 +200,7 @@
         if (conSesion && !root) construir();
         if (root) {
             root.hidden = !conSesion;
-            if (!conSesion) { olvidarLog(); abrir(false, false); log.replaceChildren(); }
+            if (!conSesion) { abrir(false); log.replaceChildren(); }
         }
     }
 

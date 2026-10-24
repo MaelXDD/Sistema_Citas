@@ -29,7 +29,6 @@ create table if not exists bot.messages (
   conversation_id uuid not null references bot.conversations(id) on delete cascade,
   role            text not null check (role in ('user','assistant','tool')),
   content         text,
-  tool_calls      jsonb,
   created_at      timestamptz not null default now()
 );
 create index if not exists ix_msg_conv on bot.messages(conversation_id, id);

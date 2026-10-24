@@ -10,6 +10,9 @@ class Project:
     timezone: str = "America/Lima"
     # Datos que el bot puede recordar del usuario: clave -> descripcion para el modelo.
     fact_keys: dict[str, str] = {}
+    # True => el motor NO deja pasar una respuesta con horas (HH:MM) que no salgan de una herramienta
+    # (o del propio mensaje del usuario). Evita ofrecer horarios inventados.
+    ground_times: bool = False
 
     def __init__(self) -> None:
         self.registry = ToolRegistry()

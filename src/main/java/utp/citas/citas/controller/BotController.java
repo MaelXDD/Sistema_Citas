@@ -11,10 +11,7 @@ import utp.citas.citas.security.UsuarioAutenticado;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.function.Function;
@@ -93,12 +90,28 @@ public class BotController {
     public Map<String, Object> disponibilidad(@RequestParam Integer idDoctor, @RequestParam String fecha) {
         LocalDate f = parseFecha(fecha);
         Doctor d = doctorActivo(idDoctor);
+        List<Horario> turnos = horarioRepository.findByDoctor_IdDoctorAndDiaSemanaAndActivoTrue(idDoctor, diaDe(f));
+        List<LocalTime> libres = horasLibres(idDoctor, f);
+
         Map<String, Object> m = new LinkedHashMap<>();
         m.put("idDoctor", idDoctor);
         m.put("doctor", nombreDoctor(d));
+        m.put("especialidad", d.getEspecialidad().getNombre());
         m.put("fecha", f.toString());
-        m.put("dia", DIAS[f.getDayOfWeek().getValue() - 1]);
-        m.put("horasLibres", horasLibres(idDoctor, f).stream().map(BotController::hhmm).toList());
+        m.put("dia", diaDe(f));
+        m.put("horasLibres", libres.stream().map(BotController::hhmm).toList());
+        if (libres.isEmpty()) {
+            // Una lista vacía es ambigua: aquí se dice POR QUÉ y qué otras fechas sí tienen horas.
+            m.put("motivoSinHoras", motivoSinHoras(d, f, turnos));
+            m.put("diasQueAtiende", horarioRepository.findActivosByDoctor(idDoctor).stream().map(h -> {
+                Map<String, Object> t = new LinkedHashMap<>();
+                t.put("dia", h.getDiaSemana());
+                t.put("desde", hhmm(h.getHoraInicio()));
+                t.put("hasta", hhmm(h.getHoraFin()));
+                return t;
+            }).toList());
+            m.put("proximasFechasConHoras", proximasFechas(idDoctor, f));
+        }
         return m;
     }
 
@@ -115,7 +128,7 @@ public class BotController {
                 .orElseThrow(() -> new NoSuchElementException("Paciente no encontrado."));
 
         if (!horasLibres(doctor.getIdDoctor(), fecha).contains(hora)) {
-            throw new IllegalStateException("Ese horario ya no está disponible. Elige otra hora.");
+            throw new IllegalStateException(motivoNoDisponible(doctor, fecha, hora));
         }
         Especialidad esp = doctor.getEspecialidad();
         BigDecimal precio = precioRepository.findByEspecialidad_IdEspecialidadAndActivoTrue(esp.getIdEspecialidad())
@@ -261,15 +274,74 @@ public class BotController {
         LocalDateTime ahora = LocalDateTime.now(LIMA);
         TreeSet<LocalTime> libres = new TreeSet<>();
         for (Horario h : horarioRepository.findByDoctor_IdDoctorAndDiaSemanaAndActivoTrue(idDoctor, diaDe(fecha))) {
-            LocalTime t = h.getHoraInicio();
-            while (!t.plusMinutes(SLOT_MIN).isAfter(h.getHoraFin())) {
+            for (LocalTime t : bloques(h.getHoraInicio(), h.getHoraFin())) {
                 if (!ocupadas.contains(t) && LocalDateTime.of(fecha, t).isAfter(ahora)) libres.add(t);
-                LocalTime sig = t.plusMinutes(SLOT_MIN);
-                if (sig.isBefore(t)) break;          // protección al cruzar medianoche
-                t = sig;
             }
         }
         return new ArrayList<>(libres);
+    }
+
+    /** Bloques de 30 min que caben en [inicio, fin]; igual que citas.js. */
+    static List<LocalTime> bloques(LocalTime inicio, LocalTime fin) {
+        List<LocalTime> out = new ArrayList<>();
+        LocalTime t = inicio;
+        while (true) {
+            LocalTime sig = t.plusMinutes(SLOT_MIN);
+            if (sig.isBefore(t) || sig.isAfter(fin)) break;   // cruza medianoche o ya no cabe
+            out.add(t);
+            t = sig;
+        }
+        return out;
+    }
+
+    private String motivoSinHoras(Doctor d, LocalDate f, List<Horario> turnos) {
+        if (turnos.isEmpty()) {
+            return nombreDoctor(d) + " no atiende los " + diaDe(f).toLowerCase() + ". Mira 'diasQueAtiende' y 'proximasFechasConHoras'.";
+        }
+        LocalDateTime ahora = LocalDateTime.now(LIMA);
+        boolean quedanBloquesFuturos = turnos.stream()
+                .flatMap(h -> bloques(h.getHoraInicio(), h.getHoraFin()).stream())
+                .anyMatch(t -> LocalDateTime.of(f, t).isAfter(ahora));
+        return quedanBloquesFuturos
+                ? "Todos los bloques de ese día ya están reservados."
+                : "Ya pasó el horario de atención de ese día.";
+    }
+
+    private String motivoNoDisponible(Doctor d, LocalDate fecha, LocalTime hora) {
+        String quien = nombreDoctor(d);
+        List<Horario> turnos = horarioRepository
+                .findByDoctor_IdDoctorAndDiaSemanaAndActivoTrue(d.getIdDoctor(), diaDe(fecha));
+        if (turnos.isEmpty()) {
+            return quien + " no atiende los " + diaDe(fecha).toLowerCase() + " (" + formatoFecha(fecha) + "). Consulta otra fecha.";
+        }
+        List<LocalTime> todos = turnos.stream()
+                .flatMap(h -> bloques(h.getHoraInicio(), h.getHoraFin()).stream())
+                .sorted().toList();
+        if (!todos.contains(hora)) {
+            return "Las " + hhmm(hora) + " no es un bloque de atención de " + quien + " ese día. Bloques válidos: "
+                    + todos.stream().map(BotController::hhmm).collect(Collectors.joining(", ")) + ".";
+        }
+        if (!LocalDateTime.of(fecha, hora).isAfter(LocalDateTime.now(LIMA))) {
+            return "Las " + hhmm(hora) + " de ese día ya pasó.";
+        }
+        return "Las " + hhmm(hora) + " con " + quien + " ya están reservadas por otro paciente.";
+    }
+
+    private List<Map<String, Object>> proximasFechas(Integer idDoctor, LocalDate desde) {
+        LocalDate limite = LocalDate.now(LIMA).plusDays(DIAS_MAX_ANTICIPACION);
+        List<Map<String, Object>> out = new ArrayList<>();
+        for (int i = 1; i <= 21 && out.size() < 4; i++) {
+            LocalDate f = desde.plusDays(i);
+            if (f.isAfter(limite)) break;
+            List<LocalTime> libres = horasLibres(idDoctor, f);
+            if (libres.isEmpty()) continue;
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("fecha", f.toString());
+            m.put("dia", diaDe(f));
+            m.put("horasLibres", libres.stream().limit(8).map(BotController::hhmm).toList());
+            out.add(m);
+        }
+        return out;
     }
 
     private Doctor doctorActivo(Integer id) {

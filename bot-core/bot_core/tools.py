@@ -41,6 +41,7 @@ class ToolSpec:
     confirm: bool = False
     summary: Callable[[dict], str] | None = None
     success_message: Callable[[dict], str] | None = None
+    note: Callable[[dict, dict], str] | None = None   # resumen compacto (args, resultado) que se recuerda entre turnos
 
     def allowed_for(self, role: str) -> bool:
         return self.roles is None or role in self.roles
@@ -116,12 +117,13 @@ class ToolRegistry:
 
     def tool(self, description: str, *, name: str | None = None, roles: list[str] | None = None,
              confirm: bool = False, summary: Callable[[dict], str] | None = None,
-             success_message: Callable[[dict], str] | None = None):
+             success_message: Callable[[dict], str] | None = None,
+             note: Callable[[dict, dict], str] | None = None):
         def deco(fn: Callable[..., Any]):
             spec = ToolSpec(
                 name=name or fn.__name__, description=description, fn=fn, schema=build_schema(fn),
                 roles=frozenset(roles) if roles else None, confirm=confirm,
-                summary=summary, success_message=success_message,
+                summary=summary, success_message=success_message, note=note,
             )
             if confirm and summary is None:
                 raise ValueError(f"{spec.name}: una tool con confirm=True necesita summary=")
