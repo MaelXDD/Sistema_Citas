@@ -86,7 +86,7 @@ def test_citas_tools_schemas_are_valid_for_gemini():
     for t in p.registry.for_role("PACIENTE"):
         _to_gemini_schema(types, t.schema)
     prep = p.registry.get("preparar_reserva").schema
-    assert prep["required"] == ["id_doctor", "fecha", "hora"] and "motivo" not in prep["required"]
+    assert prep["required"] == ["id_doctor", "nombre_doctor", "fecha", "hora"] and "motivo" not in prep["required"]
     assert p.registry.get("cancelar_cita").confirm is True
 
 
@@ -94,10 +94,12 @@ async def test_citas_reserva_forwards_token_and_returns_ui(settings):
     seen = {}
     def handler(req: httpx.Request):
         seen["auth"], seen["path"], seen["body"] = req.headers.get("authorization"), req.url.path, req.content
+        if req.url.path == "/api/bot/disponibilidad":
+            return httpx.Response(200, json={"idDoctor": 3, "doctor": "Dr. Pedro Torres León", "horasLibres": ["10:00"]})
         if req.url.path == "/api/bot/contexto":
             return httpx.Response(200, json={"citasAtendidas": 2, "citasCanceladas": 0, "proximaCita": "n.º 4, martes 27/10/2026 a las 10:00"})
         return httpx.Response(200, json={"resumen": "Dr. X, 10:00", "citaPendiente": {"fechaCita": "2026-10-27", "horaCita": "10:00:00"}})
-    llm = FakeLLM([LLMResponse(tool_calls=[ToolCall("preparar_reserva", {"id_doctor": 3, "fecha": "2026-10-27", "hora": "10:00"})]),
+    llm = FakeLLM([LLMResponse(tool_calls=[ToolCall("preparar_reserva", {"id_doctor": 3, "nombre_doctor": "Dr. Pedro Torres", "fecha": "2026-10-27", "hora": "10:00"})]),
                    LLMResponse(text="Listo")])
     eng, proj = _citas_engine(handler, llm, settings)
     r = await eng.chat(principal("5"), "reserva")

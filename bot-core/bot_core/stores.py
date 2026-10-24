@@ -35,8 +35,9 @@ class Store(Protocol):
     async def upsert_user(self, project_id: str, external_id: str, role: str, name: str) -> int: ...
     async def get_or_create_conversation(self, bot_user_id: int, conversation_id: str | None, channel: str) -> Conversation: ...
     async def get_conversation(self, conversation_id: str) -> Conversation | None: ...
-    async def add_message(self, conversation_id: str, role: str, content: str, tool_calls: Any = None) -> int: ...
+    async def add_message(self, conversation_id: str, role: str, content: str) -> int: ...
     async def recent_messages(self, conversation_id: str, limit: int, after_id: int = 0) -> list[Msg]: ...
+    async def recent_tool_notes(self, conversation_id: str, limit: int, after_id: int = 0) -> list[Msg]: ...
     async def count_after(self, conversation_id: str, after_id: int) -> int: ...
     async def messages_to_summarize(self, conversation_id: str, after_id: int, keep_last: int) -> list[Msg]: ...
     async def set_summary(self, conversation_id: str, summary: str, upto_id: int) -> None: ...
@@ -82,7 +83,7 @@ class InMemoryStore:
         c = self.convs.get(conversation_id)
         return Conversation(c["id"], c["summary"], c["upto"]) if c else None
 
-    async def add_message(self, conversation_id, role, content, tool_calls=None):
+    async def add_message(self, conversation_id, role, content):
         self._mid += 1
         self.msgs[conversation_id].append(Msg(self._mid, role, content))
         return self._mid
@@ -91,8 +92,12 @@ class InMemoryStore:
         rows = [m for m in self.msgs[conversation_id] if m.id > after_id and m.role in ("user", "assistant")]
         return rows[-limit:]
 
+    async def recent_tool_notes(self, conversation_id, limit, after_id=0):
+        rows = [m for m in self.msgs[conversation_id] if m.id > after_id and m.role == "tool"]
+        return rows[-limit:]
+
     async def count_after(self, conversation_id, after_id):
-        return len([m for m in self.msgs[conversation_id] if m.id > after_id])
+        return len([m for m in self.msgs[conversation_id] if m.id > after_id and m.role in ("user", "assistant")])
 
     async def messages_to_summarize(self, conversation_id, after_id, keep_last):
         rows = [m for m in self.msgs[conversation_id] if m.id > after_id and m.role in ("user", "assistant")]
@@ -194,10 +199,10 @@ class PostgresStore:
         row = await self._one("select id::text, summary, summarized_upto from bot.conversations where id=%s", (conversation_id,))
         return Conversation(row[0], row[1], row[2]) if row else None
 
-    async def add_message(self, conversation_id, role, content, tool_calls=None):
+    async def add_message(self, conversation_id, role, content):
         row = await self._one(
-            "insert into bot.messages(conversation_id, role, content, tool_calls) values (%s,%s,%s,%s) returning id",
-            (conversation_id, role, content, json.dumps(tool_calls) if tool_calls else None))
+            "insert into bot.messages(conversation_id, role, content) values (%s,%s,%s) returning id",
+            (conversation_id, role, content))
         return row[0]
 
     async def recent_messages(self, conversation_id, limit, after_id=0):
@@ -207,9 +212,17 @@ class PostgresStore:
                order by id desc limit %s""", (conversation_id, after_id, limit))
         return [Msg(r[0], r[1], r[2] or "") for r in reversed(rows)]
 
+    async def recent_tool_notes(self, conversation_id, limit, after_id=0):
+        rows = await self._all(
+            """select id, role, content from bot.messages
+               where conversation_id=%s and id>%s and role='tool'
+               order by id desc limit %s""", (conversation_id, after_id, limit))
+        return [Msg(r[0], r[1], r[2] or "") for r in reversed(rows)]
+
     async def count_after(self, conversation_id, after_id):
-        return (await self._one("select count(*) from bot.messages where conversation_id=%s and id>%s",
-                                (conversation_id, after_id)))[0]
+        return (await self._one(
+            "select count(*) from bot.messages where conversation_id=%s and id>%s and role in ('user','assistant')",
+            (conversation_id, after_id)))[0]
 
     async def messages_to_summarize(self, conversation_id, after_id, keep_last):
         rows = await self._all(

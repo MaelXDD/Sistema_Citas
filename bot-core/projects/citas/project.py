@@ -14,6 +14,7 @@ from .tools import register
 class CitasProject(Project):
     id = "citas"
     timezone = "America/Lima"
+    ground_times = True      # nunca ofrecer horas que no hayan salido de horas_disponibles
     fact_keys = {
         "turno_preferido": "mañana, tarde o noche",
         "especialidad_habitual": "especialidad que suele reservar",
