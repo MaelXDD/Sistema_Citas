@@ -1,0 +1,191 @@
+/* ==========================================================================
+   MISION.HTML
+   ========================================================================== */
+
+/* ---------- Presentación ---------- */
+.mision-frase {
+    margin-bottom: 24px;
+    padding: 24px 28px;
+    border-left: 6px solid var(--azul-noche);
+    background-color: var(--celeste-claro);
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.4;
+    color: var(--azul-noche);
+}
+
+.mision-texto > p {
+    font-size: 1.2rem;
+    line-height: 1.7;
+}
+
+.mision-dato {
+    padding: 18px 20px;
+}
+
+.mision-dato strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 1.8rem;
+    line-height: 1.1;
+    color: var(--azul-institucional);
+}
+
+.mision-dato span {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--azul-noche);
+}
+
+.mision-foto {
+    margin: 0;
+}
+
+.mision-foto-marco {
+    position: relative;
+    overflow: hidden;
+}
+
+.mision-foto-marco img {
+    height: 400px;
+}
+
+.mision-foto-sello {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background-color: var(--azul-noche);
+    font-weight: 800;
+    line-height: 1.4;
+    color: var(--blanco);
+}
+
+.mision-foto-sello i {
+    font-size: 1.5rem;
+    color: var(--celeste-hospital);
+}
+
+.mision-foto figcaption {
+    margin-top: 16px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.5;
+    text-align: center;
+}
+
+/* ---------- Pilares y valores ---------- */
+.mision-pilar,
+.mision-valor {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.mision-valor .icono-caja {
+    background-color: var(--celeste-claro);
+}
+
+.mision-valor .icono-caja i {
+    color: var(--azul-institucional);
+}
+
+/* ---------- Cita institucional ---------- */
+.mision-cita {
+    max-width: 900px;
+    margin: 56px auto 0;
+    padding: 36px 40px;
+    text-align: center;
+}
+
+.mision-cita .icono-caja {
+    margin-inline: auto;
+}
+
+.mision-cita blockquote {
+    margin-bottom: 16px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1.5;
+    color: var(--azul-noche);
+}
+
+.mision-cita p {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+/* ---------- Llamado a la acción ---------- */
+.mision-cta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 28px 40px;
+    margin-top: 56px;
+    padding: 36px 40px;
+    border-radius: 10px;
+}
+
+.mision-cta > div:first-child {
+    flex: 1 1 360px;
+}
+
+.mision-cta h2 {
+    font-size: clamp(1.5rem, 2.8vw, 2rem);
+    line-height: 1.25;
+}
+
+.mision-cta p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.mision-cta-botones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.mision-cta-botones a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+    .mision-foto-marco img {
+        height: 320px;
+    }
+}
+
+@media (max-width: 640px) {
+    .mision-pilar,
+    .mision-valor {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .mision-cita {
+        padding: 28px 22px;
+    }
+
+    .mision-cita blockquote {
+        font-size: 1.2rem;
+    }
+
+    .mision-cta {
+        padding: 28px 22px;
+    }
+
+    .mision-cta-botones a {
+        justify-content: center;
+        width: 100%;
+    }
+}
