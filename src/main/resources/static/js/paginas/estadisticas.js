@@ -9,15 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     configurarNavegacionGlobal();
     cargarEspecialidadesFiltros();
 
-    // Inicializar los tres reportes
     inicializarReporteDoctores();
     inicializarReportePacientes();
     inicializarReporteAfluencia();
 });
 
-/**
- * Controla el botón de regreso de la cabecera.
- */
 function configurarNavegacionGlobal() {
     document.getElementById('btnRegresarHome')?.addEventListener('click', () => {
         window.location.href = '/index.html';
@@ -25,7 +21,7 @@ function configurarNavegacionGlobal() {
 }
 
 /**
- * Llena los selectores de especialidades de los reportes 1 y 2 con datos de la BD.
+ * Llena los selectores de especialidades. El value es el ID (lo que espera el backend).
  */
 async function cargarEspecialidadesFiltros() {
     const selDocs = document.getElementById('filtroEspecialidad');
@@ -37,21 +33,17 @@ async function cargarEspecialidadesFiltros() {
         const lista = await res.json();
 
         lista.forEach(esp => {
-            if (selDocs) {
+            const id = esp.idEspecialidad ?? esp.id;
+            [selDocs, selPacs].forEach(sel => {
+                if (!sel) return;
                 const opt = document.createElement('option');
-                opt.value = esp.nombre;
+                opt.value = id;
                 opt.textContent = esp.nombre;
-                selDocs.appendChild(opt);
-            }
-            if (selPacs) {
-                const opt = document.createElement('option');
-                opt.value = esp.nombre;
-                opt.textContent = esp.nombre;
-                selPacs.appendChild(opt);
-            }
+                sel.appendChild(opt);
+            });
         });
     } catch {
-        // En caso de fallo de conexión se mantienen las opciones iniciales
+        // Si falla, se mantienen las opciones iniciales
     }
 }
 
@@ -64,20 +56,23 @@ function inicializarReporteDoctores() {
     const btnPdf = document.getElementById('btnDescargarReporteDocs');
     const btnLimpiar = document.getElementById('btnLimpiarFiltrosDocs');
 
-    const consultar = async () => {
-        const especialidad = document.getElementById('filtroEspecialidad').value;
+    const armarParametros = () => {
+        const idEspecialidad = document.getElementById('filtroEspecialidad').value;
         const estado = document.getElementById('filtroEstado').value;
+        const params = new URLSearchParams();
+        if (idEspecialidad) params.append('idEspecialidad', idEspecialidad);
+        if (estado) params.append('estado', estado);
+        return params.toString() ? '?' + params.toString() : '';
+    };
 
+    const consultar = async () => {
         renderizarMensajeEnTabla(tbody, 'tpl-msg-estadisticas', 'Consultando estadísticas de médicos...');
 
         try {
-            const params = new URLSearchParams();
-            if (especialidad) params.append('especialidad', especialidad);
-            if (estado) params.append('estado', estado);
-
-            const url = `${CONFIG.API_URL}/estadisticas/doctores-citas${params.toString() ? '?' + params.toString() : ''}`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error();
+            const res = await fetch(`${CONFIG.API_URL}/reportes/estadisticas/doctores-citas${armarParametros()}`, {
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
 
             const datos = await res.json();
 
@@ -92,13 +87,14 @@ function inicializarReporteDoctores() {
             datos.forEach((item, index) => {
                 const clon = plantilla.content.cloneNode(true);
                 clon.querySelector('.col-num').textContent = index + 1;
-                clon.querySelector('.col-nombre').textContent = item.nombreDoctor;
+                clon.querySelector('.col-nombre').textContent = `${item.nombres} ${item.apellidos}`;
                 clon.querySelector('.col-esp').textContent = item.especialidad;
                 clon.querySelector('.col-total').textContent = item.totalCitas;
-                clon.querySelector('.col-ingresos').textContent = Formato.moneda(item.ingresosTotales);
+                clon.querySelector('.col-ingresos').textContent = Formato.moneda(item.ingresos);
                 tbody.appendChild(clon);
             });
-        } catch {
+        } catch (e) {
+            console.error('Error doctores-citas:', e);
             renderizarMensajeEnTabla(tbody, 'tpl-msg-estadisticas', 'Error al cargar las estadísticas de doctores.', true);
         }
     };
@@ -112,12 +108,7 @@ function inicializarReporteDoctores() {
     });
 
     btnPdf?.addEventListener('click', () => {
-        const esp = document.getElementById('filtroEspecialidad').value;
-        const est = document.getElementById('filtroEstado').value;
-        const params = new URLSearchParams();
-        if (esp) params.append('especialidad', esp);
-        if (est) params.append('estado', est);
-        window.open(`${CONFIG.API_URL}/reportes/doctores-citas/pdf${params.toString() ? '?' + params.toString() : ''}`, '_blank');
+        window.open(`${CONFIG.API_URL}/reportes/estadisticas/doctores-citas/pdf${armarParametros()}`, '_blank');
     });
 }
 
@@ -131,9 +122,9 @@ function inicializarReportePacientes() {
     const btnLimpiar = document.getElementById('btnLimpiarFiltroPacientes');
 
     const consultar = async () => {
-        const especialidad = document.getElementById('filtroEspecialidadPacientes').value;
+        const idEspecialidad = document.getElementById('filtroEspecialidadPacientes').value;
 
-        if (!especialidad) {
+        if (!idEspecialidad) {
             Notificacion.advertencia('Filtro requerido', 'Por favor selecciona una especialidad para consultar los pacientes.');
             return;
         }
@@ -141,8 +132,10 @@ function inicializarReportePacientes() {
         renderizarMensajeEnTabla(tbody, 'tpl-msg-estadisticas', 'Cargando listado de pacientes...');
 
         try {
-            const res = await fetch(`${CONFIG.API_URL}/estadisticas/pacientes-especialidad?especialidad=${encodeURIComponent(especialidad)}`);
-            if (!res.ok) throw new Error();
+            const res = await fetch(`${CONFIG.API_URL}/reportes/estadisticas/pacientes-especialidad?idEspecialidad=${encodeURIComponent(idEspecialidad)}`, {
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
 
             const datos = await res.json();
 
@@ -155,14 +148,20 @@ function inicializarReportePacientes() {
             const plantilla = document.getElementById('tpl-fila-reporte-pac');
 
             datos.forEach((item, index) => {
+                const nombre = item.nombrePaciente
+                    ?? `${item.nombres ?? ''} ${item.apellidos ?? ''}`.trim();
+                const citas = item.cantidadCitas ?? item.totalCitas;
+                const total = item.totalPagado ?? item.totalPagos;
+
                 const clon = plantilla.content.cloneNode(true);
                 clon.querySelector('.col-num').textContent = index + 1;
-                clon.querySelector('.col-nombre').textContent = item.nombrePaciente;
-                clon.querySelector('.col-citas').textContent = item.cantidadCitas;
-                clon.querySelector('.col-total').textContent = Formato.moneda(item.totalPagado);
+                clon.querySelector('.col-nombre').textContent = nombre;
+                clon.querySelector('.col-citas').textContent = citas;
+                clon.querySelector('.col-total').textContent = Formato.moneda(total);
                 tbody.appendChild(clon);
             });
-        } catch {
+        } catch (e) {
+            console.error('Error pacientes-especialidad:', e);
             renderizarMensajeEnTabla(tbody, 'tpl-msg-estadisticas', 'Error al obtener la información de pacientes.', true);
         }
     };
@@ -175,9 +174,12 @@ function inicializarReportePacientes() {
     });
 
     btnPdf?.addEventListener('click', () => {
-        const esp = document.getElementById('filtroEspecialidadPacientes').value;
-        const params = esp ? `?especialidad=${encodeURIComponent(esp)}` : '';
-        window.open(`${CONFIG.API_URL}/reportes/pacientes-especialidad/pdf${params}`, '_blank');
+        const id = document.getElementById('filtroEspecialidadPacientes').value;
+        if (!id) {
+            Notificacion.advertencia('Filtro requerido', 'Selecciona una especialidad para descargar el PDF.');
+            return;
+        }
+        window.open(`${CONFIG.API_URL}/reportes/pacientes-especialidad/${encodeURIComponent(id)}/pdf`, '_blank');
     });
 }
 
@@ -197,15 +199,16 @@ function inicializarReporteAfluencia() {
         renderizarMensajeEnTabla(tbody, 'tpl-msg-estadisticas', 'Analizando afluencia de citas y horarios...');
 
         try {
-            const params = new URLSearchParams();
-            if (dia) params.append('diaSemana', dia);
-            if (turno) params.append('turno', turno);
+            const res = await fetch(`${CONFIG.API_URL}/reportes/afluencia`, {
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
 
-            const url = `${CONFIG.API_URL}/estadisticas/afluencia-horarios${params.toString() ? '?' + params.toString() : ''}`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error();
+            let datos = await res.json();
 
-            const datos = await res.json();
+            // El endpoint no filtra, así que se filtra aquí
+            if (dia) datos = datos.filter(d => d.diaSemana === dia);
+            if (turno) datos = datos.filter(d => d.turno === turno);
 
             if (datos.length === 0) {
                 renderizarMensajeEnTabla(tbody, 'tpl-msg-estadisticas', 'No se encontraron registros de afluencia para este criterio.');
@@ -217,7 +220,6 @@ function inicializarReporteAfluencia() {
             const tplDetalle = document.getElementById('tpl-detalle-afluencia');
 
             datos.forEach(item => {
-                // Clonar fila principal
                 const clonFila = tplFila.content.cloneNode(true);
                 const trPrincipal = clonFila.querySelector('tr');
 
@@ -226,12 +228,10 @@ function inicializarReporteAfluencia() {
                 trPrincipal.querySelector('.col-citas').textContent = item.citasTotales;
                 trPrincipal.querySelector('.col-ingresos').textContent = Formato.moneda(item.ingresosTurno);
 
-                // Clonar fila acordeón de detalle
                 const clonDetalle = tplDetalle.content.cloneNode(true);
                 const trDetalle = clonDetalle.querySelector('tr');
                 const contenedorBadges = clonDetalle.querySelector('.contenedor-badges-acordeon');
 
-                // Poblar especialidades atendidas en ese horario
                 if (item.especialidadesAtendidas && item.especialidadesAtendidas.length > 0) {
                     item.especialidadesAtendidas.forEach(nombreEsp => {
                         const span = document.createElement('span');
@@ -253,7 +253,8 @@ function inicializarReporteAfluencia() {
                 tbody.appendChild(trPrincipal);
                 tbody.appendChild(trDetalle);
             });
-        } catch {
+        } catch (e) {
+            console.error('Error afluencia:', e);
             renderizarMensajeEnTabla(tbody, 'tpl-msg-estadisticas', 'Error al consultar el reporte de afluencia.', true);
         }
     };
@@ -270,9 +271,9 @@ function inicializarReporteAfluencia() {
         const dia = document.getElementById('filtroDiaSemana').value;
         const turno = document.getElementById('filtroTurno').value;
         const params = new URLSearchParams();
-        if (dia) params.append('diaSemana', dia);
+        if (dia) params.append('dia', dia);
         if (turno) params.append('turno', turno);
-        window.open(`${CONFIG.API_URL}/reportes/afluencia-horarios/pdf${params.toString() ? '?' + params.toString() : ''}`, '_blank');
+        window.open(`${CONFIG.API_URL}/reportes/consulta3/pdf${params.toString() ? '?' + params.toString() : ''}`, '_blank');
     });
 
     consultar();

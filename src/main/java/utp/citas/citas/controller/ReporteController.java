@@ -70,25 +70,23 @@ public class ReporteController {
      * Genera el comprobante de una cita en PDF, lo sube a Supabase y devuelve la URL.
      */
     @GetMapping("/citas/{idCita}/pdf")
-    public ResponseEntity<String> descargarReporteCita(@PathVariable Integer idCita) {
+    public ResponseEntity<byte[]> descargarReporteCita(@PathVariable Integer idCita) {
         try {
             Cita cita = citaRepository.findById(idCita)
                     .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
 
-            String dni = cita.getPaciente().getDni();
-            String fecha = cita.getFechaCita().toString();
-
             byte[] pdfBytes = reporteService.generarReporteCitaPDF(idCita);
 
-            String nombreArchivo = String.format("Comprobante_%s_%s_Cita%d.pdf", dni, fecha, idCita);
+            String nombreArchivo = String.format("Comprobante_%s_%s_Cita%d.pdf",
+                    cita.getPaciente().getDni(), cita.getFechaCita(), idCita);
 
-            String urlPublica = supabaseStorageService.subirReporte(nombreArchivo, pdfBytes);
-
-            return ResponseEntity.status(HttpStatus.FOUND)
-                    .location(java.net.URI.create(urlPublica))
-                    .build();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("inline", nombreArchivo);
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -123,6 +121,7 @@ public class ReporteController {
             headers.setContentDispositionFormData("inline", "Reporte_Consulta3.pdf");
             return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
