@@ -1,0 +1,115 @@
+/* ==========================================================================
+   MISCITAS.HTML (historial de citas del paciente)
+   ========================================================================== */
+
+/* ---------- Cantidad dentro de cada botón de filtro ---------- */
+.filtro-cantidad {
+    padding: 0 8px;
+    border-radius: 999px;
+    background-color: var(--blanco);
+    font-size: 0.8rem;
+    color: var(--azul-noche);
+}
+
+/* ---------- Fila de una cita ---------- */
+.fila-cita {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 24px;
+}
+
+.fila-cita.cancelada,
+.fila-cita.vencida {
+    opacity: 0.75;
+}
+
+.cita-cuerpo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 6px;
+    min-width: 0;
+}
+
+.cita-titulo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+}
+
+.cita-doctor {
+    font-size: 1.2rem;
+    line-height: 1.25;
+}
+
+.cita-dato {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 0.95rem;
+    color: var(--texto-suave);
+}
+
+.cita-dato i {
+    color: var(--celeste-etiqueta);
+}
+
+.cita-acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 190px;
+}
+
+/* ---------- Estado de la cita ---------- */
+.estado-cita {
+    padding: 3px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.estado-cita.pendiente {
+    background-color: var(--aviso-suave);
+    color: var(--aviso-oscuro);
+}
+
+.estado-cita.confirmada {
+    background-color: var(--exito-suave);
+    color: var(--exito-oscuro);
+}
+
+.estado-cita.vencida {
+    background-color: var(--neutro-suave);
+    color: var(--neutro-oscuro);
+}
+
+.estado-cita.completada {
+    background-color: var(--celeste-claro);
+    color: var(--azul-noche);
+}
+
+.estado-cita.cancelada {
+    background-color: var(--peligro-suave);
+    color: var(--peligro-oscuro);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 700px) {
+    .fila-cita {
+        flex-wrap: wrap;
+        padding: 18px;
+    }
+
+    .cita-acciones {
+        flex-direction: row;
+        flex: 1 1 100%;
+    }
+
+    .cita-acciones .boton-suave {
+        flex: 1;
+    }
+}

@@ -1,0 +1,303 @@
+/* ==========================================================================
+   ESTADISTICAS.HTML (vista de administración)
+   ========================================================================== */
+
+/* ---------- Atajos a los tres módulos ---------- */
+.secciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--celeste-borde);
+    border-radius: 14px;
+    background-color: var(--celeste-suave);
+}
+
+.secciones-titulo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--celeste-etiqueta);
+}
+
+.seccion-enlace {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex: 1 1 220px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background-color: var(--blanco);
+    font-weight: 800;
+    color: var(--azul-noche);
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.seccion-enlace:hover {
+    background-color: var(--celeste-claro);
+}
+
+.seccion-numero {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--azul-noche);
+    font-size: 0.8rem;
+    color: var(--blanco);
+}
+
+/* ---------- Módulo (cada reporte) ---------- */
+.modulo {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px;
+    scroll-margin-top: 100px;
+}
+
+.modulo-cabecera {
+    display: grid;
+    grid-template-columns: auto 1fr minmax(240px, 380px);
+    align-items: center;
+    gap: 16px 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--celeste-claro);
+}
+
+.modulo-cabecera h2 {
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    line-height: 1.15;
+}
+
+.modulo-cabecera p {
+    font-size: 0.95rem;
+}
+
+.modulo-icono {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background-color: var(--azul-noche);
+    font-size: 1.4rem;
+    color: var(--blanco);
+}
+
+/* ---------- Tarjetas de cifras ---------- */
+.indicador {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 18px 20px;
+    border-radius: 14px;
+    background-color: var(--celeste-suave);
+}
+
+.indicador-titulo {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--celeste-etiqueta);
+}
+
+.indicador strong {
+    font-size: clamp(1.5rem, 2.2vw, 1.9rem);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.indicador small {
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+}
+
+.indicador-destacado {
+    background-color: var(--celeste-claro);
+}
+
+/* ---------- Filtros dentro del módulo ---------- */
+.filtros-modulo {
+    border-radius: 14px;
+    background-color: var(--celeste-suave);
+}
+
+.filtros-modulo .filtro-select select {
+    background-color: var(--blanco);
+}
+
+/* ---------- Tabla de reporte ---------- */
+.tabla-reporte {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.95rem;
+}
+
+.tabla-reporte th {
+    padding: 14px 16px;
+    background-color: var(--azul-noche);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-align: left;
+    white-space: nowrap;
+    color: var(--blanco);
+}
+
+.tabla-reporte th:first-child {
+    border-top-left-radius: 12px;
+}
+
+.tabla-reporte th:last-child {
+    border-top-right-radius: 12px;
+}
+
+.tabla-reporte td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--celeste-claro);
+    vertical-align: middle;
+}
+
+.tabla-reporte tbody tr:hover td {
+    background-color: var(--celeste-suave);
+}
+
+.tabla-reporte .col-centro {
+    text-align: center;
+}
+
+.tabla-reporte .col-derecha {
+    text-align: right;
+}
+
+.tabla-reporte .celda-estado,
+.tabla-reporte .celda-error {
+    padding: 36px 24px;
+}
+
+.col-num {
+    font-weight: 800;
+    color: var(--celeste-etiqueta);
+}
+
+.cifra {
+    font-weight: 800;
+}
+
+.persona {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.persona .avatar-iniciales {
+    --tamano: 44px;
+}
+
+.persona strong {
+    line-height: 1.3;
+}
+
+.modulo .paginacion {
+    padding: 0;
+}
+
+/* ---------- Control de flujo: fila con detalle desplegable ---------- */
+.fila-turno {
+    cursor: pointer;
+}
+
+.turno {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+}
+
+.turno i {
+    color: var(--celeste-etiqueta);
+}
+
+.boton-ver {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background-color: var(--celeste-claro);
+    font-weight: 800;
+    color: var(--azul-noche);
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.boton-ver i {
+    transition: transform 0.2s;
+}
+
+.fila-turno.abierta .boton-ver {
+    background-color: var(--azul-noche);
+    color: var(--blanco);
+}
+
+.fila-turno.abierta .boton-ver i {
+    transform: rotate(180deg);
+}
+
+.tabla-reporte .fila-detalle td {
+    padding: 0;
+    background-color: var(--celeste-suave);
+}
+
+.detalle-turno {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 20px;
+}
+
+.detalle-titulo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    color: var(--azul-noche);
+}
+
+.detalle-especialidades {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* ---------- Sin animaciones si el usuario lo prefiere ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .seccion-enlace,
+    .boton-ver,
+    .boton-ver i {
+        transition: none;
+    }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+    .modulo-cabecera {
+        grid-template-columns: auto 1fr;
+    }
+
+    .modulo-cabecera p {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 480px) {
+    .modulo {
+        padding: 20px;
+    }
+}

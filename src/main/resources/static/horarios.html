@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hospital de la Solidaridad - Gestión de Horarios</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/estilo.css">
-    <link rel="stylesheet" href="/css/paginas.css">
+    <link rel="stylesheet" href="/css/paginas/horarios.css">
     <link rel="stylesheet" href="/css/bot.css">
 </head>
 <body>
@@ -26,111 +30,292 @@
     </div>
 </header>
 
-<main class="area-gestion-medica">
+<main class="gestion contenido-pagina">
+    <div class="contenedor-seccion">
 
-    <div id="vistaTabla" class="tarjeta-panel animate-fade-in">
-        <div class="cabecera-panel">
-            <div class="titulos-seccion">
-                <h2>Asignación de Horarios Médicos</h2>
-                <p>Gestione los turnos de atención de 6 horas del personal médico.</p>
-            </div>
-            <button type="button" id="btnMostrarForm" class="boton-accion-total">
-                + Asignar Nuevo Turno
-            </button>
-        </div>
+        <!-- ===== Vista de la lista ===== -->
+        <div id="vistaTabla" class="vista">
 
-        <button type="button" id="btnIrEstadisticas" class="boton-blanco boton-borde-azul btn-centrado-margen">
-            Estadísticas
-        </button>
-
-        <div class="tabla-responsiva">
-            <table class="tabla-doctores">
-                <thead>
-                <tr>
-                    <th>Médico</th>
-                    <th>Especialidad</th>
-                    <th>Día de la Semana</th>
-                    <th>Hora Inicio</th>
-                    <th>Hora Fin</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody id="tablaHorariosBody">
-                <tr>
-                    <td colspan="6" class="celda-estado">Cargando horarios de atención...</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="vistaFormulario" class="tarjeta-panel panel-formulario oculto animate-fade-in">
-        <div class="cabecera-formulario">
-            <h2>Asignar Turno Médico</h2>
-            <p>Seleccione el médico y defina su rango de trabajo continuo.</p>
-        </div>
-
-        <form id="horarioForm" class="formulario-estandar">
-            <div class="contenedor-selector">
-                <label class="etiqueta-selector" for="selectDoctor">Seleccionar Médico:</label>
-                <select id="selectDoctor" class="selector-estandar" required>
-                    <option value="" disabled selected>Cargando médicos activos...</option>
-                </select>
-            </div>
-
-            <div class="contenedor-selector">
-                <label class="etiqueta-selector">Días de la Semana (Selección Múltiple):</label>
-                <div class="grupo-checkbox-dias">
-                    <label class="opcion-checkbox"><input type="checkbox" name="diasSemana" value="Lunes"> Lunes</label>
-                    <label class="opcion-checkbox"><input type="checkbox" name="diasSemana" value="Martes"> Martes</label>
-                    <label class="opcion-checkbox"><input type="checkbox" name="diasSemana" value="Miércoles"> Miércoles</label>
-                    <label class="opcion-checkbox"><input type="checkbox" name="diasSemana" value="Jueves"> Jueves</label>
-                    <label class="opcion-checkbox"><input type="checkbox" name="diasSemana" value="Viernes"> Viernes</label>
-                    <label class="opcion-checkbox"><input type="checkbox" name="diasSemana" value="Sábado"> Sábado</label>
+            <section class="panel cabecera-gestion">
+                <div class="cabecera-textos">
+                    <span class="sobretitulo">Administración de personal asistencial</span>
+                    <h2>Asignación y Gestión de Horarios Médicos</h2>
+                    <p>Gestione los turnos de atención de 6 horas del personal médico.</p>
                 </div>
+                <div class="cabecera-acciones">
+                    <button type="button" id="btnIrEstadisticas" class="boton-suave">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        Estadísticas
+                    </button>
+                    <button type="button" id="btnMostrarForm" class="boton-accion-total">
+                        <i class="bi bi-plus-circle"></i>
+                        Asignar Nuevo Turno
+                    </button>
+                </div>
+            </section>
+
+            <ul class="resumen">
+                <li class="panel dato">
+                    <div>
+                        <span class="dato-titulo">Turnos Activos</span>
+                        <strong id="resumenTurnos">—</strong>
+                    </div>
+                    <i class="bi bi-clock"></i>
+                </li>
+                <li class="panel dato">
+                    <div>
+                        <span class="dato-titulo">Doctores con Turnos</span>
+                        <strong id="resumenDoctores">—</strong>
+                    </div>
+                    <i class="bi bi-person-badge"></i>
+                </li>
+                <li class="panel dato dato-destacado">
+                    <div>
+                        <span class="dato-titulo">Atienden Hoy</span>
+                        <strong id="resumenEnTurno">—</strong>
+                    </div>
+                    <i class="bi bi-calendar-check"></i>
+                </li>
+                <li class="panel dato">
+                    <div>
+                        <span class="dato-titulo">Tarifa Promedio</span>
+                        <strong id="resumenTarifa">—</strong>
+                    </div>
+                    <i class="bi bi-cash-stack"></i>
+                </li>
+            </ul>
+
+            <section class="panel filtros">
+                <label class="filtro-busqueda">
+                    <i class="bi bi-search"></i>
+                    <input type="search" id="inputBuscar" placeholder="Buscar médico por nombre" aria-label="Buscar médico">
+                </label>
+                <label class="filtro-select">
+                    <i class="bi bi-heart-pulse"></i>
+                    <select id="filtroEspecialidad" aria-label="Filtrar por especialidad">
+                        <option value="">Todas las especialidades</option>
+                    </select>
+                </label>
+                <label class="filtro-select">
+                    <i class="bi bi-calendar3"></i>
+                    <select id="filtroDia" aria-label="Filtrar por día">
+                        <option value="">Todos los días</option>
+                        <option value="0">Lunes</option>
+                        <option value="1">Martes</option>
+                        <option value="2">Miércoles</option>
+                        <option value="3">Jueves</option>
+                        <option value="4">Viernes</option>
+                        <option value="5">Sábado</option>
+                    </select>
+                </label>
+                <button type="button" id="btnLimpiarFiltros" class="boton-suave filtros-limpiar">
+                    <i class="bi bi-funnel"></i>
+                    Limpiar Filtros
+                </button>
+            </section>
+
+            <h3 class="titulo-lista">Programación Semanal Vigente</h3>
+
+            <ul id="listaHorarios" class="lista-tarjetas">
+                <li class="panel mensaje-lista">Cargando horarios de atención...</li>
+            </ul>
+
+            <div class="panel paginacion">
+                <p>
+                    Mostrando <strong id="textoMostradas">0</strong>
+                    de <strong id="textoTotal">0</strong> turnos
+                </p>
+                <nav id="paginacion" class="paginacion-botones" aria-label="Paginación"></nav>
             </div>
 
-            <div class="contenedor-selector">
-                <label class="etiqueta-selector" for="selectTurno">Turno Laboral (6 Horas Máx.):</label>
-                <select id="selectTurno" class="selector-estandar" required>
-                    <option value="" disabled selected>Seleccione el turno continuo...</option>
-                    <option value="07:00-13:00">Turno Mañana (07:00 AM - 01:00 PM)</option>
-                    <option value="11:00-17:00">Turno Intermedio (11:00 AM - 05:00 PM)</option>
-                    <option value="13:00-19:00">Turno Tarde (01:00 PM - 07:00 PM)</option>
-                </select>
+        </div>
+
+        <!-- ===== Vista del formulario ===== -->
+        <div id="vistaFormulario" class="panel panel-formulario formulario-horario oculto">
+            <div class="cabecera-formulario">
+                <h2>
+                    <i class="bi bi-calendar3"></i>
+                    <span>Asignar Turno Médico</span>
+                </h2>
+                <p>Seleccione el médico y defina su rango de trabajo continuo.</p>
             </div>
 
-            <div class="fila-botones-formulario">
-                <button type="button" id="btnCancelar" class="boton-blanco">Cancelar</button>
-                <button type="submit" id="btnGuardar" class="boton-accion-total">Guardar Horario</button>
-            </div>
-        </form>
+            <form id="horarioForm" class="formulario-estandar">
+
+                <div class="contenedor-selector">
+                    <div class="paso-cabecera">
+                        <label class="etiqueta-selector" for="selectDoctor">
+                            <i class="bi bi-person-badge"></i>
+                            1. Seleccionar médico
+                        </label>
+                        <span class="paso-aviso">Obligatorio</span>
+                    </div>
+                    <select id="selectDoctor" class="selector-estandar" required>
+                        <option value="" disabled selected>Cargando médicos activos...</option>
+                    </select>
+                </div>
+
+                <div id="resumenDoctor" class="resumen-doctor oculto">
+                    <span class="avatar-iniciales" id="resumenDoctorIniciales"></span>
+                    <div class="resumen-doctor-datos">
+                        <strong id="resumenDoctorNombre"></strong>
+                        <span id="resumenDoctorEspecialidad"></span>
+                    </div>
+                    <div class="tarifa-caja">
+                        <span>Tarifa de consulta</span>
+                        <strong id="resumenDoctorTarifa"></strong>
+                        <small>Por atención médica</small>
+                    </div>
+                </div>
+
+                <div class="contenedor-selector">
+                    <div class="paso-cabecera">
+                        <span class="etiqueta-selector" id="etiquetaDias">
+                            <i class="bi bi-calendar-week"></i>
+                            2. Días de la semana (selección múltiple)
+                        </span>
+                        <button type="button" id="btnTodosDias" class="enlace-accion">Seleccionar todos (Lun-Sáb)</button>
+                    </div>
+                    <div class="grupo-dias" role="group" aria-labelledby="etiquetaDias">
+                        <label class="dia-opcion"><input type="checkbox" name="diasSemana" value="Lunes"><span>Lunes</span></label>
+                        <label class="dia-opcion"><input type="checkbox" name="diasSemana" value="Martes"><span>Martes</span></label>
+                        <label class="dia-opcion"><input type="checkbox" name="diasSemana" value="Miércoles"><span>Miércoles</span></label>
+                        <label class="dia-opcion"><input type="checkbox" name="diasSemana" value="Jueves"><span>Jueves</span></label>
+                        <label class="dia-opcion"><input type="checkbox" name="diasSemana" value="Viernes"><span>Viernes</span></label>
+                        <label class="dia-opcion"><input type="checkbox" name="diasSemana" value="Sábado"><span>Sábado</span></label>
+                    </div>
+                    <small id="contadorDias" class="ayuda-campo">Ningún día seleccionado</small>
+                </div>
+
+                <div class="contenedor-selector">
+                    <div class="paso-cabecera">
+                        <label class="etiqueta-selector" for="selectTurno">
+                            <i class="bi bi-clock"></i>
+                            3. Turno laboral continuo
+                        </label>
+                        <span class="paso-aviso">Máximo 6 horas</span>
+                    </div>
+                    <select id="selectTurno" class="selector-estandar" required>
+                        <option value="" disabled selected>Seleccione el turno continuo...</option>
+                        <option value="07:00-13:00">Turno Mañana (07:00 AM - 01:00 PM)</option>
+                        <option value="11:00-17:00">Turno Intermedio (11:00 AM - 05:00 PM)</option>
+                        <option value="13:00-19:00">Turno Tarde (01:00 PM - 07:00 PM)</option>
+                    </select>
+                </div>
+
+                <div class="fila-botones-formulario">
+                    <button type="button" id="btnCancelar" class="boton-blanco">Cancelar</button>
+                    <button type="submit" id="btnGuardar" class="boton-accion-total">Guardar Horario</button>
+                </div>
+            </form>
+        </div>
+
     </div>
 </main>
 
-<template id="tpl-fila-horario">
-    <tr>
-        <td class="col-medico texto-azul font-bold"></td>
-        <td><span class="badge-especialidad col-esp"></span></td>
-        <td class="col-dia uppercase"></td>
-        <td class="col-inicio"></td>
-        <td class="col-fin"></td>
-        <td>
-            <button type="button" class="boton-eliminar btn-del-horario">Eliminar</button>
-        </td>
-    </tr>
+<template id="tpl-tarjeta-horario">
+    <li class="panel panel-animado horario">
+        <div class="horario-doctor">
+            <span class="avatar-iniciales horario-avatar"></span>
+            <div>
+                <h3 class="horario-nombre"></h3>
+                <span class="etiqueta horario-especialidad"></span>
+            </div>
+        </div>
+
+        <div class="horario-bloque">
+            <span class="rotulo">
+                <i class="bi bi-calendar3"></i>
+                Día asignado
+            </span>
+            <strong class="horario-dia"></strong>
+            <small class="horario-turno"></small>
+        </div>
+
+        <div class="horario-bloque">
+            <span class="rotulo">
+                <i class="bi bi-clock"></i>
+                Horario de atención
+            </span>
+            <strong class="horario-horas"></strong>
+            <small class="horario-duracion"></small>
+        </div>
+
+        <div class="horario-lateral">
+            <div class="tarifa-caja">
+                <span>Tarifa de consulta</span>
+                <strong class="tarifa-precio"></strong>
+            </div>
+            <button type="button" class="boton-suave boton-suave-peligro btn-del-horario">
+                <i class="bi bi-trash"></i>
+                Eliminar
+            </button>
+        </div>
+    </li>
 </template>
 
-<template id="tpl-msg-horario">
-    <tr>
-        <td colspan="6" class="celda-mensaje"></td>
-    </tr>
-</template>
+<footer class="pie-inferior">
+    <div class="contenedor-seccion">
+        <div class="contenedor-pie">
+            <div class="columna-footer">
+                <div class="pie-logo">
+                    <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+                    <span>Hospital de la Solidaridad Vitarte</span>
+                </div>
+                <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="/index.html">Inicio</a></li>
+                    <li><a href="/index.html#especialidadesdest">Especialidades</a></li>
+                    <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
+                    <li><a href="/mision.html">Misión</a></li>
+                    <li><a href="/vision.html">Visión</a></li>
+                </ul>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Ayuda</h4>
+                <div class="item-contacto">
+                    <i class="bi bi-clock"></i>
+                    <span>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-question-circle"></i>
+                    <span>Preguntas frecuentes</span>
+                </div>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Contacto</h4>
+                <div class="item-contacto">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>Av. Nicolás de Ayllón (Carretera Central) Km. 7.5, Vitarte - Lima</span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-telephone"></i>
+                    <span><a href="tel:08004442222">0800-444-2222</a> · <a href="tel:015551234">(01) 555-1234</a></span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-envelope"></i>
+                    <a href="mailto:citas@hospitalsolidaridad.pe">citas@hospitalsolidaridad.pe</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/comun/configuracion.js"></script>
 <script src="/js/comun/utilidades.js"></script>
 <script src="/js/comun/sesion.js"></script>
+<script src="/js/comun/gestion.js"></script>
 <script src="/js/bot/bot-widget.js"></script>
 <script src="/js/paginas/horarios.js"></script>
 </body>

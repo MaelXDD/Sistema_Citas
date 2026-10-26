@@ -1,0 +1,245 @@
+/* ==========================================================================
+   HORARIOS.HTML (vista de administración)
+   ========================================================================== */
+.titulo-lista {
+    margin: 4px 0 0;
+    font-size: 1.3rem;
+}
+
+/* ---------- Tarjeta de turno ---------- */
+.horario {
+    display: grid;
+    grid-template-columns: minmax(220px, 1.3fr) minmax(130px, 0.8fr) minmax(170px, 1fr) auto;
+    align-items: center;
+    gap: 20px 24px;
+    padding: 24px;
+}
+
+.horario-doctor {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.horario-nombre {
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+    line-height: 1.25;
+}
+
+.horario-especialidad {
+    margin-bottom: 0;
+    padding: 3px 12px;
+    font-size: 0.8rem;
+}
+
+.horario-bloque {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-left: 24px;
+    border-left: 1px solid var(--celeste-borde);
+}
+
+.horario-bloque strong {
+    font-size: 1.15rem;
+    line-height: 1.3;
+}
+
+.horario-turno {
+    font-weight: 700;
+    color: var(--celeste-etiqueta);
+}
+
+.horario-lateral {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    min-width: 150px;
+}
+
+.horario-lateral .tarifa-caja {
+    background-color: var(--celeste-claro);
+}
+
+/* ---------- Formulario ---------- */
+.formulario-horario {
+    max-width: 720px;
+    border-top: 6px solid var(--celeste-etiqueta);
+}
+
+.paso-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+}
+
+.paso-cabecera .etiqueta-selector i {
+    margin-right: 6px;
+    color: var(--celeste-etiqueta);
+}
+
+.paso-aviso {
+    padding: 3px 10px;
+    border-radius: 999px;
+    background-color: var(--celeste-claro);
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--azul-noche);
+}
+
+.enlace-accion {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--azul-institucional);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
+.enlace-accion:hover {
+    color: var(--azul-noche);
+}
+
+.ayuda-campo {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Datos del médico elegido */
+.resumen-doctor {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px 20px;
+    padding: 18px 20px;
+    border-radius: 14px;
+    background-color: var(--celeste-suave);
+}
+
+.resumen-doctor-datos {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 200px;
+    gap: 2px;
+}
+
+.resumen-doctor-datos strong {
+    font-size: 1.15rem;
+}
+
+.resumen-doctor-datos span {
+    font-weight: 800;
+    color: var(--celeste-etiqueta);
+}
+
+.resumen-doctor .tarifa-caja {
+    border: 1px solid var(--celeste-borde);
+}
+
+/* Botones de día: la casilla queda oculta y la tarjeta es el control */
+.grupo-dias {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+}
+
+.dia-opcion {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 8px;
+    border-radius: 12px;
+    background-color: var(--celeste-suave);
+    font-weight: 800;
+    color: var(--azul-noche);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dia-opcion input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.dia-opcion span::after {
+    content: "";
+    display: block;
+    width: 18px;
+    height: 18px;
+    margin: 10px auto 0;
+    border: 2px solid var(--celeste-borde);
+    border-radius: 50%;
+    background-color: var(--blanco);
+}
+
+.dia-opcion:has(input:checked) {
+    background-color: var(--celeste-borde);
+}
+
+.dia-opcion:has(input:checked) span::after {
+    border-color: var(--azul-noche);
+    background-color: var(--azul-noche);
+    box-shadow: inset 0 0 0 3px var(--blanco);
+}
+
+.dia-opcion:has(input:focus-visible) {
+    outline: 3px solid var(--azul-noche);
+    outline-offset: 2px;
+}
+
+/* ---------- Sin animaciones si el usuario lo prefiere ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .dia-opcion {
+        transition: none;
+    }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+    .horario {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .horario-doctor,
+    .horario-lateral {
+        grid-column: 1 / -1;
+    }
+
+    .horario-doctor + .horario-bloque {
+        padding-left: 0;
+        border-left: 0;
+    }
+
+    .horario-lateral {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 640px) {
+    .grupo-dias {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .horario {
+        padding: 20px;
+    }
+
+    .horario-bloque {
+        padding-left: 0;
+        border-left: 0;
+    }
+}

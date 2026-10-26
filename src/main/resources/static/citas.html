@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sacar Cita - Hospital de la Solidaridad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/estilo.css">
-    <link rel="stylesheet" href="/css/paginas.css">
+    <link rel="stylesheet" href="/css/paginas/citas.css">
     <link rel="stylesheet" href="/css/bot.css">
 </head>
 <body>
@@ -31,160 +35,209 @@
         <a href="/horarios.html" class="nav-admin oculto">Horarios</a>
     </nav>
 
-    <!-- Zona de botones de acceso estructurada -->
     <div class="botones-acceso" id="zona-sesion">
-        <div id="sesion-visitante" class="botones-acceso oculto">
+        <div id="caja-sesion-invitado" class="botones-acceso oculto">
             <button type="button" class="boton-blanco" id="btn-abrir-login">Iniciar Sesión</button>
             <button type="button" class="boton-azul" id="btn-abrir-registro">Registrarse</button>
         </div>
-        <div id="sesion-usuario" class="botones-acceso">
+        <div id="caja-sesion-usuario" class="sesion-usuario oculto">
             <span class="texto-azul" id="nombre-usuario-sesion"></span>
             <button type="button" class="boton-blanco" id="btn-cerrar-sesion">Cerrar sesión</button>
         </div>
     </div>
 </header>
 
-<div class="area-gestion-medica">
-    <div class="tarjeta-panel">
+<main class="gestion contenido-pagina">
+    <div class="contenedor-seccion">
+        <div class="vista">
 
-        <div class="cabecera-panel">
-            <div class="titulos-seccion">
-                <h2>Sacar Cita</h2>
-                <p>Selecciona una especialidad, luego el doctor y el horario disponible.</p>
-            </div>
+            <section class="panel cabecera-gestion">
+                <div class="cabecera-textos">
+                    <span class="sobretitulo">Atención médica · Sede Vitarte</span>
+                    <h2>Sacar Cita</h2>
+                    <p>Elige una especialidad, luego el doctor y por último el día y la hora de tu atención.</p>
+                </div>
+            </section>
+
+            <!-- Indicadores de paso -->
+            <ol class="pasos" aria-label="Pasos para sacar tu cita">
+                <li class="paso activo" id="ind-paso1">
+                    <span class="paso-numero">1</span>
+                    Especialidad
+                </li>
+                <li class="paso" id="ind-paso2">
+                    <span class="paso-numero">2</span>
+                    Doctor
+                </li>
+                <li class="paso" id="ind-paso3">
+                    <span class="paso-numero">3</span>
+                    Horario
+                </li>
+            </ol>
+
+            <!-- Paso 1: especialidades -->
+            <section id="paso1">
+                <div class="paso-cabecera">
+                    <h3 class="paso-titulo">¿Qué especialidad necesitas?</h3>
+                </div>
+                <ul id="lista-especialidades" class="cuadricula-opciones">
+                    <li class="panel mensaje-lista">Cargando especialidades...</li>
+                </ul>
+            </section>
+
+            <!-- Paso 2: doctores -->
+            <section id="paso2" class="oculto">
+                <div class="paso-cabecera">
+                    <button type="button" class="boton-volver" id="btn-volver-paso1">
+                        <i class="bi bi-arrow-left"></i>
+                        Volver a especialidades
+                    </button>
+                    <h3 class="paso-titulo">Doctores de <span id="nombre-especialidad-sel"></span></h3>
+                    <p class="paso-nota">
+                        <i class="bi bi-cash-coin"></i>
+                        Tarifa de consulta: <strong id="tarifa-especialidad">—</strong>
+                    </p>
+                </div>
+                <ul id="lista-doctores" class="lista-filas">
+                    <li class="panel mensaje-lista">Selecciona una especialidad primero.</li>
+                </ul>
+            </section>
+
+            <!-- Paso 3: horarios -->
+            <section id="paso3" class="oculto">
+                <div class="paso-cabecera">
+                    <button type="button" class="boton-volver" id="btn-volver-paso2">
+                        <i class="bi bi-arrow-left"></i>
+                        Volver a doctores
+                    </button>
+                    <h3 class="paso-titulo">Horarios del Dr. <span id="nombre-doctor-sel"></span></h3>
+                    <p class="paso-nota">
+                        <i class="bi bi-calendar-check"></i>
+                        Elige el día que prefieres; en el siguiente paso escogerás la hora.
+                    </p>
+                </div>
+                <ul id="lista-horarios" class="lista-filas">
+                    <li class="panel mensaje-lista">Cargando horarios...</li>
+                </ul>
+            </section>
+
         </div>
-
-        <!-- Indicadores de Paso -->
-        <div class="pasos-cita">
-            <div class="paso-indicador activo" id="ind-paso1">① Especialidad</div>
-            <div class="paso-indicador" id="ind-paso2">② Doctor</div>
-            <div class="paso-indicador" id="ind-paso3">③ Horario</div>
-        </div>
-
-        <!-- Paso 1: Tabla de Especialidades -->
-        <div id="paso1">
-            <div class="tabla-responsiva">
-                <table class="tabla-doctores">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Especialidad</th>
-                        <th>Descripción</th>
-                        <th>Acción</th>
-                    </tr>
-                    </thead>
-                    <tbody id="tabla-especialidades-body">
-                    <tr>
-                        <td colspan="4" class="celda-estado">Cargando especialidades...</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Paso 2: Tabla de Doctores -->
-        <div id="paso2" class="oculto">
-            <button type="button" class="boton-volver" id="btn-volver-paso1">← Volver a Especialidades</button>
-            <h3 class="subtitulo-paso">Doctores disponibles en <span id="nombre-especialidad-sel"></span></h3>
-            <div class="tabla-responsiva">
-                <table class="tabla-doctores">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nombre</th>
-                        <th>DNI</th>
-                        <th>Teléfono</th>
-                        <th>Acción</th>
-                    </tr>
-                    </thead>
-                    <tbody id="tabla-doctores-body">
-                    <tr>
-                        <td colspan="5" class="celda-estado">Selecciona una especialidad primero.</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Paso 3: Tabla de Horarios -->
-        <div id="paso3" class="oculto">
-            <button type="button" class="boton-volver" id="btn-volver-paso2">← Volver a Doctores</button>
-            <h3 class="subtitulo-paso">Horarios del Dr. <span id="nombre-doctor-sel"></span></h3>
-            <div class="tabla-responsiva">
-                <table class="tabla-doctores">
-                    <thead>
-                    <tr>
-                        <th>Día</th>
-                        <th>Hora inicio</th>
-                        <th>Hora fin</th>
-                        <th>Acción</th>
-                    </tr>
-                    </thead>
-                    <tbody id="tabla-horarios-body">
-                    <tr>
-                        <td colspan="4" class="celda-estado">Cargando horarios...</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
     </div>
-</div>
+</main>
 
 <!-- Modal para confirmar turno y motivo -->
 <div id="modal-confirmar-cita" class="capa-fondo-modal">
-    <div class="cuadro-emergente">
+    <div class="cuadro-emergente cuadro-cita">
         <span class="cerrar-ventana" id="btn-cerrar-modal-cita">&times;</span>
         <h3>Confirmar Cita</h3>
-        <div class="resumen-cita">
-            <p><strong>Especialidad:</strong> <span id="res-especialidad"></span></p>
-            <p><strong>Doctor:</strong> <span id="res-doctor"></span></p>
-            <p><strong>Día:</strong> <span id="res-dia"></span></p>
-            <p><strong>Horario:</strong> <span id="res-horario"></span></p>
-            <div class="contenedor-selector">
-                <label class="etiqueta-selector">Elige tu hora de atención:</label>
-                <div id="slots-horario" class="grilla-slots"></div>
-            </div>
+
+        <ul class="resumen-cita">
+            <li>
+                <i class="bi bi-heart-pulse"></i>
+                <div>
+                    <span class="rotulo">Especialidad</span>
+                    <strong id="res-especialidad"></strong>
+                </div>
+            </li>
+            <li>
+                <i class="bi bi-person-badge"></i>
+                <div>
+                    <span class="rotulo">Doctor</span>
+                    <strong id="res-doctor"></strong>
+                </div>
+            </li>
+            <li>
+                <i class="bi bi-calendar-event"></i>
+                <div>
+                    <span class="rotulo">Día</span>
+                    <strong id="res-dia"></strong>
+                </div>
+            </li>
+            <li>
+                <i class="bi bi-clock"></i>
+                <div>
+                    <span class="rotulo">Horario de atención</span>
+                    <strong id="res-horario"></strong>
+                </div>
+            </li>
+            <li>
+                <i class="bi bi-cash-coin"></i>
+                <div>
+                    <span class="rotulo">Tarifa de consulta</span>
+                    <strong id="res-tarifa"></strong>
+                </div>
+            </li>
+        </ul>
+
+        <div class="contenedor-selector">
+            <span class="etiqueta-selector">Elige tu hora de atención</span>
+            <p class="slots-nota" id="nota-duracion"></p>
+            <div id="slots-horario" class="grilla-slots"></div>
+            <p class="slots-seleccion oculto" id="texto-seleccion"></p>
         </div>
+
         <div class="formulario-estandar">
             <label class="etiqueta-selector" for="input-motivo">Motivo (opcional)</label>
             <textarea id="input-motivo" placeholder="Describe brevemente tu motivo de consulta..." rows="3"></textarea>
-            <button type="button" class="boton-accion-total" id="btnConfirmarCita">Ir al Pago →</button>
+            <button type="button" class="boton-accion-total" id="btnConfirmarCita">Continuar al pago →</button>
         </div>
     </div>
 </div>
 
 <footer class="pie-inferior">
-    <div class="contenedor-pie">
-        <div class="columna-footer">
-            <h4>Hospital de la Solidaridad Vitarte</h4>
-            <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
+    <div class="contenedor-seccion">
+        <div class="contenedor-pie">
+            <div class="columna-footer">
+                <div class="pie-logo">
+                    <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+                    <span>Hospital de la Solidaridad Vitarte</span>
+                </div>
+                <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="/index.html">Inicio</a></li>
+                    <li><a href="/index.html#especialidadesdest">Especialidades</a></li>
+                    <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
+                    <li><a href="/mision.html">Misión</a></li>
+                    <li><a href="/vision.html">Visión</a></li>
+                </ul>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Ayuda</h4>
+                <div class="item-contacto">
+                    <i class="bi bi-clock"></i>
+                    <span>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-question-circle"></i>
+                    <span>Preguntas frecuentes</span>
+                </div>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Contacto</h4>
+                <div class="item-contacto">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>Av. Nicolás de Ayllón (Carretera Central) Km. 7.5, Vitarte - Lima</span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-telephone"></i>
+                    <span><a href="tel:08004442222">0800-444-2222</a> · <a href="tel:015551234">(01) 555-1234</a></span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-envelope"></i>
+                    <a href="mailto:contacto@hospital.pe">contacto@hospital.pe</a>
+                </div>
+            </div>
         </div>
-        <div class="columna-footer">
-            <h4>Navegación</h4>
-            <ul>
-                <li><a href="/index.html">Inicio</a></li>
-                <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
-                <li><a href="/mision.html">Misión</a></li>
-                <li><a href="/vision.html">Visión</a></li>
-            </ul>
+
+        <div class="footer-bottom">
+            <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
         </div>
-        <div class="columna-footer">
-            <h4>Ayuda</h4>
-            <p>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</p>
-            <br>
-            <p>Preguntas frecuentes</p>
-        </div>
-        <div class="columna-footer">
-            <h4>Contacto</h4>
-            <div class="item-contacto">Vitarte, Lima - Perú</div>
-            <div class="item-contacto">(01) 555-1234</div>
-            <div class="item-contacto">contacto@hospital.pe</div>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
     </div>
 </footer>
 
@@ -224,53 +277,68 @@
 <!-- ======================================================================
      PLANTILLAS HTML
      ====================================================================== -->
-<!-- Plantilla fila especialidades (Paso 1) -->
-<template id="tpl-fila-esp">
-    <tr>
-        <td class="col-indice"></td>
-        <td><strong class="col-nombre"></strong></td>
-        <td class="col-descripcion"></td>
-        <td><button type="button" class="boton-editar btn-seleccionar">Seleccionar →</button></td>
-    </tr>
+<!-- Tarjeta de especialidad (paso 1) -->
+<template id="tpl-opcion-especialidad">
+    <li>
+        <button type="button" class="panel panel-animado opcion">
+            <span class="icono-caja icono-grande opcion-icono"><i class="bi bi-heart-pulse"></i></span>
+            <span class="opcion-nombre col-nombre"></span>
+            <span class="opcion-descripcion col-descripcion"></span>
+            <span class="opcion-dato">
+                <i class="bi bi-person-badge"></i>
+                <span class="col-doctores"></span>
+            </span>
+            <span class="opcion-accion">Elegir <i class="bi bi-arrow-right"></i></span>
+        </button>
+    </li>
 </template>
 
-<!-- Plantilla fila doctores (Paso 2) -->
-<template id="tpl-fila-doc">
-    <tr>
-        <td class="col-indice"></td>
-        <td><strong class="col-nombre"></strong></td>
-        <td class="col-dni"></td>
-        <td class="col-telefono"></td>
-        <td><button type="button" class="boton-editar btn-seleccionar">Seleccionar →</button></td>
-    </tr>
+<!-- Fila de doctor (paso 2) -->
+<template id="tpl-fila-doctor">
+    <li class="panel fila-opcion">
+        <span class="avatar-iniciales col-iniciales"></span>
+        <div class="fila-cuerpo">
+            <strong class="fila-titulo col-nombre"></strong>
+            <span class="fila-detalle col-dias"></span>
+        </div>
+        <button type="button" class="boton-suave boton-suave-oscuro btn-elegir">
+            Ver horarios
+            <i class="bi bi-arrow-right"></i>
+        </button>
+    </li>
 </template>
 
-<!-- Plantilla fila turnos (Paso 3) -->
+<!-- Fila de día de atención (paso 3) -->
 <template id="tpl-fila-horario">
-    <tr>
-        <td><strong class="col-dia uppercase"></strong></td>
-        <td class="col-inicio"></td>
-        <td class="col-fin"></td>
-        <td><button type="button" class="boton-editar btn-reservar">Reservar →</button></td>
-    </tr>
+    <li class="panel fila-opcion">
+        <span class="ficha-fecha">
+            <small class="col-mes"></small>
+            <strong class="col-numero"></strong>
+        </span>
+        <div class="fila-cuerpo">
+            <strong class="fila-titulo col-dia"></strong>
+            <span class="fila-detalle">
+                <i class="bi bi-clock"></i>
+                <span class="col-horas"></span>
+            </span>
+        </div>
+        <button type="button" class="boton-suave boton-suave-oscuro btn-elegir">
+            Reservar
+            <i class="bi bi-arrow-right"></i>
+        </button>
+    </li>
 </template>
 
-<!-- Plantilla botón de intervalo horario (slot) -->
+<!-- Botón de intervalo horario (slot) -->
 <template id="tpl-boton-slot">
     <button type="button" class="slot-horario"></button>
-</template>
-
-<!-- Plantilla para mensajes de estado o error en tablas -->
-<template id="tpl-mensaje-tabla">
-    <tr>
-        <td colspan="5" class="celda-mensaje"></td>
-    </tr>
 </template>
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/comun/configuracion.js"></script>
 <script src="/js/comun/utilidades.js"></script>
+<script src="/js/comun/gestion.js"></script>
 <script src="/js/comun/sesion.js"></script>
 <script src="/js/bot/bot-widget.js"></script>
 <script src="/js/paginas/citas.js"></script>

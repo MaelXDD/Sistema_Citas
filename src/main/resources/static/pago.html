@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pago - Hospital de la Solidaridad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/estilo.css">
-    <link rel="stylesheet" href="/css/paginas.css">
+    <link rel="stylesheet" href="/css/paginas/pago.css">
     <link rel="stylesheet" href="/css/bot.css">
 </head>
 <body>
@@ -15,133 +19,219 @@
         <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
         <h1>Hospital de la Solidaridad</h1>
     </div>
+
     <nav class="menu-principal" id="menu-nav">
         <a href="/index.html">Inicio</a>
-        <a href="/citas.html">Sacar Cita</a>
-        <a href="/miscitas.html">Mis Citas</a>
+
+        <a href="/sobre_nosotros.html" class="nav-publico">Sobre nosotros</a>
+        <a href="/vision.html" class="nav-publico">Visión</a>
+        <a href="/mision.html" class="nav-publico">Misión</a>
+
+        <a href="/citas.html" class="nav-paciente enlace-activo">Sacar Cita</a>
+        <a href="/miscitas.html" class="nav-paciente">Mis Citas</a>
+
+        <a href="/especialidades.html" class="nav-admin oculto">Especialidades</a>
+        <a href="/doctores.html" class="nav-admin oculto">Doctores</a>
+        <a href="/horarios.html" class="nav-admin oculto">Horarios</a>
     </nav>
-    <div class="botones-acceso" id="zona-sesion"></div>
+
+    <div class="botones-acceso" id="zona-sesion">
+        <div id="caja-sesion-invitado" class="botones-acceso oculto">
+            <button type="button" class="boton-blanco" id="btn-abrir-login">Iniciar Sesión</button>
+            <button type="button" class="boton-azul" id="btn-abrir-registro">Registrarse</button>
+        </div>
+        <div id="caja-sesion-usuario" class="sesion-usuario oculto">
+            <span class="texto-azul" id="nombre-usuario-sesion"></span>
+            <button type="button" class="boton-blanco" id="btn-cerrar-sesion">Cerrar sesión</button>
+        </div>
+    </div>
 </header>
 
-<div class="area-gestion-medica">
-    <div class="tarjeta-panel panel-formulario">
+<main class="gestion contenido-pagina">
+    <div class="contenedor-seccion">
+        <div class="vista">
 
-        <div class="cabecera-formulario">
-            <h2>Confirmar Pago</h2>
-            <p>Revisa el resumen de tu cita y elige el método de pago.</p>
-            <p id="temporizador-pago" class="alerta-temporizador">
-                La reserva expira en: <span id="tiempo-restante">05:00</span>
-            </p>
-        </div>
-
-        <div class="resumen-pago">
-            <div class="fila-resumen"><span>Especialidad</span><strong id="pago-especialidad">—</strong></div>
-            <div class="fila-resumen"><span>Doctor</span><strong id="pago-doctor">—</strong></div>
-            <div class="fila-resumen"><span>Fecha</span><strong id="pago-fecha">—</strong></div>
-            <div class="fila-resumen"><span>Hora</span><strong id="pago-hora">—</strong></div>
-            <div class="fila-resumen total"><span>Total a pagar</span><strong id="pago-monto-total">—</strong></div>
-        </div>
-
-        <div class="metodos-pago">
-            <p class="etiqueta-selector">Selecciona tu método de pago</p>
-            <div class="grilla-metodos" id="contenedor-metodos-pago">
-                <div class="tarjeta-metodo" data-metodo="YAPE">
-                    <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/Icono_Yape.png" alt="Yape">
-                    <span>Yape</span>
+            <section class="panel cabecera-gestion">
+                <div class="cabecera-textos">
+                    <span class="sobretitulo">Último paso</span>
+                    <h2>Confirmar Pago</h2>
+                    <p>Revisa el resumen de tu cita y elige el método de pago.</p>
                 </div>
-                <div class="tarjeta-metodo" data-metodo="TARJETA">
-                    <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/TarjetaPago.png" alt="Tarjeta">
-                    <span>Tarjeta</span>
+                <p id="temporizador-pago" class="alerta-temporizador">
+                    <i class="bi bi-hourglass-split"></i>
+                    La reserva expira en: <strong id="tiempo-restante">05:00</strong>
+                </p>
+            </section>
+
+            <div class="pago-cuadricula">
+
+                <!-- Resumen de la cita -->
+                <section class="panel pago-bloque">
+                    <h3>Resumen de tu cita</h3>
+                    <ul class="detalle-pago">
+                        <li>
+                            <i class="bi bi-heart-pulse"></i>
+                            <span class="detalle-rotulo">Especialidad</span>
+                            <strong id="pago-especialidad">—</strong>
+                        </li>
+                        <li>
+                            <i class="bi bi-person-badge"></i>
+                            <span class="detalle-rotulo">Doctor</span>
+                            <strong id="pago-doctor">—</strong>
+                        </li>
+                        <li>
+                            <i class="bi bi-calendar-event"></i>
+                            <span class="detalle-rotulo">Fecha</span>
+                            <strong id="pago-fecha">—</strong>
+                        </li>
+                        <li>
+                            <i class="bi bi-clock"></i>
+                            <span class="detalle-rotulo">Hora</span>
+                            <strong id="pago-hora">—</strong>
+                        </li>
+                        <li>
+                            <i class="bi bi-chat-left-text"></i>
+                            <span class="detalle-rotulo">Motivo</span>
+                            <strong id="pago-motivo">—</strong>
+                        </li>
+                        <li class="detalle-total">
+                            <span class="detalle-rotulo">Total a pagar</span>
+                            <strong id="pago-monto-total">—</strong>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Método de pago -->
+                <section class="panel pago-bloque">
+                    <h3>Selecciona tu método de pago</h3>
+
+                    <div class="cuadricula-metodos" id="contenedor-metodos-pago">
+                        <button type="button" class="tarjeta-metodo" data-metodo="YAPE">
+                            <i class="bi bi-check-circle-fill marca-seleccion"></i>
+                            <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/Icono_Yape.png" alt="">
+                            <span>Yape</span>
+                        </button>
+                        <button type="button" class="tarjeta-metodo" data-metodo="TARJETA">
+                            <i class="bi bi-check-circle-fill marca-seleccion"></i>
+                            <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/TarjetaPago.png" alt="">
+                            <span>Tarjeta</span>
+                        </button>
+                        <button type="button" class="tarjeta-metodo" data-metodo="EFECTIVO">
+                            <i class="bi bi-check-circle-fill marca-seleccion"></i>
+                            <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/Efectivo_icono.png" alt="">
+                            <span>Efectivo</span>
+                        </button>
+                    </div>
+
+                    <input type="hidden" id="metodo-seleccionado" value="">
+
+                    <div class="pago-acciones">
+                        <button type="button" class="boton-accion-total" id="btnConfirmarPago">
+                            Confirmar y Pagar
+                        </button>
+                        <button type="button" class="boton-volver" id="btnCancelarPago">
+                            <i class="bi bi-arrow-left"></i>
+                            Volver y cancelar reserva
+                        </button>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="pie-inferior">
+    <div class="contenedor-seccion">
+        <div class="contenedor-pie">
+            <div class="columna-footer">
+                <div class="pie-logo">
+                    <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+                    <span>Hospital de la Solidaridad Vitarte</span>
                 </div>
-                <div class="tarjeta-metodo" data-metodo="EFECTIVO">
-                    <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/Efectivo_icono.png" alt="Efectivo">
-                    <span>Efectivo</span>
+                <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="/index.html">Inicio</a></li>
+                    <li><a href="/index.html#especialidadesdest">Especialidades</a></li>
+                    <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
+                    <li><a href="/mision.html">Misión</a></li>
+                    <li><a href="/vision.html">Visión</a></li>
+                </ul>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Ayuda</h4>
+                <div class="item-contacto">
+                    <i class="bi bi-clock"></i>
+                    <span>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-question-circle"></i>
+                    <span>Preguntas frecuentes</span>
+                </div>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Contacto</h4>
+                <div class="item-contacto">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>Av. Nicolás de Ayllón (Carretera Central) Km. 7.5, Vitarte - Lima</span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-telephone"></i>
+                    <span><a href="tel:08004442222">0800-444-2222</a> · <a href="tel:015551234">(01) 555-1234</a></span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-envelope"></i>
+                    <a href="mailto:contacto@hospital.pe">contacto@hospital.pe</a>
                 </div>
             </div>
         </div>
 
-        <input type="hidden" id="metodo-seleccionado" value="">
-
-        <div class="contenedor-acciones-pago">
-            <button type="button" class="boton-accion-total" id="btnConfirmarPago">
-                Confirmar y Pagar
-            </button>
-            <button type="button" class="boton-volver boton-volver-pago" id="btnCancelarPago">
-                ← Volver y cancelar reserva
-            </button>
+        <div class="footer-bottom">
+            <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
         </div>
-
-    </div>
-</div>
-
-<footer class="pie-inferior">
-    <div class="contenedor-pie">
-        <div class="columna-footer">
-            <h4>Hospital de la Solidaridad Vitarte</h4>
-            <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
-        </div>
-        <div class="columna-footer">
-            <h4>Navegación</h4>
-            <ul>
-                <li><a href="/index.html">Inicio</a></li>
-                <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
-                <li><a href="/mision.html">Misión</a></li>
-                <li><a href="/vision.html">Visión</a></li>
-            </ul>
-        </div>
-        <div class="columna-footer">
-            <h4>Ayuda</h4>
-            <p>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</p>
-            <br>
-            <p>Preguntas frecuentes</p>
-        </div>
-        <div class="columna-footer">
-            <h4>Contacto</h4>
-            <div class="item-contacto">Vitarte, Lima - Perú</div>
-            <div class="item-contacto">(01) 555-1234</div>
-            <div class="item-contacto">contacto@hospital.pe</div>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
     </div>
 </footer>
 
 <!-- Modal Pasarela de Pago con Tarjeta (Emulador Stripe Test) -->
-<div id="modal-stripe" class="capa-fondo-modal oculto">
-    <div class="cuadro-emergente">
+<div id="modal-stripe" class="capa-fondo-modal">
+    <div class="cuadro-emergente cuadro-pago">
         <span class="cerrar-ventana" data-cerrar="modal-stripe">&times;</span>
-        <h3 class="texto-azul">Pasarela de Pago Segura</h3>
+        <h3>
+            <i class="bi bi-lock"></i>
+            Pasarela de Pago Segura
+        </h3>
 
         <form id="form-tarjeta-stripe" class="formulario-estandar">
-            <!-- 1. Número de Tarjeta -->
             <div class="contenedor-selector">
-                <label class="etiqueta-selector">Número de Tarjeta</label>
-                <input type="text" id="stripe-num-tarjeta" placeholder="4242 4242 4242 4242" maxlength="19" required autocomplete="off">
+                <label class="etiqueta-selector" for="stripe-num-tarjeta">Número de Tarjeta</label>
+                <input type="text" id="stripe-num-tarjeta" placeholder="4242 4242 4242 4242" maxlength="19" inputmode="numeric" required autocomplete="off">
             </div>
 
-            <!-- 2. Vencimiento y CVC en paralelo -->
             <div class="fila-input">
                 <div class="contenedor-selector">
-                    <label class="etiqueta-selector">Vencimiento (MM/AA)</label>
-                    <input type="text" id="stripe-exp" placeholder="MM/AA" maxlength="5" required autocomplete="off">
+                    <label class="etiqueta-selector" for="stripe-exp">Vencimiento (MM/AA)</label>
+                    <input type="text" id="stripe-exp" placeholder="MM/AA" maxlength="5" inputmode="numeric" required autocomplete="off">
                 </div>
                 <div class="contenedor-selector">
-                    <label class="etiqueta-selector">CVV</label>
-                    <input type="password" id="stripe-cvc" placeholder="123" maxlength="3" minlength="3" required autocomplete="off">
+                    <label class="etiqueta-selector" for="stripe-cvc">CVV</label>
+                    <input type="password" id="stripe-cvc" placeholder="123" maxlength="3" minlength="3" inputmode="numeric" required autocomplete="off">
                 </div>
             </div>
 
-            <!-- 3. Titular de la Tarjeta en su propia fila -->
             <div class="contenedor-selector">
-                <label class="etiqueta-selector">Titular de la Tarjeta</label>
+                <label class="etiqueta-selector" for="stripe-titular">Titular de la Tarjeta</label>
                 <input type="text" id="stripe-titular" placeholder="Nombre completo" required autocomplete="off">
             </div>
 
-            <!-- 4. Botones de acción alineados al pie -->
             <div class="fila-botones-formulario">
-                <button type="button" class="boton-blanco" data-cerrar="modal-stripe">Cancelar</button>
-                <button type="submit" class="boton-azul" id="btn-procesar-cargo-stripe">Confirmar pago</button>
+                <button type="button" class="boton-suave" data-cerrar="modal-stripe">Cancelar</button>
+                <button type="submit" class="boton-suave boton-suave-oscuro" id="btn-procesar-cargo-stripe">Confirmar pago</button>
             </div>
         </form>
     </div>
@@ -151,6 +241,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/comun/configuracion.js"></script>
 <script src="/js/comun/utilidades.js"></script>
+<script src="/js/comun/gestion.js"></script>
 <script src="/js/comun/sesion.js"></script>
 <script src="/js/bot/bot-widget.js"></script>
 <script src="/js/paginas/pago.js"></script>
