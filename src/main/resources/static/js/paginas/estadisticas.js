@@ -225,15 +225,18 @@ function inicializarReporteAfluencia() {
 
                 trPrincipal.querySelector('.col-dia').textContent = item.diaSemana;
                 trPrincipal.querySelector('.col-turno').textContent = item.turno;
-                trPrincipal.querySelector('.col-citas').textContent = item.citasTotales;
+                trPrincipal.querySelector('.col-citas').textContent = item.totalCitas;
                 trPrincipal.querySelector('.col-ingresos').textContent = Formato.moneda(item.ingresosTurno);
-
                 const clonDetalle = tplDetalle.content.cloneNode(true);
                 const trDetalle = clonDetalle.querySelector('tr');
                 const contenedorBadges = clonDetalle.querySelector('.contenedor-badges-acordeon');
 
-                if (item.especialidadesAtendidas && item.especialidadesAtendidas.length > 0) {
-                    item.especialidadesAtendidas.forEach(nombreEsp => {
+                const listaEsp = item.especialidades
+                    ? item.especialidades.split(', ')
+                    : [];
+
+                if (listaEsp.length > 0) {
+                    listaEsp.forEach(nombreEsp => {
                         const span = document.createElement('span');
                         span.className = 'badge-especialidad';
                         span.textContent = nombreEsp;
