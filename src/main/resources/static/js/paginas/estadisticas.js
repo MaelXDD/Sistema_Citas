@@ -367,6 +367,7 @@ function inicializarReporteAfluencia() {
                 trPrincipal.querySelector('.col-icono-turno').classList.add(ICONOS_TURNO[item.turno] ?? 'bi-clock');
                 trPrincipal.querySelector('.col-citas').textContent = item.totalCitas;
                 trPrincipal.querySelector('.col-ingresos').textContent = Formato.moneda(item.ingresosTurno);
+
                 const clonDetalle = tplDetalle.content.cloneNode(true);
                 const trDetalle = clonDetalle.querySelector('tr');
                 const contenedorBadges = clonDetalle.querySelector('.detalle-especialidades');
@@ -375,12 +376,6 @@ function inicializarReporteAfluencia() {
 
                 if (especialidades.length > 0) {
                     especialidades.forEach(nombreEsp => {
-                const listaEsp = item.especialidades
-                    ? item.especialidades.split(', ')
-                    : [];
-
-                if (listaEsp.length > 0) {
-                    listaEsp.forEach(nombreEsp => {
                         const span = document.createElement('span');
                         span.className = 'badge-especialidad';
                         span.textContent = nombreEsp;
