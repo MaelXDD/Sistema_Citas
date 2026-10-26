@@ -2,9 +2,13 @@ let estadoReserva = {
     especialidad: null,
     doctor: null,
     horario: null,
+    precio: null,
     horaSeleccionada: null,
     fechaCita: null
 };
+
+// Los horarios se piden una sola vez y se usan en los pasos 2 y 3
+let horariosActivos = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     const paciente = obtenerPacienteSesion();
@@ -39,134 +43,192 @@ function configurarBotonesNavegacionPasos() {
 }
 
 /**
- * Alterna la visibilidad entre los 3 pasos mediante clases CSS (.oculto y .activo).
- * Cero manipulación de style inline.
+ * Muestra un paso y marca los indicadores (activo y completados) con clases CSS.
  * @param {number} paso - Número de paso a mostrar (1, 2 o 3).
  */
 function mostrarPaso(paso) {
-    const paso1 = document.getElementById('paso1');
-    const paso2 = document.getElementById('paso2');
-    const paso3 = document.getElementById('paso3');
+    [1, 2, 3].forEach((numero) => {
+        document.getElementById(`paso${numero}`)?.classList.toggle('oculto', numero !== paso);
 
-    const ind1 = document.getElementById('ind-paso1');
-    const ind2 = document.getElementById('ind-paso2');
-    const ind3 = document.getElementById('ind-paso3');
+        const indicador = document.getElementById(`ind-paso${numero}`);
+        indicador?.classList.toggle('activo', numero === paso);
+        indicador?.classList.toggle('completado', numero < paso);
+    });
 
-    paso1?.classList.add('oculto');
-    paso2?.classList.add('oculto');
-    paso3?.classList.add('oculto');
+    // Al cambiar de paso se vuelve arriba para ver el contenido nuevo (sobre todo en celular)
+    document.querySelector('.pasos')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
-    ind1?.classList.remove('activo');
-    ind2?.classList.remove('activo');
-    ind3?.classList.remove('activo');
+/**
+ * Pide los horarios activos una sola vez.
+ */
+async function consultarHorariosActivos() {
+    if (!horariosActivos) {
+        const respuesta = await fetch(`${CONFIG.API_URL}/horarios`);
+        if (!respuesta.ok) throw new Error();
 
-    if (paso === 1) {
-        paso1?.classList.remove('oculto');
-        ind1?.classList.add('activo');
-    } else if (paso === 2) {
-        paso2?.classList.remove('oculto');
-        ind2?.classList.add('activo');
-    } else if (paso === 3) {
-        paso3?.classList.remove('oculto');
-        ind3?.classList.add('activo');
+        const todos = await respuesta.json();
+        horariosActivos = todos.filter(h => h.doctor && h.activo);
     }
+    return horariosActivos;
+}
+
+/**
+ * Cuenta los doctores activos con horario de cada especialidad.
+ * @returns {Promise<Map|null>} Mapa idEspecialidad -> cantidad, o null si no se pudo consultar.
+ */
+async function contarDoctoresPorEspecialidad() {
+    try {
+        const [respuesta, horarios] = await Promise.all([
+            fetch(`${CONFIG.API_URL}/doctores/activos`),
+            consultarHorariosActivos().catch(() => null)
+        ]);
+        if (!respuesta.ok) return null;
+
+        const conHorario = horarios && new Set(horarios.map(h => h.doctor.idDoctor));
+        const cantidades = new Map();
+
+        (await respuesta.json()).forEach((doc) => {
+            if (!doc.especialidad || (conHorario && !conHorario.has(doc.idDoctor))) return;
+            const id = doc.especialidad.idEspecialidad;
+            cantidades.set(id, (cantidades.get(id) ?? 0) + 1);
+        });
+
+        return cantidades;
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * "2 doctores disponibles", "1 doctor disponible" o "Sin doctores disponibles".
+ */
+function textoDoctores(cantidad) {
+    if (cantidad === 0) return 'Sin doctores disponibles';
+    return `${cantidad} ${cantidad === 1 ? 'doctor disponible' : 'doctores disponibles'}`;
 }
 
 /* ==========================================================================
    PASO 1: ESPECIALIDADES
    ========================================================================== */
 async function cargarPasoEspecialidades() {
-    const tbody = document.getElementById('tabla-especialidades-body');
-    if (!tbody) return;
+    const lista = document.getElementById('lista-especialidades');
+    if (!lista) return;
 
-    renderizarMensajeEnTabla(tbody, 'tpl-mensaje-tabla', 'Cargando especialidades médicas...');
+    mostrarMensajeLista(lista, 'Cargando especialidades médicas...');
 
     try {
-        const respuesta = await fetch(`${CONFIG.API_URL}/especialidades/activas`);
+        const [respuesta, cantidades] = await Promise.all([
+            fetch(`${CONFIG.API_URL}/especialidades/activas`),
+            contarDoctoresPorEspecialidad()
+        ]);
         if (!respuesta.ok) throw new Error();
 
         const especialidades = await respuesta.json();
 
         if (especialidades.length === 0) {
-            renderizarMensajeEnTabla(tbody, 'tpl-mensaje-tabla', 'No hay especialidades disponibles.');
+            mostrarMensajeLista(lista, 'No hay especialidades disponibles.');
             return;
         }
 
-        tbody.replaceChildren();
-        const tpl = document.getElementById('tpl-fila-esp');
+        lista.replaceChildren();
+        const tpl = document.getElementById('tpl-opcion-especialidad');
 
-        especialidades.forEach((esp, index) => {
+        especialidades.forEach((esp) => {
             const clon = tpl.content.cloneNode(true);
-            clon.querySelector('.col-indice').textContent = index + 1;
             clon.querySelector('.col-nombre').textContent = esp.nombre;
+            mostrarIcono(clon.querySelector('.opcion-icono'), esp.nombre);
             clon.querySelector('.col-descripcion').textContent = esp.descripcion || 'Atención integral especializada.';
 
-            clon.querySelector('.btn-seleccionar').addEventListener('click', () => {
+            const boton = clon.querySelector('.opcion');
+            const datoDoctores = clon.querySelector('.opcion-dato');
+
+            if (cantidades) {
+                const cantidad = cantidades.get(esp.idEspecialidad) ?? 0;
+                clon.querySelector('.col-doctores').textContent = textoDoctores(cantidad);
+                boton.disabled = cantidad === 0;
+            } else {
+                datoDoctores.remove();
+            }
+
+            boton.addEventListener('click', () => {
                 seleccionarEspecialidad(esp);
             });
 
-            tbody.appendChild(clon);
+            lista.appendChild(clon);
         });
     } catch {
-        renderizarMensajeEnTabla(tbody, 'tpl-mensaje-tabla', 'Error al obtener especialidades.', true);
+        mostrarMensajeLista(lista, 'Error al obtener especialidades.', true);
     }
 }
 
-function seleccionarEspecialidad(esp) {
+async function seleccionarEspecialidad(esp) {
     estadoReserva.especialidad = esp;
-    const spanNombre = document.getElementById('nombre-especialidad-sel');
-    if (spanNombre) spanNombre.textContent = esp.nombre;
+    estadoReserva.precio = null;
+
+    document.getElementById('nombre-especialidad-sel').textContent = esp.nombre;
+    document.getElementById('tarifa-especialidad').textContent = '—';
 
     cargarPasoDoctores(esp.idEspecialidad);
     mostrarPaso(2);
+
+    const precio = await consultarPrecio(esp.idEspecialidad);
+    estadoReserva.precio = precio;
+    document.getElementById('tarifa-especialidad').textContent = precio ? Formato.moneda(precio.monto) : 'Sin tarifa';
 }
 
 /* ==========================================================================
    PASO 2: DOCTORES POR ESPECIALIDAD
    ========================================================================== */
 async function cargarPasoDoctores(idEspecialidad) {
-    const tbody = document.getElementById('tabla-doctores-body');
-    if (!tbody) return;
+    const lista = document.getElementById('lista-doctores');
+    if (!lista) return;
 
-    renderizarMensajeEnTabla(tbody, 'tpl-mensaje-tabla', 'Buscando médicos disponibles...');
+    mostrarMensajeLista(lista, 'Buscando médicos disponibles...');
 
     try {
-        const respuesta = await fetch(`${CONFIG.API_URL}/doctores/activos`);
+        const [respuesta, horarios] = await Promise.all([
+            fetch(`${CONFIG.API_URL}/doctores/activos`),
+            consultarHorariosActivos().catch(() => [])
+        ]);
         if (!respuesta.ok) throw new Error();
 
         const todos = await respuesta.json();
         const doctores = todos.filter(d => d.especialidad && d.especialidad.idEspecialidad === idEspecialidad);
 
         if (doctores.length === 0) {
-            renderizarMensajeEnTabla(tbody, 'tpl-mensaje-tabla', 'No hay médicos con turnos en esta especialidad.');
+            mostrarMensajeLista(lista, 'No hay médicos con turnos en esta especialidad.');
             return;
         }
 
-        tbody.replaceChildren();
-        const tpl = document.getElementById('tpl-fila-doc');
+        lista.replaceChildren();
+        const tpl = document.getElementById('tpl-fila-doctor');
 
-        doctores.forEach((doc, index) => {
+        doctores.forEach((doc) => {
+            const horariosDoctor = horarios.filter(h => h.doctor.idDoctor === doc.idDoctor);
+            const lineas = armarLineasHorario(horariosDoctor, DIAS_LARGOS);
+
             const clon = tpl.content.cloneNode(true);
-            clon.querySelector('.col-indice').textContent = index + 1;
+            clon.querySelector('.col-iniciales').textContent = `${doc.nombres[0]}${doc.apellidos[0]}`.toUpperCase();
             clon.querySelector('.col-nombre').textContent = `Dr. ${doc.nombres} ${doc.apellidos}`;
-            clon.querySelector('.col-dni').textContent = doc.dni;
-            clon.querySelector('.col-telefono').textContent = doc.telefono || '—';
+            clon.querySelector('.col-dias').textContent = lineas.length > 0 ? lineas.join('\n') : 'Sin horarios disponibles';
 
-            clon.querySelector('.btn-seleccionar').addEventListener('click', () => {
+            const boton = clon.querySelector('.btn-elegir');
+            boton.disabled = lineas.length === 0;
+            boton.addEventListener('click', () => {
                 seleccionarDoctor(doc);
             });
 
-            tbody.appendChild(clon);
+            lista.appendChild(clon);
         });
     } catch {
-        renderizarMensajeEnTabla(tbody, 'tpl-mensaje-tabla', 'Error al cargar personal médico.', true);
+        mostrarMensajeLista(lista, 'Error al cargar personal médico.', true);
     }
 }
 
 function seleccionarDoctor(doc) {
     estadoReserva.doctor = doc;
-    const spanNombre = document.getElementById('nombre-doctor-sel');
-    if (spanNombre) spanNombre.textContent = `${doc.nombres} ${doc.apellidos}`;
+    document.getElementById('nombre-doctor-sel').textContent = `${doc.nombres} ${doc.apellidos}`;
 
     cargarPasoHorarios(doc.idDoctor);
     mostrarPaso(3);
@@ -176,40 +238,44 @@ function seleccionarDoctor(doc) {
    PASO 3: HORARIOS DEL MÉDICO
    ========================================================================== */
 async function cargarPasoHorarios(idDoctor) {
-    const tbody = document.getElementById('tabla-horarios-body');
-    if (!tbody) return;
+    const lista = document.getElementById('lista-horarios');
+    if (!lista) return;
 
-    renderizarMensajeEnTabla(tbody, 'tpl-mensaje-tabla', 'Consultando horarios de atención...');
+    mostrarMensajeLista(lista, 'Consultando horarios de atención...');
 
     try {
-        const respuesta = await fetch(`${CONFIG.API_URL}/horarios`);
-        if (!respuesta.ok) throw new Error();
+        const todos = await consultarHorariosActivos();
+        const indiceDia = (h) => DIAS_SEMANA.indexOf(sinTildes(h.diaSemana).toUpperCase());
 
-        const todos = await respuesta.json();
-        const horarios = todos.filter(h => h.doctor && h.doctor.idDoctor === idDoctor && h.activo);
+        const horarios = todos
+            .filter(h => h.doctor.idDoctor === idDoctor)
+            .sort((a, b) => indiceDia(a) - indiceDia(b) || a.horaInicio.localeCompare(b.horaInicio));
 
         if (horarios.length === 0) {
-            renderizarMensajeEnTabla(tbody, 'tpl-mensaje-tabla', 'El especialista no cuenta con horarios activos.');
+            mostrarMensajeLista(lista, 'El especialista no cuenta con horarios activos.');
             return;
         }
 
-        tbody.replaceChildren();
+        lista.replaceChildren();
         const tpl = document.getElementById('tpl-fila-horario');
 
-        horarios.forEach(h => {
+        horarios.forEach((h) => {
             const clon = tpl.content.cloneNode(true);
-            clon.querySelector('.col-dia').textContent = h.diaSemana;
-            clon.querySelector('.col-inicio').textContent = Formato.horaAmPm(h.horaInicio);
-            clon.querySelector('.col-fin').textContent = Formato.horaAmPm(h.horaFin);
+            const fecha = fechaDesdeIso(calcularProximaFechaDia(h.diaSemana));
 
-            clon.querySelector('.btn-reservar').addEventListener('click', () => {
+            clon.querySelector('.col-mes').textContent = fecha.toLocaleDateString('es-PE', { month: 'short' }).replace('.', '');
+            clon.querySelector('.col-numero').textContent = fecha.getDate();
+            clon.querySelector('.col-dia').textContent = h.diaSemana;
+            clon.querySelector('.col-horas').textContent = `${Formato.horaAmPm(h.horaInicio)} - ${Formato.horaAmPm(h.horaFin)}`;
+
+            clon.querySelector('.btn-elegir').addEventListener('click', () => {
                 abrirModalConfirmacion(h);
             });
 
-            tbody.appendChild(clon);
+            lista.appendChild(clon);
         });
     } catch {
-        renderizarMensajeEnTabla(tbody, 'tpl-mensaje-tabla', 'Error al consultar horarios.', true);
+        mostrarMensajeLista(lista, 'Error al consultar horarios.', true);
     }
 }
 
@@ -234,6 +300,7 @@ function configurarModalConfirmacion() {
             paciente: obtenerPacienteSesion(),
             doctor: estadoReserva.doctor,
             especialidad: estadoReserva.especialidad,
+            precio: estadoReserva.precio,
             horario: estadoReserva.horario,
             fechaCita: estadoReserva.fechaCita,
             horaCita: estadoReserva.horaSeleccionada,
@@ -246,27 +313,54 @@ function configurarModalConfirmacion() {
     });
 }
 
-function abrirModalConfirmacion(horario) {
+/**
+ * Pide las horas que ya tienen cita ese día. Si falla, se muestran todas libres.
+ */
+async function consultarHorasOcupadas(idDoctor, fecha) {
+    try {
+        const respuesta = await fetch(`${CONFIG.API_URL}/citas/ocupadas?idDoctor=${idDoctor}&fecha=${fecha}`);
+        return respuesta.ok ? await respuesta.json() : [];
+    } catch {
+        return [];
+    }
+}
+
+async function abrirModalConfirmacion(horario) {
     estadoReserva.horario = horario;
     estadoReserva.horaSeleccionada = null;
 
     // Calcular la fecha más próxima correspondiente a ese día de la semana
     estadoReserva.fechaCita = calcularProximaFechaDia(horario.diaSemana);
 
+    const precio = estadoReserva.precio;
+
     document.getElementById('res-especialidad').textContent = estadoReserva.especialidad.nombre;
     document.getElementById('res-doctor').textContent = `Dr. ${estadoReserva.doctor.nombres} ${estadoReserva.doctor.apellidos}`;
-    document.getElementById('res-dia').textContent = `${horario.diaSemana.toUpperCase()} (${estadoReserva.fechaCita})`;
+    document.getElementById('res-dia').textContent = `${horario.diaSemana} ${textoFecha(estadoReserva.fechaCita)}`;
     document.getElementById('res-horario').textContent = `${Formato.horaAmPm(horario.horaInicio)} - ${Formato.horaAmPm(horario.horaFin)}`;
+    document.getElementById('res-tarifa').textContent = precio ? Formato.moneda(precio.monto) : 'Sin tarifa';
+    document.getElementById('input-motivo').value = '';
+    document.getElementById('nota-duracion').textContent = `Cada cita dura ${DURACION_CITA_MINUTOS} minutos.`;
+    document.getElementById('texto-seleccion').classList.add('oculto');
 
-    generarSlotsHorarios(horario.horaInicio, horario.horaFin);
+    const ocupadas = await consultarHorasOcupadas(estadoReserva.doctor.idDoctor, estadoReserva.fechaCita);
+
+    generarSlotsHorarios(horario.horaInicio, horario.horaFin, ocupadas);
     toggleModal('modal-confirmar-cita');
 }
 
 /**
- * Divide el rango del turno en bloques de consulta clonando el <template id="tpl-boton-slot">.
- * Cero inyección de HTML con innerHTML.
+ * Convierte minutos desde las 00:00 en "HH:mm" (870 -> "14:30").
  */
-function generarSlotsHorarios(horaInicio, horaFin) {
+function minutosAHora(minutos) {
+    return `${String(Math.floor(minutos / 60)).padStart(2, '0')}:${String(minutos % 60).padStart(2, '0')}`;
+}
+
+/**
+ * Divide el rango del turno en bloques de consulta clonando el <template id="tpl-boton-slot">.
+ * Las horas que ya tienen cita salen deshabilitadas.
+ */
+function generarSlotsHorarios(horaInicio, horaFin, ocupadas = []) {
     const contenedor = document.getElementById('slots-horario');
     if (!contenedor) return;
 
@@ -278,25 +372,41 @@ function generarSlotsHorarios(horaInicio, horaFin) {
 
     let actual = hIni * 60 + mIni;
     const limite = hFin * 60 + mFin;
-    const duracionSlot = 30; // Minutos estándar por bloque de consulta
+    let libres = 0;
 
-    while (actual + duracionSlot <= limite) {
-        const hBloque = Math.floor(actual / 60);
-        const mBloque = actual % 60;
-        const textoHora = `${String(hBloque).padStart(2, '0')}:${String(mBloque).padStart(2, '0')}`;
+    while (actual + DURACION_CITA_MINUTOS <= limite) {
+        const textoHora = minutosAHora(actual);
+        const textoFin = minutosAHora(actual + DURACION_CITA_MINUTOS);
 
         const clon = tpl.content.cloneNode(true);
         const boton = clon.querySelector('.slot-horario');
         boton.textContent = Formato.horaAmPm(textoHora);
 
-        boton.addEventListener('click', () => {
-            contenedor.querySelectorAll('.slot-horario').forEach(b => b.classList.remove('seleccionado'));
-            boton.classList.add('seleccionado');
-            estadoReserva.horaSeleccionada = `${textoHora}:00`;
-        });
+        if (ocupadas.includes(textoHora)) {
+            boton.disabled = true;
+            boton.title = 'Esta hora ya tiene una cita';
+        } else {
+            libres++;
+            boton.addEventListener('click', () => {
+                contenedor.querySelectorAll('.slot-horario').forEach(b => b.classList.remove('seleccionado'));
+                boton.classList.add('seleccionado');
+                estadoReserva.horaSeleccionada = `${textoHora}:00`;
+
+                const seleccion = document.getElementById('texto-seleccion');
+                seleccion.textContent = `Tu cita: ${Formato.horaAmPm(textoHora)} - ${Formato.horaAmPm(textoFin)}`;
+                seleccion.classList.remove('oculto');
+            });
+        }
 
         contenedor.appendChild(clon);
-        actual += duracionSlot;
+        actual += DURACION_CITA_MINUTOS;
+    }
+
+    if (libres === 0) {
+        const aviso = document.createElement('p');
+        aviso.className = 'aviso-slots';
+        aviso.textContent = 'Ya no quedan horas libres este día. Prueba con otra fecha.';
+        contenedor.appendChild(aviso);
     }
 }
 

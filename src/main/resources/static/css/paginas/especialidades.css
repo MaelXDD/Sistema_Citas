@@ -1,0 +1,227 @@
+/* ==========================================================================
+   ESPECIALIDADES.HTML (vista de administración)
+   ========================================================================== */
+
+/* ---------- Tarjeta de especialidad ---------- */
+.especialidad {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: start;
+    gap: 20px;
+    padding: 24px;
+}
+
+.especialidad-icono {
+    margin-bottom: 0;
+    background-color: var(--celeste-claro);
+}
+
+.especialidad:hover .especialidad-icono {
+    transform: scale(1.1);
+}
+
+.especialidad-titulo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.especialidad-id {
+    padding: 3px 10px;
+    border-radius: 6px;
+    background-color: var(--celeste-claro);
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--azul-noche);
+}
+
+.especialidad-nombre {
+    margin: 0;
+    font-size: 1.4rem;
+    line-height: 1.2;
+}
+
+.especialidad-descripcion {
+    line-height: 1.55;
+}
+
+.especialidad-lateral {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.especialidad-tarifa {
+    text-align: right;
+}
+
+.especialidad-tarifa span {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.especialidad-precio {
+    font-size: 1.9rem;
+    line-height: 1.2;
+}
+
+.especialidad-acciones {
+    display: flex;
+    gap: 10px;
+}
+
+/* ---------- Médico a cargo y horarios ---------- */
+.medico {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 28px;
+    margin-top: 12px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    background-color: var(--celeste-suave);
+}
+
+.medico-foto {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: var(--celeste-claro);
+}
+
+.medico-datos,
+.medico-horarios {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.medico-datos {
+    flex: 0 1 auto;
+}
+
+.medico-horarios {
+    flex: 1 1 240px;
+}
+
+.medico-nombre,
+.medico-horario-lineas {
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.4;
+    color: var(--azul-noche);
+}
+
+.medico-horario-lineas span {
+    display: block;
+}
+
+/* Doctores adicionales: se despliegan con la flecha */
+.medicos-extra {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+}
+
+.medicos-extra.abierto {
+    grid-template-rows: 1fr;
+}
+
+.medicos-extra-interior {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.medicos-boton {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 6px 0;
+    border: 0;
+    background: none;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--azul-institucional);
+    cursor: pointer;
+}
+
+.medicos-boton:hover {
+    color: var(--azul-noche);
+}
+
+.medicos-boton i {
+    transition: transform 0.3s ease;
+}
+
+.medicos-boton[aria-expanded="true"] i {
+    transform: rotate(180deg);
+}
+
+/* ---------- Campo de precio con prefijo S/ ---------- */
+.campo-precio {
+    position: relative;
+}
+
+.campo-precio-prefijo {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    font-weight: 800;
+    color: var(--azul-noche);
+}
+
+.campo-precio input {
+    padding-left: 42px;
+}
+
+/* ---------- Sin animaciones si el usuario lo prefiere ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .medicos-extra,
+    .medicos-boton i {
+        transition: none;
+    }
+
+    .especialidad:hover .especialidad-icono {
+        transform: none;
+    }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+    .especialidad {
+        grid-template-columns: auto 1fr;
+    }
+
+    .especialidad-lateral {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .especialidad-tarifa {
+        text-align: left;
+    }
+}
+
+@media (max-width: 480px) {
+    .especialidad {
+        padding: 20px;
+    }
+
+    .especialidad-acciones {
+        width: 100%;
+    }
+
+    .especialidad-acciones .boton-suave {
+        flex: 1;
+    }
+}
