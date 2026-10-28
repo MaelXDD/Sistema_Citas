@@ -41,11 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function cargarDatosResumen() {
-    const elEsp   = document.getElementById('pago-especialidad');
-    const elDoc   = document.getElementById('pago-doctor');
-    const elFecha = document.getElementById('pago-fecha');
-    const elHora  = document.getElementById('pago-hora');
-    const elTotal = document.getElementById('pago-monto-total');
+    const elEsp    = document.getElementById('pago-especialidad');
+    const elDoc    = document.getElementById('pago-doctor');
+    const elFecha  = document.getElementById('pago-fecha');
+    const elHora   = document.getElementById('pago-hora');
+    const elMotivo = document.getElementById('pago-motivo');
+    const elTotal  = document.getElementById('pago-monto-total');
 
     if (elEsp) elEsp.textContent = citaPendiente.especialidad?.nombre || 'General';
     if (elDoc) {
@@ -53,17 +54,22 @@ function cargarDatosResumen() {
             ? `Dr. ${citaPendiente.doctor.nombres} ${citaPendiente.doctor.apellidos}`
             : 'Por asignar';
     }
-    if (elFecha) elFecha.textContent = citaPendiente.fechaCita || '—';
+    if (elFecha) elFecha.textContent = citaPendiente.fechaCita ? textoFechaLarga(citaPendiente.fechaCita) : '—';
     if (elHora) elHora.textContent = Formato.horaAmPm(citaPendiente.horaCita);
+    if (elMotivo) elMotivo.textContent = citaPendiente.motivo || 'Consulta general';
 
-    const precio = citaPendiente.especialidad?.precioConsulta
-        || citaPendiente.especialidad?.costo
-        || citaPendiente.especialidad?.precio
-        || 30.00;
+    // La tarifa viene de la tabla precios; la guarda citas.js junto con la cita pendiente
+    const monto = Number(citaPendiente.precio?.monto);
 
-    citaPendiente.montoTotal = parseFloat(precio);
+    if (Number.isFinite(monto) && monto > 0) {
+        citaPendiente.montoTotal = monto;
+        if (elTotal) elTotal.textContent = Formato.moneda(monto);
+        return;
+    }
 
-    if (elTotal) elTotal.textContent = Formato.moneda(citaPendiente.montoTotal);
+    if (elTotal) elTotal.textContent = 'Sin tarifa';
+    document.getElementById('btnConfirmarPago').disabled = true;
+    Notificacion.advertencia('Sin tarifa', 'Esta especialidad todavía no tiene una tarifa registrada, por eso no se puede pagar. Vuelve a Sacar Cita.');
 }
 
 function configurarMetodosPago() {

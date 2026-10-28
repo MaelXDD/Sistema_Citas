@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hospital de la Solidaridad - Gestión de Especialidades</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/estilo.css">
-    <link rel="stylesheet" href="/css/paginas.css">
+    <link rel="stylesheet" href="/css/paginas/especialidades.css">
     <link rel="stylesheet" href="/css/bot.css">
 </head>
 <body>
@@ -26,113 +30,269 @@
     </div>
 </header>
 
-<main class="area-gestion-medica">
+<main class="gestion contenido-pagina">
+    <div class="contenedor-seccion">
 
-    <div id="vistaTabla" class="tarjeta-panel">
-        <div class="cabecera-panel">
-            <div class="titulos-seccion">
-                <h2>Especialidades Médicas</h2>
-                <p>Lista de especialidades registradas en el sistema.</p>
+        <!-- ===== Vista de la lista ===== -->
+        <div id="vistaTabla" class="vista">
+
+            <section class="panel cabecera-gestion">
+                <div class="cabecera-textos">
+                    <span class="sobretitulo">Catálogo clínico · Sede Vitarte</span>
+                    <h2>Especialidades Médicas Registradas</h2>
+                    <p>Lista de especialidades registradas en el sistema.</p>
+                </div>
+                <div class="cabecera-acciones">
+                    <button type="button" id="btnDescargarReporteEsp" class="boton-suave">
+                        <i class="bi bi-file-earmark-pdf"></i>
+                        Descargar Reporte PDF
+                    </button>
+                    <button type="button" id="btnIrEstadisticas" class="boton-suave">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        Estadísticas
+                    </button>
+                    <button type="button" id="btnMostrarForm" class="boton-accion-total">
+                        <i class="bi bi-plus-circle"></i>
+                        Registrar Nueva Especialidad
+                    </button>
+                </div>
+            </section>
+
+            <ul class="resumen">
+                <li class="panel dato">
+                    <div>
+                        <span class="dato-titulo">Total Especialidades</span>
+                        <strong id="resumenTotal">—</strong>
+                    </div>
+                    <i class="bi bi-archive"></i>
+                </li>
+                <li class="panel dato">
+                    <div>
+                        <span class="dato-titulo">Médicos en Turno Hoy</span>
+                        <strong id="resumenEnTurno">—</strong>
+                    </div>
+                    <i class="bi bi-people"></i>
+                </li>
+                <li class="panel dato">
+                    <div>
+                        <span class="dato-titulo">Tarifa Promedio Consulta</span>
+                        <strong id="resumenTarifa">—</strong>
+                    </div>
+                    <i class="bi bi-cash-stack"></i>
+                </li>
+                <li class="panel dato dato-destacado">
+                    <div>
+                        <span class="dato-titulo">Especialidades Inactivas</span>
+                        <strong id="resumenInactivas">—</strong>
+                    </div>
+                    <i class="bi bi-slash-circle"></i>
+                </li>
+            </ul>
+
+            <ul id="listaEspecialidades" class="lista-tarjetas">
+                <li class="panel mensaje-lista">Cargando especialidades...</li>
+            </ul>
+
+            <div class="panel paginacion">
+                <p>
+                    Mostrando <strong id="textoMostradas">0</strong>
+                    de <strong id="textoTotal">0</strong> especialidades registradas
+                </p>
+                <nav id="paginacion" class="paginacion-botones" aria-label="Paginación"></nav>
             </div>
-            <div class="fila-botones-filtro">
-                <button type="button" id="btnDescargarReporteEsp" class="boton-blanco boton-borde-azul">Descargar Reporte PDF</button>
-                <button type="button" id="btnIrEstadisticas" class="boton-blanco boton-borde-azul">Estadísticas</button>
-                <button type="button" id="btnMostrarForm" class="boton-accion-total">
-                    + Registrar Nueva Especialidad
+
+        </div>
+
+        <!-- ===== Vista del formulario ===== -->
+        <div id="vistaFormulario" class="panel panel-formulario oculto">
+            <div class="cabecera-formulario">
+                <h2>
+                    <i class="bi bi-journal-medical"></i>
+                    <span id="tituloFormulario">Registrar Especialidad</span>
+                </h2>
+                <p id="descripcionFormulario">Ingrese los datos requeridos para registrar la especialidad en el sistema.</p>
+            </div>
+
+            <form id="especialidadForm" class="formulario-estandar">
+                <input type="hidden" id="inputIdEspecialidad" name="idEspecialidad">
+                <input type="hidden" id="inputIdPrecio"       name="idPrecio">
+
+                <div class="contenedor-selector">
+                    <label class="etiqueta-selector" for="inputNombre">Nombre de la especialidad</label>
+                    <input
+                            type="text"
+                            id="inputNombre"
+                            name="nombre"
+                            placeholder="Ej. Cardiología"
+                            maxlength="100"
+                            required
+                    >
+                </div>
+
+                <div class="contenedor-selector">
+                    <label class="etiqueta-selector" for="inputDescripcion">Descripción</label>
+                    <textarea
+                            id="inputDescripcion"
+                            name="descripcion"
+                            placeholder="Describa brevemente la especialidad"
+                            maxlength="500"
+                            rows="4"
+                    ></textarea>
+                    <small id="contadorDescripcion" class="contador">0 / 500</small>
+                </div>
+
+                <div class="contenedor-selector">
+                    <label class="etiqueta-selector" for="inputPrecio">Precio de consulta</label>
+                    <div class="campo-precio">
+                        <span class="campo-precio-prefijo">S/</span>
+                        <input
+                                type="number"
+                                id="inputPrecio"
+                                name="precio"
+                                placeholder="0.00"
+                                min="0.01"
+                                step="0.01"
+                        >
+                    </div>
+                </div>
+
+                <div class="fila-botones-formulario">
+                    <button type="button" id="btnCancelar" class="boton-blanco">Cancelar</button>
+                    <button type="submit" id="btnGuardar" class="boton-accion-total">Guardar Especialidad</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</main>
+
+<template id="tpl-tarjeta-especialidad">
+    <li class="panel panel-animado especialidad">
+        <span class="icono-caja especialidad-icono"><i class="bi bi-heart-pulse"></i></span>
+
+        <div class="especialidad-info">
+            <div class="especialidad-titulo">
+                <span class="especialidad-id"></span>
+                <h3 class="especialidad-nombre"></h3>
+                <span class="badge-estado especialidad-estado"></span>
+            </div>
+            <p class="especialidad-descripcion"></p>
+
+            <div class="medicos">
+                <div class="medicos-principal"></div>
+
+                <div class="medicos-extra">
+                    <div class="medicos-extra-interior"></div>
+                </div>
+
+                <button type="button" class="medicos-boton oculto" aria-expanded="false">
+                    <span class="medicos-boton-texto"></span>
+                    <i class="bi bi-chevron-down"></i>
                 </button>
             </div>
         </div>
 
-        <div class="tabla-responsiva">
-            <table class="tabla-doctores">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody id="tablaEspecialidadesBody">
-                <tr>
-                    <td colspan="6" class="celda-estado">Cargando especialidades...</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="vistaFormulario" class="tarjeta-panel panel-formulario oculto">
-        <div class="cabecera-formulario">
-            <h2 id="tituloFormulario">Registrar Especialidad</h2>
-            <p id="descripcionFormulario">Ingrese los datos requeridos para registrar la especialidad en el sistema.</p>
-        </div>
-
-        <form id="especialidadForm" class="formulario-estandar">
-            <input type="hidden" id="inputIdEspecialidad" name="idEspecialidad">
-            <input type="hidden" id="inputIdPrecio"       name="idPrecio">
-
-            <input
-                    type="text"
-                    id="inputNombre"
-                    name="nombre"
-                    placeholder="Nombre de la Especialidad"
-                    maxlength="100"
-                    required
-            >
-
-            <textarea
-                    id="inputDescripcion"
-                    name="descripcion"
-                    placeholder="Descripción de la especialidad"
-                    maxlength="500"
-                    rows="4"
-            ></textarea>
-
-            <input
-                    type="number"
-                    id="inputPrecio"
-                    name="precio"
-                    placeholder="Precio de consulta (S/)"
-                    min="0.01"
-                    step="0.01"
-            >
-
-            <div class="fila-botones-formulario">
-                <button type="button" id="btnCancelar" class="boton-blanco">Cancelar</button>
-                <button type="submit" id="btnGuardar" class="boton-accion-total">Guardar Especialidad</button>
+        <div class="especialidad-lateral">
+            <div class="especialidad-tarifa">
+                <span>Tarifa Social</span>
+                <strong class="especialidad-precio"></strong>
             </div>
-        </form>
+            <div class="especialidad-acciones">
+                <button type="button" class="boton-suave btn-edit-esp">
+                    <i class="bi bi-pencil"></i>
+                    Editar
+                </button>
+                <button type="button" class="boton-suave btn-toggle-esp">
+                    <i class="bi icono-estado"></i>
+                    <span class="texto-estado"></span>
+                </button>
+            </div>
+        </div>
+    </li>
+</template>
+
+<template id="tpl-medico">
+    <div class="medico">
+        <!-- La foto saldrá de la vista de doctores: por ahora queda el espacio vacío -->
+        <span class="medico-foto"></span>
+
+        <div class="medico-datos">
+            <span class="rotulo">Médico a Cargo</span>
+            <strong class="medico-nombre"></strong>
+        </div>
+
+        <div class="medico-horarios">
+            <span class="rotulo">
+                <i class="bi bi-clock"></i>
+                Horarios Habituales
+            </span>
+            <div class="medico-horario-lineas"></div>
+        </div>
     </div>
-
-</main>
-
-<template id="tpl-fila-especialidad">
-    <tr>
-        <td class="col-id texto-azul font-bold"></td>
-        <td class="col-nombre font-bold"></td>
-        <td class="col-desc"></td>
-        <td><strong class="col-precio"></strong></td>
-        <td><span class="badge-estado col-estado"></span></td>
-        <td>
-            <button type="button" class="boton-editar btn-edit-esp">Editar</button>
-            <button type="button" class="boton-eliminar btn-toggle-esp"></button>
-        </td>
-    </tr>
 </template>
 
-<template id="tpl-msg-esp">
-    <tr>
-        <td colspan="6" class="celda-mensaje"></td>
-    </tr>
-</template>
+<footer class="pie-inferior">
+    <div class="contenedor-seccion">
+        <div class="contenedor-pie">
+            <div class="columna-footer">
+                <div class="pie-logo">
+                    <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+                    <span>Hospital de la Solidaridad Vitarte</span>
+                </div>
+                <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="/index.html">Inicio</a></li>
+                    <li><a href="/index.html#especialidadesdest">Especialidades</a></li>
+                    <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
+                    <li><a href="/mision.html">Misión</a></li>
+                    <li><a href="/vision.html">Visión</a></li>
+                </ul>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Ayuda</h4>
+                <div class="item-contacto">
+                    <i class="bi bi-clock"></i>
+                    <span>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-question-circle"></i>
+                    <span>Preguntas frecuentes</span>
+                </div>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Contacto</h4>
+                <div class="item-contacto">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>Av. Nicolás de Ayllón (Carretera Central) Km. 7.5, Vitarte - Lima</span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-telephone"></i>
+                    <span><a href="tel:08004442222">0800-444-2222</a> · <a href="tel:015551234">(01) 555-1234</a></span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-envelope"></i>
+                    <a href="mailto:citas@hospitalsolidaridad.pe">citas@hospitalsolidaridad.pe</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/comun/configuracion.js"></script>
 <script src="/js/comun/utilidades.js"></script>
 <script src="/js/comun/sesion.js"></script>
+<script src="/js/comun/gestion.js"></script>
 <script src="/js/bot/bot-widget.js"></script>
 <script src="/js/paginas/especialidades.js"></script>
 </body>

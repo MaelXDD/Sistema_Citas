@@ -4,9 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis Citas - Hospital de la Solidaridad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="/css/estilo.css">
-  <link rel="stylesheet" href="/css/paginas.css">
-    <link rel="stylesheet" href="/css/bot.css">
+  <link rel="stylesheet" href="/css/paginas/miscitas.css">
+  <link rel="stylesheet" href="/css/bot.css">
 </head>
 <body>
 
@@ -31,91 +35,238 @@
     <a href="/horarios.html" class="nav-admin oculto">Horarios</a>
   </nav>
 
-  <!-- Zona de botones de acceso estructurada -->
   <div class="botones-acceso" id="zona-sesion">
-    <div id="sesion-visitante" class="botones-acceso oculto">
+    <div id="caja-sesion-invitado" class="botones-acceso oculto">
       <button type="button" class="boton-blanco" id="btn-abrir-login">Iniciar Sesión</button>
       <button type="button" class="boton-azul" id="btn-abrir-registro">Registrarse</button>
     </div>
-    <div id="sesion-usuario" class="botones-acceso">
+    <div id="caja-sesion-usuario" class="sesion-usuario oculto">
       <span class="texto-azul" id="nombre-usuario-sesion"></span>
       <button type="button" class="boton-blanco" id="btn-cerrar-sesion">Cerrar sesión</button>
     </div>
   </div>
 </header>
 
-<section class="contenedor-general">
-  <h1 class="titulo">Mis Citas Médicas</h1>
-  <p class="descripcion">
-    Consulta todas tus citas registradas en el sistema.
-  </p>
+<main class="gestion contenido-pagina">
+  <div class="contenedor-seccion">
+    <div class="vista">
 
-  <!-- Contenedor donde se clonarán las plantillas -->
-  <div class="grid-citas" id="contenedor-mis-citas">
-    <div class="sin-citas celda-estado">Cargando citas médicas...</div>
+      <section class="panel cabecera-gestion">
+        <div class="cabecera-textos">
+          <span class="sobretitulo">Historial de atención</span>
+          <h2>Mis Citas Médicas</h2>
+          <p>Consulta todas tus citas registradas en el sistema.</p>
+        </div>
+        <div class="cabecera-acciones">
+          <a href="/citas.html" class="boton-suave boton-suave-oscuro">
+            <i class="bi bi-calendar-plus"></i>
+            Sacar una cita
+          </a>
+        </div>
+      </section>
+
+      <ul class="resumen">
+        <li class="panel dato">
+          <div>
+            <span class="dato-titulo">Total de citas</span>
+            <strong id="resumenTotal">—</strong>
+          </div>
+          <i class="bi bi-journal-medical"></i>
+        </li>
+        <li class="panel dato dato-destacado">
+          <div>
+            <span class="dato-titulo">Próxima cita</span>
+            <strong id="resumenProxima">—</strong>
+          </div>
+          <i class="bi bi-calendar-event"></i>
+        </li>
+        <li class="panel dato">
+          <div>
+            <span class="dato-titulo">Por atender</span>
+            <strong id="resumenActivas">—</strong>
+          </div>
+          <i class="bi bi-hourglass-split"></i>
+        </li>
+        <li class="panel dato">
+          <div>
+            <span class="dato-titulo">Canceladas</span>
+            <strong id="resumenCanceladas">—</strong>
+          </div>
+          <i class="bi bi-x-circle"></i>
+        </li>
+      </ul>
+
+      <section class="panel filtros" id="filtros-estado" aria-label="Filtrar citas por estado">
+        <button type="button" class="boton-suave boton-suave-oscuro" data-estado="">
+          Todas
+          <span class="filtro-cantidad">0</span>
+        </button>
+        <button type="button" class="boton-suave" data-estado="PENDIENTE">
+          Pendientes
+          <span class="filtro-cantidad">0</span>
+        </button>
+        <button type="button" class="boton-suave" data-estado="CONFIRMADA">
+          Confirmadas
+          <span class="filtro-cantidad">0</span>
+        </button>
+        <button type="button" class="boton-suave" data-estado="VENCIDA">
+          Vencidas
+          <span class="filtro-cantidad">0</span>
+        </button>
+        <button type="button" class="boton-suave" data-estado="COMPLETADA">
+          Completadas
+          <span class="filtro-cantidad">0</span>
+        </button>
+        <button type="button" class="boton-suave" data-estado="CANCELADA">
+          Canceladas
+          <span class="filtro-cantidad">0</span>
+        </button>
+      </section>
+
+      <!-- Lista donde se clonan las tarjetas -->
+      <ul class="lista-tarjetas" id="contenedor-mis-citas">
+        <li class="panel mensaje-lista">Cargando citas médicas...</li>
+      </ul>
+
+    </div>
   </div>
-</section>
+</main>
 
 <footer class="pie-inferior">
-  <div class="contenedor-pie">
-    <div class="columna-footer">
-      <h4>Hospital de la Solidaridad Vitarte</h4>
-      <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
+  <div class="contenedor-seccion">
+    <div class="contenedor-pie">
+      <div class="columna-footer">
+        <div class="pie-logo">
+          <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+          <span>Hospital de la Solidaridad Vitarte</span>
+        </div>
+        <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
+      </div>
+
+      <div class="columna-footer">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="/index.html">Inicio</a></li>
+          <li><a href="/index.html#especialidadesdest">Especialidades</a></li>
+          <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
+          <li><a href="/mision.html">Misión</a></li>
+          <li><a href="/vision.html">Visión</a></li>
+        </ul>
+      </div>
+
+      <div class="columna-footer">
+        <h4>Ayuda</h4>
+        <div class="item-contacto">
+          <i class="bi bi-clock"></i>
+          <span>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</span>
+        </div>
+        <div class="item-contacto">
+          <i class="bi bi-question-circle"></i>
+          <span>Preguntas frecuentes</span>
+        </div>
+      </div>
+
+      <div class="columna-footer">
+        <h4>Contacto</h4>
+        <div class="item-contacto">
+          <i class="bi bi-geo-alt"></i>
+          <span>Av. Nicolás de Ayllón (Carretera Central) Km. 7.5, Vitarte - Lima</span>
+        </div>
+        <div class="item-contacto">
+          <i class="bi bi-telephone"></i>
+          <span><a href="tel:08004442222">0800-444-2222</a> · <a href="tel:015551234">(01) 555-1234</a></span>
+        </div>
+        <div class="item-contacto">
+          <i class="bi bi-envelope"></i>
+          <a href="mailto:contacto@hospital.pe">contacto@hospital.pe</a>
+        </div>
+      </div>
     </div>
-    <div class="columna-footer">
-      <h4>Navegación</h4>
-      <ul>
-        <li><a href="/index.html">Inicio</a></li>
-        <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
-        <li><a href="/mision.html">Misión</a></li>
-        <li><a href="/vision.html">Visión</a></li>
-      </ul>
+
+    <div class="footer-bottom">
+      <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
     </div>
-    <div class="columna-footer">
-      <h4>Ayuda</h4>
-      <p>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</p>
-      <br>
-      <p>Preguntas frecuentes</p>
-    </div>
-    <div class="columna-footer">
-      <h4>Contacto</h4>
-      <div class="item-contacto">Vitarte, Lima - Perú</div>
-      <div class="item-contacto">(01) 555-1234</div>
-      <div class="item-contacto">contacto@hospital.pe</div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
   </div>
 </footer>
 
+<!-- Modales de autenticación reutilizables -->
+<div id="modal-login" class="capa-fondo-modal">
+  <div class="cuadro-emergente">
+    <span class="cerrar-ventana" data-cerrar="modal-login">&times;</span>
+    <h3>Iniciar Sesión</h3>
+    <form id="loginForm" class="formulario-estandar">
+      <input type="email" name="correo" placeholder="Ingresa tu correo" required>
+      <input type="password" name="password" placeholder="Ingresa tu contraseña" required>
+      <button type="submit" class="boton-accion-total">Iniciar Sesión</button>
+    </form>
+  </div>
+</div>
+
+<div id="modal-registro" class="capa-fondo-modal">
+  <div class="cuadro-emergente">
+    <span class="cerrar-ventana" data-cerrar="modal-registro">&times;</span>
+    <h3>Registro</h3>
+    <form id="registerForm" class="formulario-estandar">
+      <div class="fila-input">
+        <input type="text" id="reg-nombres" name="nombres" placeholder="Nombres" maxlength="50" required>
+        <input type="text" id="reg-apellidos" name="apellidos" placeholder="Apellidos" maxlength="50" required>
+      </div>
+      <input type="email" name="correo" placeholder="Correo" maxlength="100" required>
+      <input type="text" id="reg-dni" name="dni" placeholder="DNI" maxlength="8" required>
+      <input type="text" id="reg-telefono" name="telefono" placeholder="Teléfono" maxlength="9">
+      <input type="date" name="fechaNac" required>
+      <input type="text" name="direccion" placeholder="Dirección" maxlength="150" required>
+      <input type="password" name="password" placeholder="Contraseña" maxlength="50" required>
+      <button type="submit" class="boton-accion-total">Crear cuenta</button>
+    </form>
+  </div>
+</div>
+
 <!-- Plantilla tarjeta de cita -->
 <template id="tpl-tarjeta-cita">
-  <div class="tarjeta-cita">
-    <div class="encabezado-cita">
-      <h2 class="nombre-doctor col-doc"></h2>
-      <div class="estado-cita col-estado"></div>
+  <li class="panel fila-cita">
+        <span class="ficha-fecha">
+            <small class="col-mes"></small>
+            <strong class="col-numero"></strong>
+        </span>
+
+    <div class="cita-cuerpo">
+      <div class="cita-titulo">
+        <strong class="cita-doctor col-doc"></strong>
+        <span class="estado-cita col-estado"></span>
+      </div>
+      <span class="cita-dato">
+                <i class="bi bi-heart-pulse"></i>
+                <span class="col-esp"></span>
+            </span>
+      <span class="cita-dato">
+                <i class="bi bi-calendar-event"></i>
+                <span><span class="col-fecha"></span> · <span class="col-hora"></span></span>
+            </span>
+      <span class="cita-dato">
+                <i class="bi bi-chat-left-text"></i>
+                <span class="col-motivo"></span>
+            </span>
     </div>
-    <div class="detalle-cita"><span>Especialidad:</span> <span class="col-esp"></span></div>
-    <div class="detalle-cita"><span>Fecha:</span> <span class="col-fecha"></span></div>
-    <div class="detalle-cita"><span>Horario:</span> <span class="col-hora"></span></div>
-    <div class="detalle-cita"><span>Motivo:</span> <span class="col-motivo"></span></div>
 
-    <button type="button" class="boton-imprimir btn-pdf oculto">Imprimir Comprobante</button>
-    <button type="button" class="boton-cancelar btn-anular oculto">Cancelar cita</button>
-    <p class="mensaje-cancelado col-msg-cancelado oculto">Cita cancelada</p>
-  </div>
-</template>
-
-<!-- Plantilla estado vacío o mensajes -->
-<template id="tpl-sin-citas">
-  <div class="sin-citas celda-mensaje"></div>
+    <div class="cita-acciones">
+      <button type="button" class="boton-suave btn-pdf oculto">
+        <i class="bi bi-file-earmark-pdf"></i>
+        Comprobante
+      </button>
+      <button type="button" class="boton-suave boton-suave-peligro btn-anular oculto">
+        <i class="bi bi-x-circle"></i>
+        Cancelar cita
+      </button>
+    </div>
+  </li>
 </template>
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/comun/configuracion.js"></script>
 <script src="/js/comun/utilidades.js"></script>
+<script src="/js/comun/gestion.js"></script>
 <script src="/js/comun/sesion.js"></script>
 <script src="/js/bot/bot-widget.js"></script>
 <script src="/js/paginas/miscitas.js"></script>

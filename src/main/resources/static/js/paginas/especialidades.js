@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     configurarNavegacionVistas();
     configurarEventosCabecera();
     configurarFormularioEspecialidades();
+    configurarContadorDescripcion();
     cargarEspecialidades();
 });
 
@@ -63,15 +64,54 @@ function configurarEventosCabecera() {
     });
 }
 
+const ESPECIALIDADES_POR_PAGINA = 5;
+let listaEspecialidades = [];
+let paginaActual = 1;
+
 /**
- * Carga todas las especialidades registradas y consulta de forma dinámica
- * sus tarifas en la tabla precios de la base de datos.
+ * Pide los doctores activos y sus horarios en dos consultas y los reparte por especialidad.
+ * @returns {Promise<Map>} Mapa idEspecialidad -> lista de { doctor, horarios }.
+ */
+async function consultarDoctoresPorEspecialidad() {
+    const porEspecialidad = new Map();
+
+    try {
+        const [respuesta, horariosPorDoctor] = await Promise.all([
+            fetch(`${CONFIG.API_URL}/doctores/activos`),
+            consultarHorariosPorDoctor().catch(() => new Map())
+        ]);
+        if (!respuesta.ok) return porEspecialidad;
+
+        (await respuesta.json()).forEach((doctor) => {
+            if (!doctor.especialidad) return;
+
+            const id = doctor.especialidad.idEspecialidad;
+            if (!porEspecialidad.has(id)) porEspecialidad.set(id, []);
+            porEspecialidad.get(id).push({ doctor, horarios: horariosPorDoctor.get(doctor.idDoctor) ?? [] });
+        });
+    } catch {
+        // Sin doctores: las tarjetas se muestran igual, solo con la tarifa
+    }
+
+    return porEspecialidad;
+}
+
+/**
+ * Muestra un mensaje en la lista y deja la paginación en cero.
+ */
+function mostrarMensajeEspecialidades(texto, esError = false) {
+    mostrarMensajeLista(document.getElementById('listaEspecialidades'), texto, esError);
+
+    document.getElementById('paginacion').replaceChildren();
+    document.getElementById('textoMostradas').textContent = '0';
+    document.getElementById('textoTotal').textContent = '0';
+}
+
+/**
+ * Carga las especialidades con su tarifa y las muestra paginadas.
  */
 async function cargarEspecialidades() {
-    const tbody = document.getElementById('tablaEspecialidadesBody');
-    if (!tbody) return;
-
-    renderizarMensajeEnTabla(tbody, 'tpl-msg-esp', 'Cargando especialidades médicas...');
+    mostrarMensajeEspecialidades('Cargando especialidades médicas...');
 
     try {
         const respuesta = await fetch(`${CONFIG.API_URL}/especialidades`);
@@ -80,58 +120,171 @@ async function cargarEspecialidades() {
         const especialidades = await respuesta.json();
 
         if (especialidades.length === 0) {
-            renderizarMensajeEnTabla(tbody, 'tpl-msg-esp', 'No se encontraron especialidades registradas.');
+            listaEspecialidades = [];
+            mostrarResumen();
+            mostrarMensajeEspecialidades('No se encontraron especialidades registradas.');
             return;
         }
 
-        tbody.replaceChildren();
-        const plantilla = document.getElementById('tpl-fila-especialidad');
+        const [doctoresPorEspecialidad, precios] = await Promise.all([
+            consultarDoctoresPorEspecialidad(),
+            Promise.all(especialidades.map(esp => consultarPrecio(esp.idEspecialidad)))
+        ]);
 
-        for (const esp of especialidades) {
-            const clon = plantilla.content.cloneNode(true);
+        listaEspecialidades = especialidades.map((esp, i) => ({
+            esp,
+            precio: precios[i],
+            doctores: doctoresPorEspecialidad.get(esp.idEspecialidad) ?? []
+        }));
 
-            clon.querySelector('.col-id').textContent   = esp.idEspecialidad;
-            clon.querySelector('.col-nombre').textContent = esp.nombre;
-            clon.querySelector('.col-desc').textContent   = esp.descripcion || '—';
-
-            // Consultar precio dinámico desde la BD
-            const celdaPrecio = clon.querySelector('.col-precio');
-            let precioObj = null;
-
-            try {
-                const resPrecio = await fetch(`${CONFIG.API_URL}/precios/especialidad/${esp.idEspecialidad}`);
-                if (resPrecio.ok) {
-                    precioObj = await resPrecio.json();
-                    celdaPrecio.textContent = Formato.moneda(precioObj.monto);
-                } else {
-                    celdaPrecio.textContent = 'Sin tarifa';
-                }
-            } catch {
-                celdaPrecio.textContent = 'Sin tarifa';
-            }
-
-            // Badge de estado (activo / inactivo) mediante clases semánticas
-            const badgeEstado = clon.querySelector('.col-estado');
-            badgeEstado.textContent = esp.activo ? 'Activo' : 'Inactivo';
-            badgeEstado.classList.add(esp.activo ? 'activo' : 'inactivo');
-
-            // Botón de alternancia de estado
-            const btnToggle = clon.querySelector('.btn-toggle-esp');
-            btnToggle.textContent = esp.activo ? 'Desactivar' : 'Activar';
-
-            clon.querySelector('.btn-edit-esp').addEventListener('click', () => {
-                prepararEdicionEspecialidad(esp, precioObj);
-            });
-
-            btnToggle.addEventListener('click', () => {
-                alternarEstadoEspecialidad(esp);
-            });
-
-            tbody.appendChild(clon);
-        }
+        mostrarResumen();
+        mostrarPagina(paginaActual);
     } catch {
-        renderizarMensajeEnTabla(tbody, 'tpl-msg-esp', 'Error al consultar las especialidades con el servidor.', true);
+        mostrarMensajeEspecialidades('Error al consultar las especialidades con el servidor.', true);
     }
+}
+
+/**
+ * Llena los cuadros de arriba con los datos reales de la lista.
+ */
+function mostrarResumen() {
+    const total    = listaEspecialidades.length;
+    const inactivas = listaEspecialidades.filter(({ esp }) => !esp.activo).length;
+    const enTurno   = listaEspecialidades
+        .flatMap(({ doctores }) => doctores)
+        .filter(({ horarios }) => atiendeHoy(horarios)).length;
+    const montos   = listaEspecialidades.filter(({ precio }) => precio).map(({ precio }) => precio.monto);
+    const promedio = montos.length ? montos.reduce((suma, monto) => suma + monto, 0) / montos.length : null;
+
+    document.getElementById('resumenTotal').textContent      = total;
+    document.getElementById('resumenEnTurno').textContent    = enTurno;
+    document.getElementById('resumenInactivas').textContent  = inactivas;
+    document.getElementById('resumenTarifa').textContent     = promedio === null ? '—' : Formato.moneda(promedio);
+}
+
+/**
+ * Dibuja las tarjetas de la página indicada.
+ */
+function mostrarPagina(pagina) {
+    const totalPaginas = Math.max(1, Math.ceil(listaEspecialidades.length / ESPECIALIDADES_POR_PAGINA));
+    paginaActual = Math.min(Math.max(pagina, 1), totalPaginas);
+
+    const inicio  = (paginaActual - 1) * ESPECIALIDADES_POR_PAGINA;
+    const visibles = listaEspecialidades.slice(inicio, inicio + ESPECIALIDADES_POR_PAGINA);
+
+    const lista = document.getElementById('listaEspecialidades');
+    const plantilla = document.getElementById('tpl-tarjeta-especialidad');
+    lista.replaceChildren();
+
+    for (const { esp, precio, doctores } of visibles) {
+        const clon = plantilla.content.cloneNode(true);
+
+        clon.querySelector('.especialidad-id').textContent          = `ID #${String(esp.idEspecialidad).padStart(2, '0')}`;
+        clon.querySelector('.especialidad-nombre').textContent      = esp.nombre;
+        clon.querySelector('.especialidad-descripcion').textContent = esp.descripcion || '—';
+        clon.querySelector('.especialidad-precio').textContent      = precio ? Formato.moneda(precio.monto) : 'Sin tarifa';
+
+        mostrarIcono(clon.querySelector('.especialidad-icono'), esp.nombre);
+        mostrarMedicos(clon, doctores);
+
+        const estado = clon.querySelector('.especialidad-estado');
+        estado.textContent = esp.activo ? 'Activo' : 'Inactivo';
+        estado.classList.add(esp.activo ? 'activo' : 'inactivo');
+
+        const btnToggle = clon.querySelector('.btn-toggle-esp');
+        btnToggle.querySelector('.texto-estado').textContent = esp.activo ? 'Desactivar' : 'Activar';
+        btnToggle.querySelector('.icono-estado').classList.add(esp.activo ? 'bi-slash-circle' : 'bi-check-circle');
+
+        clon.querySelector('.btn-edit-esp').addEventListener('click', () => {
+            prepararEdicionEspecialidad(esp, precio);
+        });
+
+        btnToggle.addEventListener('click', () => {
+            alternarEstadoEspecialidad(esp);
+        });
+
+        lista.appendChild(clon);
+    }
+
+    document.getElementById('textoMostradas').textContent = visibles.length;
+    document.getElementById('textoTotal').textContent     = listaEspecialidades.length;
+    dibujarPaginacion(document.getElementById('paginacion'), paginaActual, totalPaginas, mostrarPagina);
+}
+
+/**
+ * Crea la fila de un doctor (nombre y horarios) a partir de la plantilla.
+ */
+function crearFilaMedico({ doctor, horarios }) {
+    const fila = document.getElementById('tpl-medico').content.cloneNode(true);
+
+    fila.querySelector('.medico-nombre').textContent = `Dr(a). ${doctor.nombres} ${doctor.apellidos}`;
+
+    const lineas = fila.querySelector('.medico-horario-lineas');
+    const textos = armarLineasHorario(horarios);
+
+    if (textos.length === 0) {
+        lineas.textContent = 'Sin horarios registrados';
+    }
+
+    for (const texto of textos) {
+        const linea = document.createElement('span');
+        linea.textContent = texto;
+        lineas.appendChild(linea);
+    }
+
+    return fila;
+}
+
+/**
+ * Muestra el primer doctor de la especialidad. Si hay más, aparece una flecha
+ * que despliega a los demás.
+ */
+function mostrarMedicos(tarjeta, doctores) {
+    const principal = tarjeta.querySelector('.medicos-principal');
+
+    if (doctores.length === 0) {
+        const fila = document.getElementById('tpl-medico').content.cloneNode(true);
+        fila.querySelector('.medico-nombre').textContent = 'Sin médico asignado';
+        fila.querySelector('.medico-horario-lineas').textContent = 'Sin horarios registrados';
+        principal.appendChild(fila);
+        return;
+    }
+
+    principal.appendChild(crearFilaMedico(doctores[0]));
+
+    if (doctores.length === 1) return;
+
+    const extra = tarjeta.querySelector('.medicos-extra');
+    const boton = tarjeta.querySelector('.medicos-boton');
+    const texto = boton.querySelector('.medicos-boton-texto');
+    const otros = doctores.length - 1;
+    const verMas = otros === 1 ? 'Ver 1 doctor más' : `Ver ${otros} doctores más`;
+
+    for (const doctor of doctores.slice(1)) {
+        tarjeta.querySelector('.medicos-extra-interior').appendChild(crearFilaMedico(doctor));
+    }
+
+    texto.textContent = verMas;
+    boton.classList.remove('oculto');
+
+    boton.addEventListener('click', () => {
+        const abierto = extra.classList.toggle('abierto');
+        boton.setAttribute('aria-expanded', abierto);
+        texto.textContent = abierto ? 'Ocultar doctores' : verMas;
+    });
+}
+
+/**
+ * Muestra cuántos caracteres lleva la descripción (ej. "35 / 500").
+ */
+function actualizarContadorDescripcion() {
+    const campo = document.getElementById('inputDescripcion');
+    document.getElementById('contadorDescripcion').textContent = `${campo.value.length} / ${campo.maxLength}`;
+}
+
+function configurarContadorDescripcion() {
+    document.getElementById('inputDescripcion')?.addEventListener('input', actualizarContadorDescripcion);
+    document.getElementById('especialidadForm')?.addEventListener('reset', () => setTimeout(actualizarContadorDescripcion));
 }
 
 /**
@@ -145,6 +298,7 @@ function prepararEdicionEspecialidad(esp, precio) {
     document.getElementById('inputNombre').value         = esp.nombre;
     document.getElementById('inputDescripcion').value    = esp.descripcion || '';
     document.getElementById('inputPrecio').value         = precio ? precio.monto : '';
+    actualizarContadorDescripcion();
 
     document.getElementById('tituloFormulario').textContent      = "Modificar Especialidad";
     document.getElementById('descripcionFormulario').textContent = "Edite los campos necesarios para actualizar la especialidad y su tarifa.";

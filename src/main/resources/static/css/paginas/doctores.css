@@ -1,0 +1,129 @@
+/* ==========================================================================
+   DOCTORES.HTML (vista de administración)
+   ========================================================================== */
+
+/* ---------- Tarjeta de doctor ---------- */
+.doctor {
+    display: grid;
+    grid-template-columns: auto minmax(180px, 1fr) minmax(300px, 1.3fr) auto;
+    align-items: center;
+    gap: 20px 24px;
+    padding: 24px;
+}
+
+.doctor-foto {
+    --tamano: 88px;
+}
+
+.doctor-etiquetas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.doctor-etiquetas .etiqueta {
+    margin-bottom: 0;
+    padding: 3px 12px;
+    font-size: 0.8rem;
+}
+
+.doctor-dni {
+    padding: 3px 12px;
+    border-radius: 999px;
+    background-color: var(--celeste-suave);
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--azul-noche);
+}
+
+.doctor-nombre {
+    margin-bottom: 8px;
+    font-size: 1.4rem;
+    line-height: 1.2;
+}
+
+.doctor-dato {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.doctor-dato i {
+    color: var(--celeste-etiqueta);
+}
+
+/* ---------- Días, turnos y costo ---------- */
+.doctor-turnos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 18px;
+    border-radius: 10px;
+    background-color: var(--celeste-suave);
+}
+
+.turnos-horarios {
+    flex: 1 1 200px;
+}
+
+.turnos-lineas {
+    line-height: 1.5;
+}
+
+.turnos-lineas p + p {
+    margin-top: 6px;
+}
+
+.turnos-lineas strong,
+.turnos-lineas span {
+    display: block;
+}
+
+.turnos-lineas span {
+    font-size: 0.95rem;
+}
+
+/* ---------- Acciones ---------- */
+.doctor-acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 140px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+    .doctor {
+        grid-template-columns: auto 1fr;
+    }
+
+    .doctor-turnos {
+        grid-column: 1 / -1;
+    }
+
+    .doctor-acciones {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .doctor-acciones .boton-suave {
+        flex: 1 1 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .doctor {
+        padding: 20px;
+    }
+
+    .doctor-foto {
+        --tamano: 72px;
+    }
+}

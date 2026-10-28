@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     configurarNavegacionVistas();
     configurarEventosCabecera();
     configurarFormularioDoctores();
+    configurarFiltros();
     cargarDoctores();
     cargarEspecialidadesEnSelector();
 });
@@ -65,51 +66,168 @@ function configurarEventosCabecera() {
     });
 }
 
+const DOCTORES_POR_PAGINA = 5;
+let listaDoctores = [];
+let doctoresFiltrados = [];
+let paginaActual = 1;
+
 /**
- * Obtiene la lista de médicos activos desde la base de datos y la renderiza
+ * Muestra un mensaje en la lista y deja la paginación en cero.
+ */
+function mostrarMensajeDoctores(texto, esError = false) {
+    mostrarMensajeLista(document.getElementById('listaDoctores'), texto, esError);
+
+    document.getElementById('paginacion').replaceChildren();
+    document.getElementById('textoMostradas').textContent = '0';
+    document.getElementById('textoTotal').textContent = '0';
+}
+
+/**
+ * Obtiene los médicos activos con sus horarios y la tarifa de su especialidad.
  */
 async function cargarDoctores() {
-    const tbody = document.getElementById('tablaDoctoresBody');
-    if (!tbody) return;
+    if (!document.getElementById('listaDoctores')) return;
 
-    renderizarMensajeEnTabla(tbody, 'tpl-msg-doctor', 'Cargando personal médico...');
+    mostrarMensajeDoctores('Cargando personal médico...');
 
     try {
-        const respuesta = await fetch(`${CONFIG.API_URL}/doctores/activos`);
+        // Los doctores y todos los horarios se piden a la vez, en dos consultas en total
+        const [respuesta, horariosPorDoctor] = await Promise.all([
+            fetch(`${CONFIG.API_URL}/doctores/activos`),
+            consultarHorariosPorDoctor().catch(() => new Map())
+        ]);
         if (!respuesta.ok) throw new Error();
 
         const doctores = await respuesta.json();
 
         if (doctores.length === 0) {
-            renderizarMensajeEnTabla(tbody, 'tpl-msg-doctor', 'No hay doctores registrados actualmente.');
+            listaDoctores = [];
+            mostrarResumen();
+            mostrarMensajeDoctores('No hay doctores registrados actualmente.');
             return;
         }
 
-        tbody.replaceChildren();
-        const plantilla = document.getElementById('tpl-fila-doctor');
+        // Una sola consulta de tarifa por especialidad
+        const tarifas = new Map();
+        const tarifaDe = (idEspecialidad) => {
+            if (!tarifas.has(idEspecialidad)) tarifas.set(idEspecialidad, consultarPrecio(idEspecialidad));
+            return tarifas.get(idEspecialidad);
+        };
 
-        doctores.forEach(doc => {
-            const clon = plantilla.content.cloneNode(true);
+        listaDoctores = await Promise.all(doctores.map(async (doc) => ({
+            doc,
+            horarios: horariosPorDoctor.get(doc.idDoctor) ?? [],
+            precio: doc.especialidad ? await tarifaDe(doc.especialidad.idEspecialidad) : null
+        })));
 
-            clon.querySelector('.col-dni').textContent = doc.dni;
-            clon.querySelector('.col-nombre').textContent = `${doc.apellidos}, ${doc.nombres}`;
-            clon.querySelector('.col-esp').textContent = doc.especialidad ? doc.especialidad.nombre : 'Sin asignar';
-            clon.querySelector('.col-correo').textContent = doc.correo;
-            clon.querySelector('.col-telefono').textContent = doc.telefono || '—';
-
-            clon.querySelector('.btn-edit').addEventListener('click', () => {
-                prepararEdicionDoctor(doc);
-            });
-
-            clon.querySelector('.btn-del').addEventListener('click', () => {
-                darDeBajaDoctor(doc.idDoctor);
-            });
-
-            tbody.appendChild(clon);
-        });
+        mostrarResumen();
+        aplicarFiltros(paginaActual);
     } catch {
-        renderizarMensajeEnTabla(tbody, 'tpl-msg-doctor', 'Error al obtener la lista de médicos desde el servidor.', true);
+        mostrarMensajeDoctores('Error al obtener la lista de médicos desde el servidor.', true);
     }
+}
+
+/**
+ * Llena los cuadros de arriba con los datos reales de la lista.
+ */
+function mostrarResumen() {
+    const especialidades = new Set(
+        listaDoctores.filter(({ doc }) => doc.especialidad).map(({ doc }) => doc.especialidad.idEspecialidad)
+    );
+    const enTurno = listaDoctores.filter(({ horarios }) => atiendeHoy(horarios)).length;
+
+    document.getElementById('resumenDoctores').textContent      = listaDoctores.length;
+    document.getElementById('resumenEspecialidades').textContent = especialidades.size;
+    document.getElementById('resumenEnTurno').textContent       = enTurno;
+}
+
+/**
+ * Vincula el buscador y el filtro de especialidad.
+ */
+function configurarFiltros() {
+    document.getElementById('inputBuscar')?.addEventListener('input', () => aplicarFiltros(1));
+    document.getElementById('filtroEspecialidad')?.addEventListener('change', () => aplicarFiltros(1));
+}
+
+/**
+ * Filtra por texto (nombre, apellido o DNI) y por especialidad, y muestra la página indicada.
+ */
+function aplicarFiltros(pagina = 1) {
+    const texto          = sinTildes(document.getElementById('inputBuscar').value.trim());
+    const idEspecialidad = document.getElementById('filtroEspecialidad').value;
+
+    doctoresFiltrados = listaDoctores.filter(({ doc }) => {
+        const coincideTexto = sinTildes(`${doc.nombres} ${doc.apellidos} ${doc.dni}`).includes(texto);
+        const coincideEsp   = !idEspecialidad || String(doc.especialidad?.idEspecialidad) === idEspecialidad;
+        return coincideTexto && coincideEsp;
+    });
+
+    if (doctoresFiltrados.length === 0) {
+        mostrarMensajeDoctores('No se encontraron doctores con esos filtros.');
+        return;
+    }
+
+    mostrarPagina(pagina);
+}
+
+/**
+ * Dibuja las tarjetas de la página indicada.
+ */
+function mostrarPagina(pagina) {
+    const totalPaginas = Math.max(1, Math.ceil(doctoresFiltrados.length / DOCTORES_POR_PAGINA));
+    paginaActual = Math.min(Math.max(pagina, 1), totalPaginas);
+
+    const inicio   = (paginaActual - 1) * DOCTORES_POR_PAGINA;
+    const visibles = doctoresFiltrados.slice(inicio, inicio + DOCTORES_POR_PAGINA);
+
+    const lista = document.getElementById('listaDoctores');
+    const plantilla = document.getElementById('tpl-tarjeta-doctor');
+    lista.replaceChildren();
+
+    for (const { doc, horarios, precio } of visibles) {
+        const clon = plantilla.content.cloneNode(true);
+
+        // La foto saldrá de la base de datos cuando exista; por ahora van las iniciales
+        clon.querySelector('.doctor-foto').textContent         = `${doc.nombres[0]}${doc.apellidos[0]}`.toUpperCase();
+        clon.querySelector('.doctor-especialidad').textContent = doc.especialidad ? doc.especialidad.nombre : 'Sin asignar';
+        clon.querySelector('.doctor-dni').textContent          = `DNI: ${doc.dni}`;
+        clon.querySelector('.doctor-nombre').textContent       = `Dr(a). ${doc.nombres} ${doc.apellidos}`;
+        clon.querySelector('.doctor-correo').textContent       = doc.correo;
+        clon.querySelector('.doctor-telefono').textContent     = doc.telefono || '—';
+        clon.querySelector('.tarifa-precio').textContent       = precio ? Formato.moneda(precio.monto) : 'Sin tarifa';
+
+        const lineas = clon.querySelector('.turnos-lineas');
+        const grupos = agruparHorarios(horarios, DIAS_LARGOS);
+
+        if (grupos.length === 0) {
+            lineas.textContent = 'Sin horarios registrados';
+        }
+
+        for (const { dias, horas } of grupos) {
+            const bloque = document.createElement('p');
+            const diasTexto = document.createElement('strong');
+            const horasTexto = document.createElement('span');
+
+            diasTexto.textContent = dias;
+            horasTexto.textContent = horas;
+            bloque.append(diasTexto, horasTexto);
+            lineas.appendChild(bloque);
+        }
+
+        clon.querySelector('.btn-edit').addEventListener('click', () => {
+            prepararEdicionDoctor(doc);
+        });
+
+        clon.querySelector('.btn-del').addEventListener('click', () => {
+            darDeBajaDoctor(doc.idDoctor);
+        });
+
+        lista.appendChild(clon);
+    }
+
+    document.getElementById('textoMostradas').textContent = visibles.length;
+    document.getElementById('textoTotal').textContent     = doctoresFiltrados.length;
+    dibujarPaginacion(document.getElementById('paginacion'), paginaActual, totalPaginas, mostrarPagina);
 }
 
 /**
@@ -133,11 +251,15 @@ async function cargarEspecialidadesEnSelector() {
         optDefault.selected = true;
         selector.appendChild(optDefault);
 
+        const filtro = document.getElementById('filtroEspecialidad');
+
         especialidades.forEach(esp => {
             const opt = document.createElement('option');
             opt.value = esp.idEspecialidad;
             opt.textContent = esp.nombre;
             selector.appendChild(opt);
+
+            filtro?.appendChild(opt.cloneNode(true));
         });
     } catch {
         selector.replaceChildren();

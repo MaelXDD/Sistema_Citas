@@ -115,10 +115,6 @@ function inicializarAutenticacion() {
                         timer: 1800,
                         showConfirmButton: false
                     });
-
-                    if (paciente.rol === 'ADMIN' && window.location.pathname.endsWith('index.html')) {
-                        window.location.href = '/doctores.html';
-                    }
                 } else {
                     const err = await res.json().catch(() => ({}));
                     Notificacion.error('Acceso denegado', err.mensaje || 'Credenciales incorrectas.');
