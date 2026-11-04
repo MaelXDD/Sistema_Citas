@@ -74,7 +74,8 @@ CREATE TABLE IF NOT EXISTS "bot"."messages" (
     "conversation_id" "uuid",
     "role" "text" NOT NULL,
     "content" "text",
-    "created_at" timestamp with time zone DEFAULT "now"()
+    "created_at" timestamp with time zone DEFAULT "now"(),
+    "ui" "jsonb"
 );
 
 
@@ -540,6 +541,18 @@ ALTER TABLE ONLY "public"."pagos"
 
 ALTER TABLE ONLY "public"."precios"
     ADD CONSTRAINT "precios_pkey" PRIMARY KEY ("id_precio");
+
+
+
+CREATE INDEX "ix_audit_user" ON "bot"."tool_audit" USING "btree" ("user_id", "created_at" DESC);
+
+
+
+CREATE INDEX "ix_conv_user" ON "bot"."conversations" USING "btree" ("user_id", "last_at" DESC);
+
+
+
+CREATE INDEX "ix_msg_conv" ON "bot"."messages" USING "btree" ("conversation_id", "id");
 
 
 
