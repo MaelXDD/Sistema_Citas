@@ -7,7 +7,7 @@
 
     const KEY_TOKEN = 'botToken';
     const KEY_CONV = 'botConv';
-    const botUrl = () => ((typeof CONFIG !== 'undefined' && CONFIG.BOT_URL) || 'http://localhost:8090').replace(/\/$/, '');
+    const botUrl = () => ((typeof CONFIG !== 'undefined' && CONFIG.BOT_URL) || 'https://bot-asitente.onrender.com/citas/chat').replace(/\/$/, '');
     const token = () => sessionStorage.getItem(KEY_TOKEN);
     const paciente = () => { try { return JSON.parse(sessionStorage.getItem('paciente')); } catch { return null; } };
 
