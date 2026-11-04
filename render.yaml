@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: sistema-citas
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DB_HOST
+        fromDatabase:
+          name: citas-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: citas-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: citas-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: citas-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: citas-db
+          property: password
+
+databases:
+  - name: citas-db
+    plan: free
+    databaseName: citas
+    user: citas_user
