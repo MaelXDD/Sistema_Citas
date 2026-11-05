@@ -218,4 +218,23 @@ public class ReporteController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * Genera el reporte de horarios médicos en PDF, con los turnos activos de cada doctor.
+     *
+     * @return PDF con doctor, especialidad, día, horario, turno, horas y tarifa.
+     */
+    @GetMapping("/horarios/pdf")
+    public ResponseEntity<byte[]> descargarReporteHorarios() {
+        try {
+            byte[] pdfBytes = reporteService.generarReporteHorariosPDF();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("inline", "Reporte_Horarios.pdf");
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

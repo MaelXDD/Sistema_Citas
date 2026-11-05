@@ -57,6 +57,10 @@ function configurarEventosCabecera() {
     document.getElementById('btnIrEstadisticas')?.addEventListener('click', () => {
         window.location.href = '/estadisticas.html';
     });
+
+    document.getElementById('btnDescargarReporte')?.addEventListener('click', () => {
+        window.open(`${CONFIG.API_URL}/reportes/horarios/pdf`, '_blank');
+    });
 }
 
 const HORARIOS_POR_PAGINA = 5;
