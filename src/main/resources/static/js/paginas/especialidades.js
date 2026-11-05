@@ -126,14 +126,11 @@ async function cargarEspecialidades() {
             return;
         }
 
-        const [doctoresPorEspecialidad, precios] = await Promise.all([
-            consultarDoctoresPorEspecialidad(),
-            Promise.all(especialidades.map(esp => consultarPrecio(esp.idEspecialidad)))
-        ]);
+        const doctoresPorEspecialidad = await consultarDoctoresPorEspecialidad();
 
-        listaEspecialidades = especialidades.map((esp, i) => ({
+        listaEspecialidades = especialidades.map((esp) => ({
             esp,
-            precio: precios[i],
+            precio: esp.monto != null ? { monto: esp.monto } : null,
             doctores: doctoresPorEspecialidad.get(esp.idEspecialidad) ?? []
         }));
 
@@ -297,7 +294,6 @@ function prepararEdicionEspecialidad(esp, precio) {
     document.getElementById('inputIdPrecio').value       = precio ? precio.idPrecio : '';
     document.getElementById('inputNombre').value         = esp.nombre;
     document.getElementById('inputDescripcion').value    = esp.descripcion || '';
-    document.getElementById('inputPrecio').value         = precio ? precio.monto : '';
     actualizarContadorDescripcion();
 
     document.getElementById('tituloFormulario').textContent      = "Modificar Especialidad";
@@ -323,9 +319,11 @@ function configurarFormularioEspecialidades() {
         const desc     = document.getElementById('inputDescripcion').value.trim();
         const precio   = document.getElementById('inputPrecio').value;
 
+        const montoNum = parseFloat(precio);
         const payloadEsp = {
             nombre: nombre,
             descripcion: desc || null,
+            monto: montoNum > 0 ? montoNum : null,
             activo: true
         };
 

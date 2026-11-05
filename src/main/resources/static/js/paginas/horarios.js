@@ -438,8 +438,18 @@ function configurarFormularioHorarios() {
                 const res = await fetch(`${CONFIG.API_URL}/horarios`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        idDoctor: parseInt(idDoctor),
+                        diasSemana: diasSeleccionados,
+                        horaInicio: `${horaInicio}:00`,
+                        horaFin: `${horaFin}:00`
+                    })
                 });
+
+                if (!res.ok) {
+                    const err = await res.json().catch(() => null);
+                    throw new Error(err?.mensaje || '');
+                }
 
                 if (!res.ok) throw new Error();
             }
@@ -450,8 +460,8 @@ function configurarFormularioHorarios() {
             await cargarHorarios();
 
             Notificacion.exito('¡Turnos Asignados!', 'Los horarios seleccionados fueron registrados correctamente.');
-        } catch {
-            Notificacion.error('Error al registrar', 'Ocurrió un error al guardar los turnos del médico.');
+        } catch (error) {
+            Notificacion.error('Error al registrar', error.message || 'Ocurrió un error al guardar los turnos del médico.');
         }
     });
 }

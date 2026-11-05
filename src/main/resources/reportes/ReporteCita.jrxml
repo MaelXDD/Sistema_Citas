@@ -9,7 +9,7 @@
     p.dni,
     d.nombres || ' ' || d.apellidos AS nombre_doctor,
     e.nombre AS especialidad,
-    pr.monto AS precio,
+    e.monto AS precio,
     pa.metodo_pago,
     c.fecha_cita,
     c.hora_cita
@@ -17,7 +17,6 @@ FROM citas c
 JOIN pacientes p ON c.id_paciente = p.id_paciente
 JOIN doctores d ON c.id_doctor = d.id_doctor
 JOIN especialidades e ON d.id_especialidad = e.id_especialidad
-JOIN precios pr ON e.id_especialidad = pr.id_especialidad
 JOIN pagos pa ON c.id_cita = pa.id_cita
 WHERE c.id_cita = $P{id_cita}]]></query>
 	<field name="nombre_paciente" class="java.lang.String">

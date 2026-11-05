@@ -85,8 +85,10 @@ function atiendeHoy(horarios) {
  */
 async function consultarPrecio(idEspecialidad) {
     try {
-        const respuesta = await fetch(`${CONFIG.API_URL}/precios/especialidad/${idEspecialidad}`);
-        return respuesta.ok ? await respuesta.json() : null;
+        const respuesta = await fetch(`${CONFIG.API_URL}/especialidades/${idEspecialidad}`);
+        if (!respuesta.ok) return null;
+        const esp = await respuesta.json();
+        return esp.monto != null ? { monto: esp.monto } : null;
     } catch {
         return null;
     }
