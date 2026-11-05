@@ -94,4 +94,8 @@ public class ReporteService {
         p.put("estado", (estado == null || estado.isBlank()) ? null : estado);
         return generar("reportes/ReporteConsultaEspecialidad.jrxml", p);
     }
+
+    public byte[] generarReporteHorariosPDF() throws Exception {
+        return generar("reportes/ReporteHorarios.jrxml", new HashMap<>());
+    }
 }

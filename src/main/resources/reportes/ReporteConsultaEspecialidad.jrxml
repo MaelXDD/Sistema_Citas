@@ -83,8 +83,8 @@ ORDER BY ingresos DESC]]></query>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
-		<element kind="staticText" uuid="92f7bb23-72e5-45e1-9d02-df161aacc9cb" x="180" y="10" width="370" height="28" forecolor="#FFFFFF" fontSize="20.0" bold="true" hTextAlign="Center" vTextAlign="Justified">
-			<text><![CDATA[Reporte de Especialidades]]></text>
+		<element kind="staticText" uuid="92f7bb23-72e5-45e1-9d02-df161aacc9cb" x="180" y="10" width="370" height="28" forecolor="#FFFFFF" fontSize="18.0" bold="true" hTextAlign="Center" vTextAlign="Justified">
+			<text><![CDATA[Doctor con más citas por especialidad]]></text>
 			<property name="com.jaspersoft.studio.unit.x" value="px"/>
 			<property name="com.jaspersoft.studio.unit.y" value="px"/>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>

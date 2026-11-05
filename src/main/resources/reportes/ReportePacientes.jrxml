@@ -65,8 +65,8 @@ ORDER BY total_pagos DESC]]></query>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<pen lineWidth="0.0"/>
 		</element>
-		<element kind="staticText" uuid="9597c3e4-a805-4c59-ae80-8141c3932cbb" x="180" y="10" width="370" height="28" forecolor="#FFFFFF" fontSize="20.0" bold="true" hTextAlign="Center" vTextAlign="Justified">
-			<text><![CDATA[Pacientes por Especialidad]]></text>
+		<element kind="staticText" uuid="9597c3e4-a805-4c59-ae80-8141c3932cbb" x="180" y="10" width="370" height="28" forecolor="#FFFFFF" fontSize="18.0" bold="true" hTextAlign="Center" vTextAlign="Justified">
+			<text><![CDATA[Pacientes Atendidos por Especialidad]]></text>
 			<property name="com.jaspersoft.studio.unit.x" value="px"/>
 			<property name="com.jaspersoft.studio.unit.y" value="px"/>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
