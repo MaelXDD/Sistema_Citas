@@ -39,7 +39,6 @@ public class BotController {
     private final DoctorRepository doctorRepository;
     private final EspecialidadRepository especialidadRepository;
     private final HorarioRepository horarioRepository;
-    private final PrecioRepository precioRepository;
     private final PacienteRepository pacienteRepository;
     private final PagoRepository pagoRepository;
 
@@ -50,16 +49,13 @@ public class BotController {
 
     @GetMapping("/catalogo")
     public List<Map<String, Object>> catalogo() {
-        Map<Integer, BigDecimal> precios = precioRepository.findAllActivos().stream()
-                .collect(Collectors.toMap(p -> p.getEspecialidad().getIdEspecialidad(), Precio::getMonto, (a, b) -> a));
         List<Map<String, Object>> out = new ArrayList<>();
         for (Especialidad e : especialidadRepository.findByActivoTrue()) {
             Map<String, Object> m = new LinkedHashMap<>();
             m.put("idEspecialidad", e.getIdEspecialidad());
             m.put("nombre", e.getNombre());
             m.put("descripcion", e.getDescripcion());
-            m.put("precioSoles", precios.get(e.getIdEspecialidad()));
-            out.add(m);
+            m.put("precioSoles", e.getMonto());            out.add(m);
         }
         return out;
     }
@@ -131,9 +127,10 @@ public class BotController {
             throw new IllegalStateException(motivoNoDisponible(doctor, fecha, hora));
         }
         Especialidad esp = doctor.getEspecialidad();
-        BigDecimal precio = precioRepository.findByEspecialidad_IdEspecialidadAndActivoTrue(esp.getIdEspecialidad())
-                .map(Precio::getMonto)
-                .orElseThrow(() -> new IllegalArgumentException("Esta especialidad no tiene precio configurado."));
+        BigDecimal precio = esp.getMonto();
+        if (precio == null) {
+            throw new IllegalArgumentException("Esta especialidad no tiene precio configurado.");
+        }
         Horario turno = horarioRepository
                 .findByDoctor_IdDoctorAndDiaSemanaAndActivoTrue(doctor.getIdDoctor(), diaDe(fecha)).stream()
                 .filter(h -> !hora.isBefore(h.getHoraInicio()) && !hora.plusMinutes(SLOT_MIN).isAfter(h.getHoraFin()))

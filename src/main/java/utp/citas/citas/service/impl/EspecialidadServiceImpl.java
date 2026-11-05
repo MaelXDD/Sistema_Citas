@@ -55,6 +55,7 @@ public class EspecialidadServiceImpl implements EspecialidadService {
         Especialidad existente = buscarPorId(id);
         existente.setNombre(datos.getNombre());
         existente.setDescripcion(datos.getDescripcion());
+        existente.setMonto(datos.getMonto());
         if (datos.getActivo() != null) {
             existente.setActivo(datos.getActivo());
         }
