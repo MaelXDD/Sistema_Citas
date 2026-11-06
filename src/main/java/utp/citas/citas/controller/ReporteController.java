@@ -142,7 +142,8 @@ public class ReporteController {
                         (String) r[2],
                         (String) r[3],
                         ((Number) r[4]).longValue(),
-                        (BigDecimal) r[5]
+                        (BigDecimal) r[5],
+                        (String) r[7]
                 ))
                 .collect(java.util.stream.Collectors.toList());
 

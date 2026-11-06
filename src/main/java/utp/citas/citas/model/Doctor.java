@@ -53,4 +53,7 @@ public class Doctor {
 
     @Column(name = "activo", nullable = false)
     private Boolean activo = true;
+
+    @Column(name = "foto_url")
+    private String fotoUrl;
 }

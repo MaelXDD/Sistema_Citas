@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     configurarNavegacionVistas();
     configurarEventosCabecera();
     configurarFormularioDoctores();
+    configurarFotoDoctor();
     configurarFiltros();
     cargarDoctores();
     cargarEspecialidadesEnSelector();
@@ -187,8 +188,17 @@ function mostrarPagina(pagina) {
     for (const { doc, horarios, precio } of visibles) {
         const clon = plantilla.content.cloneNode(true);
 
-        // La foto saldrá de la base de datos cuando exista; por ahora van las iniciales
-        clon.querySelector('.doctor-foto').textContent         = `${doc.nombres[0]}${doc.apellidos[0]}`.toUpperCase();
+        // Foto del doctor; si no tiene, se muestran las iniciales
+        const foto = clon.querySelector('.doctor-foto');
+        if (doc.fotoUrl) {
+            const img = document.createElement('img');
+            img.src = doc.fotoUrl;
+            img.alt = `Dr(a). ${doc.nombres} ${doc.apellidos}`;
+            foto.replaceChildren(img);
+        } else {
+            foto.textContent = `${doc.nombres[0]}${doc.apellidos[0]}`.toUpperCase();
+        }
+
         clon.querySelector('.doctor-especialidad').textContent = doc.especialidad ? doc.especialidad.nombre : 'Sin asignar';
         clon.querySelector('.doctor-dni').textContent          = `DNI: ${doc.dni}`;
         clon.querySelector('.doctor-nombre').textContent       = `Dr(a). ${doc.nombres} ${doc.apellidos}`;
@@ -283,6 +293,11 @@ function prepararEdicionDoctor(doc) {
     document.getElementById('inputCorreo').value     = doc.correo;
     document.getElementById('inputTelefono').value   = doc.telefono || '';
 
+    // Foto actual del doctor (si no elige una nueva, se conserva)
+    document.getElementById('inputFoto').value = '';
+    fotoActualUrl = doc.fotoUrl || null;
+    mostrarPreviewFoto(fotoActualUrl);
+
     const selector = document.getElementById('selectEspecialidad');
     if (selector && doc.especialidad) {
         selector.value = doc.especialidad.idEspecialidad;
@@ -318,12 +333,27 @@ function configurarFormularioDoctores() {
             return;
         }
 
+        // Si eligió una foto, se sube primero al bucket y se obtiene su URL
+        const archivoFoto  = document.getElementById('inputFoto').files[0];
+        const fotoAnterior = fotoActualUrl;
+        let fotoUrl = null;
+
+        if (archivoFoto) {
+            try {
+                fotoUrl = await subirFotoDoctor(archivoFoto);
+            } catch {
+                Notificacion.error('Error con la foto', 'No se pudo subir la imagen. Intente de nuevo.');
+                return;
+            }
+        }
+
         const payload = {
             dni: datos.dni,
             nombres: datos.nombres,
             apellidos: datos.apellidos,
             correo: datos.correo,
             telefono: datos.telefono || null,
+            fotoUrl: fotoUrl,
             especialidad: { idEspecialidad: parseInt(selectorEsp.value) }
         };
 
@@ -339,6 +369,9 @@ function configurarFormularioDoctores() {
             });
 
             if (respuesta.ok) {
+                // Al reemplazar la foto de un doctor, se borra la anterior del bucket
+                if (esEdicion && fotoUrl && fotoAnterior) borrarFotoDoctor(fotoAnterior);
+
                 form.reset();
                 selectorEsp.selectedIndex = 0;
                 document.getElementById('vistaFormulario').classList.add('oculto');
@@ -349,10 +382,14 @@ function configurarFormularioDoctores() {
                     esEdicion ? 'Los datos se actualizaron correctamente.' : 'El médico fue registrado en el staff activo.'
                 );
             } else {
+                // Si el doctor no se guardó, se elimina la foto recién subida para no dejarla huérfana
+                if (fotoUrl) borrarFotoDoctor(fotoUrl);
+
                 const error = await respuesta.json().catch(() => ({}));
                 Notificacion.error('Error al guardar', error.mensaje || 'Verifique que el correo o DNI no estén duplicados.');
             }
         } catch {
+            if (fotoUrl) borrarFotoDoctor(fotoUrl);
             Notificacion.error('Error de conexión', 'No hubo respuesta del servidor.');
         }
     });
@@ -387,4 +424,90 @@ async function darDeBajaDoctor(idDoctor) {
     } catch {
         Notificacion.error('Error de red', 'No se pudo comunicar con el servidor.');
     }
+}
+
+// ==========================================================================
+// Foto del doctor donde la subida la hace el backend hacia Supabase Storage
+// ==========================================================================
+
+// URL de la foto que ya tiene el doctor que se está editando
+let fotoActualUrl = null;
+
+/**
+ * Envía la imagen al backend y devuelve su URL pública.
+ */
+async function subirFotoDoctor(archivo) {
+    const datos = new FormData();
+    datos.append('archivo', archivo);
+
+    const respuesta = await fetch(`${CONFIG.API_URL}/fotos/doctores`, {
+        method: 'POST',
+        body: datos
+    });
+
+    if (!respuesta.ok) throw new Error('No se pudo subir la imagen');
+    const { url } = await respuesta.json();
+    return url;
+}
+
+/**
+ * Pide al backend borrar una imagen a partir de su URL pública.
+ */
+async function borrarFotoDoctor(fotoUrl) {
+    if (!fotoUrl) return;
+
+    try {
+        await fetch(`${CONFIG.API_URL}/fotos/doctores?url=${encodeURIComponent(fotoUrl)}`, {
+            method: 'DELETE'
+        });
+    } catch {
+        // Si falla el borrado, no afecta al guardado del doctor
+    }
+}
+
+/**
+ * Muestra u oculta la vista previa de la foto en el formulario.
+ */
+function mostrarPreviewFoto(url) {
+    const img = document.getElementById('previewFoto');
+    if (!img) return;
+
+    if (url) {
+        img.src = url;
+        img.style.display = 'block';
+    } else {
+        img.removeAttribute('src');
+        img.style.display = 'none';
+    }
+}
+
+/**
+ * Vincula el selector de foto del formulario (vista previa y validaciones).
+ */
+function configurarFotoDoctor() {
+    const input = document.getElementById('inputFoto');
+    const form  = document.getElementById('doctorForm');
+
+    input?.addEventListener('change', () => {
+        const archivo = input.files[0];
+
+        if (!archivo) {
+            mostrarPreviewFoto(fotoActualUrl);
+            return;
+        }
+
+        if (!archivo.type.startsWith('image/') || archivo.size > 5 * 1024 * 1024) {
+            Notificacion.advertencia('Imagen inválida', 'Elija una imagen de hasta 5 MB.');
+            input.value = '';
+            mostrarPreviewFoto(fotoActualUrl);
+            return;
+        }
+
+        mostrarPreviewFoto(URL.createObjectURL(archivo));
+    });
+
+    form?.addEventListener('reset', () => {
+        fotoActualUrl = null;
+        mostrarPreviewFoto(null);
+    });
 }

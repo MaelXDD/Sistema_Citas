@@ -209,7 +209,15 @@ async function cargarPasoDoctores(idEspecialidad) {
             const lineas = armarLineasHorario(horariosDoctor, DIAS_LARGOS);
 
             const clon = tpl.content.cloneNode(true);
-            clon.querySelector('.col-iniciales').textContent = `${doc.nombres[0]}${doc.apellidos[0]}`.toUpperCase();
+            const avatar = clon.querySelector('.col-iniciales');
+            if (doc.fotoUrl) {
+                const img = document.createElement('img');
+                img.src = doc.fotoUrl;
+                img.alt = `Dr. ${doc.nombres} ${doc.apellidos}`;
+                avatar.replaceChildren(img);
+            } else {
+                avatar.textContent = `${doc.nombres[0]}${doc.apellidos[0]}`.toUpperCase();
+            }
             clon.querySelector('.col-nombre').textContent = `Dr. ${doc.nombres} ${doc.apellidos}`;
             clon.querySelector('.col-dias').textContent = lineas.length > 0 ? lineas.join('\n') : 'Sin horarios disponibles';
 

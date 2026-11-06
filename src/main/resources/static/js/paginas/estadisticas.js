@@ -129,7 +129,15 @@ function inicializarReporteDoctores() {
         idBotones: 'paginacionDoctores',
         llenarFila: (clon, item, numero) => {
             clon.querySelector('.col-num').textContent = numero;
-            clon.querySelector('.col-iniciales').textContent = `${item.nombres?.[0] ?? ''}${item.apellidos?.[0] ?? ''}`.toUpperCase();
+            const avatar = clon.querySelector('.col-iniciales');
+            if (item.fotoUrl) {
+                const img = document.createElement('img');
+                img.src = item.fotoUrl;
+                img.alt = '';
+                avatar.replaceChildren(img);
+            } else {
+                avatar.textContent = `${item.nombres?.[0] ?? ''}${item.apellidos?.[0] ?? ''}`.toUpperCase();
+            }
             clon.querySelector('.col-nombre').textContent = `${item.nombres} ${item.apellidos}`;
             clon.querySelector('.col-esp').textContent = item.especialidad;
             clon.querySelector('.col-total').textContent = item.totalCitas;

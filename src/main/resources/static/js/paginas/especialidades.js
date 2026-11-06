@@ -214,6 +214,14 @@ function mostrarPagina(pagina) {
 function crearFilaMedico({ doctor, horarios }) {
     const fila = document.getElementById('tpl-medico').content.cloneNode(true);
 
+    // Foto del doctor; si no tiene, el espacio queda vacío
+    if (doctor.fotoUrl) {
+        const img = document.createElement('img');
+        img.src = doctor.fotoUrl;
+        img.alt = `Dr(a). ${doctor.nombres} ${doctor.apellidos}`;
+        fila.querySelector('.medico-foto').appendChild(img);
+    }
+
     fila.querySelector('.medico-nombre').textContent = `Dr(a). ${doctor.nombres} ${doctor.apellidos}`;
 
     const lineas = fila.querySelector('.medico-horario-lineas');
