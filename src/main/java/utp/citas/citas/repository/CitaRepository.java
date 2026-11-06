@@ -62,7 +62,8 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
             ROW_NUMBER() OVER (
                 PARTITION BY e.id_especialidad
                 ORDER BY COUNT(DISTINCT c.id_cita) DESC
-            ) AS rn
+            ) AS rn,
+            d.foto_url AS foto_url
         FROM especialidades e
         JOIN doctores d ON d.id_especialidad = e.id_especialidad
         JOIN citas c ON c.id_doctor = d.id_doctor
@@ -71,7 +72,7 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
           AND pa.estado_pago = 'COMPLETADO'
           AND (:idEspecialidad IS NULL OR e.id_especialidad = :idEspecialidad)
           AND (:estado IS NULL OR c.estado = :estado)
-        GROUP BY e.id_especialidad, e.nombre, d.id_doctor, d.nombres, d.apellidos
+        GROUP BY e.id_especialidad, e.nombre, d.id_doctor, d.nombres, d.apellidos, d.foto_url
     ) t
     WHERE rn = 1
     ORDER BY ingresos DESC

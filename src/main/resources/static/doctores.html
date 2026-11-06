@@ -122,6 +122,13 @@
             <form id="doctorForm" class="formulario-estandar">
                 <input type="hidden" id="inputIdDoctor" name="idDoctor">
 
+                <div class="contenedor-selector">
+                    <label class="etiqueta-selector" for="inputFoto">Foto del doctor</label>
+                    <input type="file" id="inputFoto" accept="image/*">
+                    <img id="previewFoto" alt="Vista previa"
+                         style="display:none; width:110px; height:110px; object-fit:cover; border-radius:14px; margin-top:10px;">
+                </div>
+
                 <div class="fila-input">
                     <div class="contenedor-selector">
                         <label class="etiqueta-selector" for="inputNombres">Nombres</label>

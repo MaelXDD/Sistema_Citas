@@ -133,6 +133,25 @@ function compararHorarios(a, b) {
 }
 
 /**
+ * Muestra la foto del doctor en el avatar; si no tiene, usa sus iniciales.
+ */
+function mostrarAvatarDoctor(elemento, doctor) {
+    if (!doctor) {
+        elemento.textContent = '?';
+        return;
+    }
+
+    if (doctor.fotoUrl) {
+        const img = document.createElement('img');
+        img.src = doctor.fotoUrl;
+        img.alt = `Dr(a). ${doctor.nombres} ${doctor.apellidos}`;
+        elemento.replaceChildren(img);
+    } else {
+        elemento.textContent = `${doctor.nombres[0]}${doctor.apellidos[0]}`.toUpperCase();
+    }
+}
+
+/**
  * Consulta los turnos activos con la tarifa de la especialidad de cada médico.
  */
 async function cargarHorarios() {
@@ -279,7 +298,7 @@ function mostrarPagina(pagina) {
         const doctor = h.doctor;
         const dia    = indiceDia(h);
 
-        clon.querySelector('.horario-avatar').textContent       = doctor ? `${doctor.nombres[0]}${doctor.apellidos[0]}`.toUpperCase() : '?';
+        mostrarAvatarDoctor(clon.querySelector('.horario-avatar'), doctor);
         clon.querySelector('.horario-nombre').textContent       = doctor ? `Dr(a). ${doctor.nombres} ${doctor.apellidos}` : 'No asignado';
         clon.querySelector('.horario-especialidad').textContent = doctor && doctor.especialidad ? doctor.especialidad.nombre : 'General';
         clon.querySelector('.horario-dia').textContent          = dia === -1 ? h.diaSemana : DIAS_LARGOS[dia];
@@ -353,7 +372,7 @@ function configurarResumenDoctor() {
             return;
         }
 
-        document.getElementById('resumenDoctorIniciales').textContent    = `${doctor.nombres[0]}${doctor.apellidos[0]}`.toUpperCase();
+        mostrarAvatarDoctor(document.getElementById('resumenDoctorIniciales'), doctor);
         document.getElementById('resumenDoctorNombre').textContent       = `Dr(a). ${doctor.nombres} ${doctor.apellidos}`;
         document.getElementById('resumenDoctorEspecialidad').textContent = doctor.especialidad ? doctor.especialidad.nombre : 'Sin especialidad asignada';
         document.getElementById('resumenDoctorTarifa').textContent       = '...';

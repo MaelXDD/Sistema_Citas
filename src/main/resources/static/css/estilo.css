@@ -1303,15 +1303,17 @@ body {
     font-weight: 600;
 }
 
-/* Cuadro con las iniciales del doctor (hasta que exista la foto) */
+/* Cuadro con la foto del doctor o sus iniciales si no tiene */
 .avatar-iniciales {
     --tamano: 64px;
+    position: relative;
     display: grid;
     place-items: center;
     flex-shrink: 0;
     width: var(--tamano);
     height: var(--tamano);
     border-radius: 14px;
+    overflow: hidden;
     background-color: var(--celeste-claro);
     font-size: calc(var(--tamano) * 0.35);
     font-weight: 800;
@@ -1319,6 +1321,8 @@ body {
 }
 
 .avatar-iniciales img {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;

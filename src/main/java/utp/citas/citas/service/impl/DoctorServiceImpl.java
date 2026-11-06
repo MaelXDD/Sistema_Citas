@@ -90,6 +90,9 @@ public class DoctorServiceImpl implements DoctorService {
         existente.setApellidos(datos.getApellidos());
         existente.setCorreo(datos.getCorreo());
         existente.setTelefono(datos.getTelefono());
+        if (datos.getFotoUrl() != null) {
+            existente.setFotoUrl(datos.getFotoUrl());
+        }
         if (datos.getActivo() != null) {
             existente.setActivo(datos.getActivo());
         }
