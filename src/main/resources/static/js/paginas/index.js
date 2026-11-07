@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     configurarTarjetasEspecialidad();
     configurarCierreModalEspecialidad();
+    configurarModalVideo();
 });
 
 /**
@@ -100,5 +101,42 @@ function configurarCierreModalEspecialidad() {
         if (e.target === modal) {
             cerrar();
         }
+    });
+}
+
+/**
+ * Abre el video explicativo encima de la página con fondo oscuro.
+ * La URL se toma del data-video del botón y solo se carga al abrir.
+ */
+function configurarModalVideo() {
+    const boton = document.getElementById('btn-videos-ayuda');
+    const modal = document.getElementById('modal-video');
+    const video = document.getElementById('video-explicativo');
+    const btnCerrar = document.getElementById('btn-cerrar-video');
+    if (!boton || !modal || !video) return;
+
+    const abrir = (e) => {
+        e.preventDefault();
+        video.src = boton.dataset.video;
+        modal.classList.add('activo');
+        document.body.classList.add('sin-scroll');
+        video.play().catch(() => {});
+    };
+
+    const cerrar = () => {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        modal.classList.remove('activo');
+        document.body.classList.remove('sin-scroll');
+    };
+
+    boton.addEventListener('click', abrir);
+    btnCerrar?.addEventListener('click', cerrar);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) cerrar();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('activo')) cerrar();
     });
 }

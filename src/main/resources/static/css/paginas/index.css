@@ -274,6 +274,49 @@
     }
 }
 
+/* ---------- Video explicativo ---------- */
+.modal-video {
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+}
+
+.cuadro-video {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+}
+
+.cuadro-video video {
+    display: block;
+    width: 100%;
+    max-height: 80vh;
+    border-radius: 12px;
+    background-color: #000;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.cerrar-video {
+    position: absolute;
+    top: -46px;
+    right: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 38px;
+    line-height: 1;
+    color: var(--blanco);
+    cursor: pointer;
+}
+
+.cerrar-video:hover {
+    color: var(--celeste-hospital);
+}
+
+body.sin-scroll {
+    overflow: hidden;
+}
+
 /* ---------- Sin animaciones si el usuario lo prefiere ---------- */
 @media (prefers-reduced-motion: reduce) {
     .carrusel img {
