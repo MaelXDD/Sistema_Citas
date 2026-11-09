@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas Frecuentes - Hospital de la Solidaridad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/estilo.css">
+    <link rel="stylesheet" href="/css/paginas/preguntas_frecuentes.css">
+    <link rel="stylesheet" href="/css/bot.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="pagina-faq">
+
+<header class="encabezado-navegacion">
+    <div class="logotipo" id="logotipo-hospital">
+        <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+        <h1>Hospital de la Solidaridad</h1>
+    </div>
+
+    <nav class="menu-principal" id="menu-nav">
+        <a href="/index.html">Inicio</a>
+
+        <a href="/sobre_nosotros.html" class="enlace-nav nav-publico">Sobre nosotros</a>
+        <a href="/vision.html" class="enlace-nav nav-publico">Visión</a>
+        <a href="/mision.html" class="enlace-nav nav-publico">Misión</a>
+
+        <a href="/citas.html" class="enlace-nav nav-paciente oculto">Sacar Cita</a>
+        <a href="/miscitas.html" class="enlace-nav nav-paciente oculto">Mis Citas</a>
+
+        <a href="/especialidades.html" class="enlace-nav nav-admin oculto">Especialidades</a>
+        <a href="/doctores.html" class="enlace-nav nav-admin oculto">Doctores</a>
+        <a href="/horarios.html" class="enlace-nav nav-admin oculto">Horarios</a>
+    </nav>
+
+    <div class="botones-acceso" id="zona-sesion">
+        <div id="caja-sesion-invitado">
+            <button class="boton-blanco" id="btn-abrir-login">Iniciar Sesión</button>
+            <button class="boton-azul" id="btn-abrir-registro">Registrarse</button>
+        </div>
+        <div id="caja-sesion-usuario" class="sesion-usuario oculto">
+            <span class="texto-azul" id="nombre-usuario-sesion"></span>
+            <button class="boton-blanco" id="btn-cerrar-sesion">Cerrar sesión</button>
+        </div>
+    </div>
+</header>
+
+<main class="contenido-pagina">
+
+    <section class="faq-portada seccion fondo-suave">
+        <div class="contenedor-seccion dos-columnas">
+            <div class="faq-portada-texto">
+                <span class="etiqueta">Centro de ayuda</span>
+                <h1>Preguntas frecuentes</h1>
+                <p>Respuestas rápidas sobre cómo registrarte, reservar tu cita, pagar y atenderte en el Hospital de la Solidaridad Vitarte.</p>
+
+                <label class="filtro-busqueda faq-buscador">
+                    <i class="bi bi-search"></i>
+                    <input type="search" id="faq-buscar" placeholder="Busca tu duda: pago, DNI, cita..." aria-label="Buscar en las preguntas frecuentes" autocomplete="off">
+                </label>
+
+                <nav class="faq-temas" aria-label="Temas de ayuda">
+                    <a class="faq-tema" href="#faq-cuenta"><i class="bi bi-person-circle"></i> Cuenta y registro</a>
+                    <a class="faq-tema" href="#faq-reservar"><i class="bi bi-calendar-check"></i> Reservar</a>
+                    <a class="faq-tema" href="#faq-pagos"><i class="bi bi-credit-card"></i> Pagos</a>
+                    <a class="faq-tema" href="#faq-citas"><i class="bi bi-journal-medical"></i> Mis citas</a>
+                    <a class="faq-tema" href="#faq-atencion"><i class="bi bi-hospital"></i> Tu atención</a>
+                </nav>
+            </div>
+
+            <figure class="faq-portada-foto">
+                <img class="foto" src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/preguntas_frecuentes.png" alt="" fetchpriority="high" decoding="async">
+            </figure>
+        </div>
+    </section>
+
+    <section class="faq-seccion seccion" id="faq-cuenta" data-tema>
+        <div class="contenedor-seccion faq-contenedor">
+            <h2><i class="bi bi-person-circle"></i> Cuenta y registro</h2>
+
+            <details class="faq-item tarjeta">
+                <summary>¿Cómo creo mi cuenta?</summary>
+                <p>Haz clic en <strong>Registrarse</strong> en la parte superior e ingresa tus nombres, apellidos, correo, DNI, teléfono, fecha de nacimiento, dirección y una contraseña. Al terminar podrás iniciar sesión.</p>
+            </details>
+
+            <details class="faq-item tarjeta">
+                <summary>¿Qué necesito para registrarme?</summary>
+                <p>Tu <strong>DNI</strong> y completar todos los datos del formulario: nombres, apellidos, correo, teléfono, fecha de nacimiento, dirección y una contraseña. Todos los campos son obligatorios.</p>
+            </details>
+
+            <details class="faq-item tarjeta">
+                <summary>¿Puedo reservar una cita sin cuenta?</summary>
+                <p>No. Para reservar en línea necesitas iniciar sesión. Si prefieres no usar el sistema, puedes llamar al <a href="tel:08004442222">0800-444-2222</a> y un orientador te ayudará.</p>
+            </details>
+        </div>
+    </section>
+
+    <section class="faq-seccion seccion fondo-suave" id="faq-reservar" data-tema>
+        <div class="contenedor-seccion faq-contenedor">
+            <h2><i class="bi bi-calendar-check"></i> Reservar una cita</h2>
+
+            <details class="faq-item tarjeta">
+                <summary>¿Cómo reservo una cita médica?</summary>
+                <p>Inicia sesión, entra a <strong>Sacar Cita</strong>, elige la especialidad, el doctor y el horario que prefieras, y confirma el pago. Puedes ver los <a href="/index.html#como-reservar">4 pasos para reservar</a> y el video explicativo en el inicio.</p>
+            </details>
+
+            <details class="faq-item tarjeta">
+                <summary>¿Puedo elegir a mi doctor?</summary>
+                <p>Sí. Después de elegir la especialidad puedes seleccionar al doctor de tu preferencia entre los disponibles, y el horario que mejor se acomode a tu tiempo.</p>
+            </details>
+
+            <details class="faq-item tarjeta">
+                <summary>¿Qué especialidades hay?</summary>
+                <p>Cardiología, Pediatría, Traumatología, Dermatología, Neurología, Geriatría y otras. Puedes ver el detalle de cada una en la sección <a href="/index.html#especialidadesdest">Nuestras Especialidades</a>.</p>
+            </details>
+        </div>
+    </section>
+
+    <section class="faq-seccion seccion" id="faq-pagos" data-tema>
+        <div class="contenedor-seccion faq-contenedor">
+            <h2><i class="bi bi-credit-card"></i> Pagos</h2>
+
+            <details class="faq-item tarjeta">
+                <summary>¿Cómo puedo pagar mi cita?</summary>
+                <p>Puedes pagar en línea con <strong>Yape o tarjeta</strong>, o elegir la opción <strong>"Pagar en efectivo en el hospital"</strong> y cancelar en caja.</p>
+            </details>
+
+            <details class="faq-item tarjeta">
+                <summary>¿Dónde veo el costo de la consulta?</summary>
+                <p>El costo aparece al elegir al doctor, antes de confirmar tu cita.</p>
+            </details>
+        </div>
+    </section>
+
+    <section class="faq-seccion seccion fondo-suave" id="faq-citas" data-tema>
+        <div class="contenedor-seccion faq-contenedor">
+            <h2><i class="bi bi-journal-medical"></i> Mis citas</h2>
+
+            <details class="faq-item tarjeta">
+                <summary>¿Dónde veo mis citas reservadas?</summary>
+                <p>En la opción <strong>Mis Citas</strong> del menú, con tu sesión iniciada. Ahí verás la fecha, el doctor y el estado de cada cita.</p>
+            </details>
+
+            <details class="faq-item tarjeta">
+                <summary>¿Qué significa el estado de mi cita?</summary>
+                <p>Una cita pendiente es la que aún no llega a su fecha. Cuando la fecha ya pasó, se muestra como <strong>completada</strong>.</p>
+            </details>
+        </div>
+    </section>
+
+    <section class="faq-seccion seccion" id="faq-atencion" data-tema>
+        <div class="contenedor-seccion faq-contenedor">
+            <h2><i class="bi bi-hospital"></i> El día de tu atención</h2>
+
+            <details class="faq-item tarjeta">
+                <summary>¿Qué debo llevar a mi cita?</summary>
+                <p>Tu <strong>DNI físico</strong>. Preséntate en la sede Vitarte en la fecha programada.</p>
+            </details>
+
+            <details class="faq-item tarjeta">
+                <summary>¿Cuál es el horario de atención?</summary>
+                <p>De lunes a sábado, de 7:00 a.m. a 7:00 p.m., en horario corrido.</p>
+            </details>
+
+            <details class="faq-item tarjeta">
+                <summary>¿Dónde queda el hospital y cómo me ayudan si soy adulto mayor?</summary>
+                <p>Estamos en Av. Nicolás de Ayllón (Carretera Central) Km. 7.5, Vitarte - Lima. Si eres adulto mayor o vienes con uno, un orientador te asiste de inmediato, y también puedes llamar al <a href="tel:08004442222">0800-444-2222</a>.</p>
+            </details>
+        </div>
+    </section>
+
+    <section class="faq-seccion seccion oculto" id="faq-sin-resultados">
+        <div class="contenedor-seccion faq-contenedor">
+            <div class="faq-vacio tarjeta">
+                <i class="bi bi-search"></i>
+                <h2>No encontramos resultados</h2>
+                <p>Prueba con otra palabra, o llámanos al <a href="tel:08004442222">0800-444-2222</a> y te ayudamos.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-seccion seccion">
+        <div class="contenedor-seccion faq-contenedor">
+            <aside class="faq-ayuda panel-oscuro tarjeta-sombra">
+                <div>
+                    <h2>¿No encontraste tu respuesta?</h2>
+                    <p>Llámanos y un orientador te atenderá de inmediato, o reserva tu cita en línea.</p>
+                </div>
+                <div class="faq-ayuda-botones">
+                    <a class="btn-celeste" href="tel:08004442222">Llamar al 0800-444-2222</a>
+                    <a class="btn-blanco" href="/citas.html">Reservar cita ahora</a>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+</main>
+
+<footer class="pie-inferior">
+    <div class="contenedor-seccion">
+        <div class="contenedor-pie">
+            <div class="columna-footer">
+                <div class="pie-logo">
+                    <img src="https://hynuxxkgxzjjcpkowfhz.supabase.co/storage/v1/object/public/recursos/logomuni.png" alt="Logo Hospital">
+                    <span>Hospital de la Solidaridad Vitarte</span>
+                </div>
+                <p>Donde tu salud y tu vida es lo más importante para nosotros.</p>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Navegación</h4>
+                <ul>
+                    <li><a href="/index.html">Inicio</a></li>
+                    <li><a href="/citas.html">Especialidades</a></li>
+                    <li><a href="/sobre_nosotros.html">Sobre Nosotros</a></li>
+                    <li><a href="/mision.html">Misión</a></li>
+                    <li><a href="/vision.html">Visión</a></li>
+                </ul>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Ayuda</h4>
+                <div class="item-contacto">
+                    <i class="bi bi-clock"></i>
+                    <span>Horario de atención: Lunes a Sábado de 7:00 am a 7:00 pm.</span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-question-circle"></i>
+                    <a href="/preguntas_frecuentes.html">Preguntas frecuentes</a>
+                </div>
+            </div>
+
+            <div class="columna-footer">
+                <h4>Contacto</h4>
+                <div class="item-contacto">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>Av. Nicolás de Ayllón (Carretera Central) Km. 7.5, Vitarte - Lima</span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-telephone"></i>
+                    <span><a href="tel:08004442222">0800-444-2222</a> · <a href="tel:015551234">(01) 555-1234</a></span>
+                </div>
+                <div class="item-contacto">
+                    <i class="bi bi-envelope"></i>
+                    <a href="mailto:citas@hospitalsolidaridad.pe">citas@hospitalsolidaridad.pe</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 Hospital de la Solidaridad Vitarte. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
+
+<div id="modal-login" class="capa-fondo-modal oculto">
+    <div class="cuadro-emergente">
+        <span class="cerrar-ventana" id="btn-cerrar-login">&times;</span>
+        <h3>Iniciar Sesión</h3>
+        <form id="loginForm" class="formulario-estandar">
+            <input type="email" name="correo" placeholder="Ingresa tu correo" required>
+            <input type="password" name="password" placeholder="Ingresa tu contraseña" required>
+            <button type="submit" class="boton-accion-total">Iniciar Sesión</button>
+        </form>
+    </div>
+</div>
+
+<div id="modal-registro" class="capa-fondo-modal oculto">
+    <div class="cuadro-emergente">
+        <span class="cerrar-ventana" id="btn-cerrar-registro">&times;</span>
+        <h3>Registro</h3>
+        <form id="registerForm" class="formulario-estandar">
+            <div class="fila-input">
+                <input type="text" id="reg-nombres" name="nombres" placeholder="Nombres" maxlength="50" required>
+                <input type="text" id="reg-apellidos" name="apellidos" placeholder="Apellidos" maxlength="50" required>
+            </div>
+            <input type="email" name="correo" placeholder="Correo" maxlength="100" required>
+            <input type="text" id="reg-dni" name="dni" placeholder="DNI" maxlength="8" required>
+            <input type="text" id="reg-telefono" name="telefono" placeholder="Teléfono" maxlength="9">
+            <input type="date" name="fechaNac" required>
+            <input type="text" name="direccion" placeholder="Dirección" maxlength="150" required>
+            <input type="password" name="password" placeholder="Contraseña" maxlength="50" required>
+            <button type="submit" class="boton-accion-total">Crear cuenta</button>
+        </form>
+    </div>
+</div>
+
+<button type="button" class="btn-subir oculto" id="btn-subir" aria-label="Volver arriba">
+    <i class="bi bi-arrow-up"></i>
+</button>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/comun/configuracion.js"></script>
+<script src="/js/comun/utilidades.js"></script>
+<script src="/js/comun/sesion.js"></script>
+<script src="/js/bot/bot-widget.js"></script>
+<script src="/js/paginas/preguntas_frecuentes.js"></script>
+</body>
+</html>
