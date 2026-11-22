@@ -57,6 +57,33 @@ const Notificacion = {
 };
 
 /**
+ * Obtiene el mensaje de error de una respuesta fallida del backend.
+ * Si el texto parece técnico (excepciones de Java, JSON, SQL...), devuelve
+ * el mensaje por defecto para que el usuario nunca vea detalles internos.
+ * @param {Response} res - Respuesta con estado de error.
+ * @param {string} mensajePorDefecto - Texto amable a mostrar si no hay uno válido.
+ */
+async function leerMensajeError(res, mensajePorDefecto) {
+    const cuerpo = await res.json().catch(() => ({}));
+    const texto = String(cuerpo.mensaje || cuerpo.message || '').trim();
+    const esTecnico = /exception|java\.|json parse|deserialize|sql|hibernate|stack|error interno del servidor|null/i.test(texto);
+    return texto && !esTecnico ? texto : mensajePorDefecto;
+}
+
+/**
+ * Convierte un error capturado en un texto para el usuario.
+ * Si no hubo conexión con el servidor, avisa eso; si el texto es técnico, usa el de por defecto.
+ */
+function mensajeDeError(error, mensajePorDefecto) {
+    const texto = String(error?.message || '').trim();
+    if (/failed to fetch|networkerror|load failed|network request failed/i.test(texto)) {
+        return 'No se pudo contactar al servidor.';
+    }
+    const esTecnico = /exception|java\.|json|deserialize|sql|hibernate|stack|undefined|null|cannot read/i.test(texto);
+    return texto && !esTecnico ? texto : mensajePorDefecto;
+}
+
+/**
  * Utilidades de formateo para datos de negocio.
  */
 const Formato = {

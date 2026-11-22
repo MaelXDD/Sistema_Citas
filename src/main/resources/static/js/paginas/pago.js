@@ -228,8 +228,7 @@ function configurarFormularioStripe() {
             });
 
             if (!resStripe.ok) {
-                const errStripe = await resStripe.json().catch(() => ({}));
-                throw new Error(errStripe.error || 'Stripe rechazó el cargo.');
+                throw new Error(await leerMensajeError(resStripe, 'Stripe rechazó el cargo.'));
             }
 
             toggleModal('modal-stripe');
@@ -247,7 +246,7 @@ function configurarFormularioStripe() {
         } catch (error) {
             btnPagarStripe.disabled = false;
             btnPagarStripe.textContent = 'Pagar con Stripe';
-            Notificacion.error('Fallo en la transacción', error.message || 'Error al procesar la tarjeta.');
+            Notificacion.error('Fallo en la transacción', mensajeDeError(error, 'Error al procesar la tarjeta.'));
         }
     });
 }
@@ -267,15 +266,18 @@ async function procesarRegistroCitaYDirecto(metodo) {
             cita: { idCita: citaRegistrada.idCita },
             monto: citaPendiente.montoTotal,
             metodoPago: metodo,
-            estado: metodo === 'EFECTIVO' ? 'PENDIENTE' : 'PAGADO',
-            fechaPago: new Date().toISOString().split('T')[0]
+            estadoPago: 'COMPLETADO'
         };
 
-        await fetch(`${CONFIG.API_URL}/pagos`, {
+        const resPago = await fetch(`${CONFIG.API_URL}/pagos`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payloadPago)
         });
+
+        if (!resPago.ok) {
+            throw new Error(await leerMensajeError(resPago, 'No se pudo registrar el pago. Inténtalo de nuevo.'));
+        }
 
         clearInterval(temporizadorInterval);
         sessionStorage.removeItem('citaPendiente');
@@ -290,7 +292,7 @@ async function procesarRegistroCitaYDirecto(metodo) {
         window.location.href = '/miscitas.html';
     } catch (error) {
         btn.disabled = false;
-        Notificacion.error('Error al procesar', error.message || 'Error al procesar la cita.');
+        Notificacion.error('Error al procesar', mensajeDeError(error, 'Error al procesar la cita.'));
     }
 }
 
@@ -312,8 +314,7 @@ async function guardarCitaEnBD(estado) {
     });
 
     if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.mensaje || 'No se pudo reservar la cita médica.');
+        throw new Error(await leerMensajeError(res, 'No se pudo reservar la cita médica.'));
     }
 
     return await res.json();

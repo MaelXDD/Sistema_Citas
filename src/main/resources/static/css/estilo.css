@@ -7,7 +7,7 @@
     --blanco: #ffffff;
     --gris-fondo: #f8f9fa;
     --texto-oscuro: #333333;
-    --amarillo-accion: #ffcc00;
+    --color-accion: #022c44;
     --azul-noche: #022c44;
     --celeste-suave: #eafaff;
     --celeste-claro: #d6f5fc;
@@ -189,8 +189,8 @@ body {
 }
 
 .boton-accion-total {
-    background-color: var(--amarillo-accion);
-    color: var(--azul-institucional);
+    background-color: var(--color-accion);
+    color: var(--blanco);
     padding: 15px;
     border: none;
     border-radius: 10px;
@@ -199,8 +199,8 @@ body {
     width: 100%;
 }
 
-.boton-accion-total:hover {
-    opacity: 0.9;
+.boton-accion-total:hover:not(:disabled) {
+    background-color: var(--azul-institucional);
 }
 
 .boton-editar {
@@ -337,6 +337,17 @@ body {
 }
 
 .fila-input input {
+    flex: 1;
+    min-width: 0;
+}
+
+.fila-fecha {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.fila-fecha select {
     flex: 1;
     min-width: 0;
 }

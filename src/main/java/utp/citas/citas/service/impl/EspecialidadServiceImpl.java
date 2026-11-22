@@ -71,7 +71,7 @@ public class EspecialidadServiceImpl implements EspecialidadService {
     @Override
     public void activar(Integer id) {
         Especialidad especialidad = especialidadRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Especialidad no encontrada"));
+                .orElseThrow(() -> new NoSuchElementException("Especialidad no encontrada"));
         especialidad.setActivo(true);
         especialidadRepository.save(especialidad);
     }

@@ -385,8 +385,7 @@ function configurarFormularioDoctores() {
                 // Si el doctor no se guardó, se elimina la foto recién subida para no dejarla huérfana
                 if (fotoUrl) borrarFotoDoctor(fotoUrl);
 
-                const error = await respuesta.json().catch(() => ({}));
-                Notificacion.error('Error al guardar', error.mensaje || 'Verifique que el correo o DNI no estén duplicados.');
+                Notificacion.error('Error al guardar', await leerMensajeError(respuesta, 'Verifique que el correo o DNI no estén duplicados.'));
             }
         } catch {
             if (fotoUrl) borrarFotoDoctor(fotoUrl);
@@ -418,8 +417,7 @@ async function darDeBajaDoctor(idDoctor) {
             await cargarDoctores();
             Notificacion.exito('Baja confirmada', 'El médico ha sido desactivado del sistema.');
         } else {
-            const error = await respuesta.json().catch(() => ({}));
-            Notificacion.error('No se pudo desactivar', error.mensaje || 'El registro no pudo ser modificado.');
+            Notificacion.error('No se pudo desactivar', await leerMensajeError(respuesta, 'El registro no pudo ser modificado.'));
         }
     } catch {
         Notificacion.error('Error de red', 'No se pudo comunicar con el servidor.');

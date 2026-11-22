@@ -9,6 +9,7 @@ import utp.citas.citas.repository.PacienteRepository;
 import utp.citas.citas.service.PacienteService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -27,12 +28,19 @@ public class PacienteServiceImpl implements PacienteService {
     @Transactional(readOnly = true)
     public Paciente buscarPorId(Integer id) {
         return pacienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Paciente no encontrado con ID: " + id));
+                .orElseThrow(() -> new NoSuchElementException("Paciente no encontrado con ID: " + id));
     }
 
     @Override
     @Transactional
     public Paciente registrar(Paciente paciente) {
+        // El teléfono es obligatorio solo al registrarse (hay pacientes antiguos sin teléfono)
+        String telefono = paciente.getTelefono() == null ? "" : paciente.getTelefono().trim();
+        if (!telefono.matches("\\d{9}")) {
+            throw new IllegalArgumentException("El teléfono es obligatorio y debe tener 9 dígitos.");
+        }
+        paciente.setTelefono(telefono);
+
         if (pacienteRepository.existsByCorreo(paciente.getCorreo())) {
             throw new IllegalArgumentException("El correo ya está registrado.");
         }

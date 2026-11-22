@@ -346,7 +346,9 @@ function configurarFormularioEspecialidades() {
                 body: JSON.stringify(payloadEsp)
             });
 
-            if (!resEsp.ok) throw new Error();
+            if (!resEsp.ok) {
+                throw new Error(await leerMensajeError(resEsp, 'No se pudieron registrar los datos de la especialidad.'));
+            }
             const espGuardada = await resEsp.json();
 
             // Si se ingresó precio, registrar o actualizar en la tabla precios
@@ -361,11 +363,15 @@ function configurarFormularioEspecialidades() {
                 const urlPrecio = idPrecio ? `${CONFIG.API_URL}/precios/${idPrecio}` : `${CONFIG.API_URL}/precios`;
                 const metodoPrecio = idPrecio ? 'PUT' : 'POST';
 
-                await fetch(urlPrecio, {
+                const resPrecio = await fetch(urlPrecio, {
                     method: metodoPrecio,
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payloadPrecio)
                 });
+
+                if (!resPrecio.ok) {
+                    throw new Error(await leerMensajeError(resPrecio, 'La especialidad se guardó, pero no se pudo registrar su tarifa.'));
+                }
             }
 
             form.reset();
@@ -377,8 +383,8 @@ function configurarFormularioEspecialidades() {
                 esEdicion ? '¡Cambios Guardados!' : '¡Especialidad Creada!',
                 esEdicion ? 'La especialidad y su precio han sido actualizados.' : 'Se registró la nueva especialidad con éxito.'
             );
-        } catch {
-            Notificacion.error('Error al guardar', 'No se pudieron registrar los datos de la especialidad.');
+        } catch (error) {
+            Notificacion.error('Error al guardar', mensajeDeError(error, 'No se pudieron registrar los datos de la especialidad.'));
         }
     });
 }
@@ -414,7 +420,7 @@ async function alternarEstadoEspecialidad(esp) {
             await cargarEspecialidades();
             Notificacion.exito('Estado modificado', `La especialidad se encuentra ahora ${!esp.activo ? 'activa' : 'inactiva'}.`);
         } else {
-            Notificacion.error('Error', 'No se pudo actualizar el estado de la especialidad.');
+            Notificacion.error('Error', await leerMensajeError(res, 'No se pudo actualizar el estado de la especialidad.'));
         }
     } catch {
         Notificacion.error('Error de red', 'No hubo respuesta del servidor.');
