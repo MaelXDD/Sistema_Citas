@@ -278,8 +278,34 @@
             </div>
             <input type="email" name="correo" placeholder="Correo" maxlength="100" required>
             <input type="text" id="reg-dni" name="dni" placeholder="DNI" maxlength="8" required>
-            <input type="text" id="reg-telefono" name="telefono" placeholder="Teléfono" maxlength="9">
-            <input type="date" name="fechaNac" required>
+            <input type="text" id="reg-telefono" name="telefono" placeholder="Teléfono" maxlength="9" required>
+            <div class="contenedor-selector">
+                <span class="etiqueta-selector">Fecha de nacimiento</span>
+                <div class="fila-fecha">
+                    <select id="reg-dia" class="selector-estandar" aria-label="Día" required>
+                        <option value="">Día</option>
+                    </select>
+                    <select id="reg-mes" class="selector-estandar" aria-label="Mes" required>
+                        <option value="">Mes</option>
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                    </select>
+                    <select id="reg-anio" class="selector-estandar" aria-label="Año" required>
+                        <option value="">Año</option>
+                    </select>
+                </div>
+                <input type="hidden" id="reg-fecha" name="fechaNac">
+            </div>
             <input type="text" name="direccion" placeholder="Dirección" maxlength="150" required>
             <input type="password" name="password" placeholder="Contraseña" maxlength="50" required>
             <button type="submit" class="boton-accion-total">Crear cuenta</button>

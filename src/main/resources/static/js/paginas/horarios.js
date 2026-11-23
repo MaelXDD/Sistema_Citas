@@ -470,11 +470,8 @@ function configurarFormularioHorarios() {
                 });
 
                 if (!res.ok) {
-                    const err = await res.json().catch(() => null);
-                    throw new Error(err?.mensaje || '');
+                    throw new Error(await leerMensajeError(res, 'Ocurrió un error al guardar los turnos del médico.'));
                 }
-
-                if (!res.ok) throw new Error();
             }
 
             form.reset();
@@ -484,7 +481,7 @@ function configurarFormularioHorarios() {
 
             Notificacion.exito('¡Turnos Asignados!', 'Los horarios seleccionados fueron registrados correctamente.');
         } catch (error) {
-            Notificacion.error('Error al registrar', error.message || 'Ocurrió un error al guardar los turnos del médico.');
+            Notificacion.error('Error al registrar', mensajeDeError(error, 'Ocurrió un error al guardar los turnos del médico.'));
         }
     });
 }
@@ -511,8 +508,7 @@ async function eliminarHorario(idHorario) {
             await cargarHorarios();
             Notificacion.exito('Turno eliminado', 'El horario fue retirado correctamente.');
         } else {
-            const error = await respuesta.json().catch(() => ({}));
-            Notificacion.error('No se pudo eliminar', error.mensaje || 'Error al retirar el turno.');
+            Notificacion.error('No se pudo eliminar', await leerMensajeError(respuesta, 'Error al retirar el turno.'));
         }
     } catch {
         Notificacion.error('Error de red', 'No hubo respuesta del servidor.');

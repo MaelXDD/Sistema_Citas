@@ -18,6 +18,7 @@ import utp.citas.citas.service.impl.ReporteService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 /**
@@ -73,7 +74,7 @@ public class ReporteController {
     public ResponseEntity<byte[]> descargarReporteCita(@PathVariable Integer idCita) {
         try {
             Cita cita = citaRepository.findById(idCita)
-                    .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
+                    .orElseThrow(() -> new NoSuchElementException("Cita no encontrada"));
 
             byte[] pdfBytes = reporteService.generarReporteCitaPDF(idCita);
 

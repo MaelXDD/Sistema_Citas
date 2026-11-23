@@ -204,8 +204,7 @@ async function cancelarCita(idCita, idPaciente) {
             await Notificacion.exito('Cita cancelada', 'Tu cita fue cancelada correctamente.');
             await cargarCitasPaciente(idPaciente);
         } else {
-            const error = await respuesta.json().catch(() => ({}));
-            Notificacion.error('No se pudo cancelar', error.mensaje || 'Error al cancelar la cita.');
+            Notificacion.error('No se pudo cancelar', await leerMensajeError(respuesta, 'Error al cancelar la cita.'));
         }
     } catch {
         Notificacion.error('Error de red', 'No hubo respuesta del servidor.');

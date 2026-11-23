@@ -35,7 +35,7 @@
 
 /* ===== FOCO DE BOTONES (ACCESIBILIDAD) ===== */
 .bot-launcher:focus-visible, .bot-btn:focus-visible {
-    outline: 3px solid var(--amarillo-accion, #ffcc00); outline-offset: 2px;
+    outline: 3px solid var(--color-accion, #022c44); outline-offset: 2px;
 }
 
 /* ===== PANEL DEL CHAT ===== */
