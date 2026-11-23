@@ -196,7 +196,12 @@
     <h3>Iniciar Sesión</h3>
     <form id="loginForm" class="formulario-estandar">
       <input type="email" name="correo" placeholder="Ingresa tu correo" required>
-      <input type="password" name="password" placeholder="Ingresa tu contraseña" required>
+      <div class="campo-password">
+        <input type="password" name="password" placeholder="Ingresa tu contraseña" required>
+        <button type="button" class="btn-ver-password" aria-label="Mostrar contraseña">
+          <i class="bi bi-eye"></i>
+        </button>
+      </div>
       <button type="submit" class="boton-accion-total">Iniciar Sesión</button>
     </form>
   </div>
@@ -242,7 +247,19 @@
         <input type="hidden" id="reg-fecha" name="fechaNac">
       </div>
       <input type="text" name="direccion" placeholder="Dirección" maxlength="150" required>
-      <input type="password" name="password" placeholder="Contraseña" maxlength="50" required>
+      <div class="campo-password">
+        <input type="password" id="reg-password" name="password" placeholder="Contraseña" maxlength="50" required>
+        <button type="button" class="btn-ver-password" aria-label="Mostrar contraseña">
+          <i class="bi bi-eye"></i>
+        </button>
+      </div>
+      <ul class="requisitos-password" id="requisitos-password">
+        <li data-req="longitud">Mínimo 8 caracteres</li>
+        <li data-req="mayuscula">Una letra mayúscula</li>
+        <li data-req="minuscula">Una letra minúscula</li>
+        <li data-req="numero">Un número</li>
+        <li data-req="simbolo">Un símbolo (!@#$%...)</li>
+      </ul>
       <button type="submit" class="boton-accion-total">Crear cuenta</button>
     </form>
   </div>
@@ -293,6 +310,7 @@
 <script src="/js/comun/configuracion.js"></script>
 <script src="/js/comun/utilidades.js"></script>
 <script src="/js/comun/gestion.js"></script>
+<script src="/js/comun/password.js"></script>
 <script src="/js/comun/sesion.js"></script>
 <script src="/js/bot/bot-widget.js"></script>
 <script src="/js/paginas/miscitas.js"></script>

@@ -281,6 +281,8 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .cerrar-ventana {
@@ -1526,4 +1528,110 @@ body {
     .panel-formulario {
         padding: 24px 20px;
     }
+}
+.campo-password {
+    position: relative;
+    width: 100%;
+}
+
+.campo-password input {
+    width: 100%;
+    padding-right: 44px;
+    box-sizing: border-box;
+}
+
+.btn-ver-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #5a6b7b;
+    padding: 4px;
+    line-height: 1;
+}
+
+.btn-ver-password:hover {
+    color: #0b2e4a;
+}
+
+.requisitos-password {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 4px;
+    font-size: 0.9rem;
+    color: #6b7785;
+}
+
+.requisitos-password li::before {
+    content: "○";
+    display: inline-block;
+    width: 1.4em;
+    font-weight: 700;
+}
+
+.requisitos-password li.cumplido {
+    color: #1e8e3e;
+}
+
+.requisitos-password li.cumplido::before {
+    content: "✓";
+}
+/* ===== Modal de registro compacto (sin scroll) ===== */
+#modal-registro .cuadro-emergente {
+    padding: 24px 32px;
+    max-height: 96vh;
+    overflow-y: auto; /* solo aparece si la pantalla es muy baja */
+}
+
+#modal-registro .cuadro-emergente h3 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+#modal-registro .cerrar-ventana {
+    top: 10px;
+    right: 20px;
+}
+
+#modal-registro .formulario-estandar {
+    gap: 10px;
+    margin-top: 12px;
+}
+
+#modal-registro .formulario-estandar input,
+#modal-registro .selector-estandar {
+    padding: 10px 14px;
+    font-size: 0.95rem;
+}
+
+#modal-registro .campo-password input {
+    padding-right: 44px;
+}
+
+#modal-registro .fila-input {
+    gap: 10px;
+}
+
+#modal-registro .etiqueta-selector {
+    font-size: 0.9rem;
+}
+
+#modal-registro .requisitos-password {
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 12px;
+    font-size: 0.8rem;
+}
+
+#modal-registro .requisitos-password li::before {
+    width: 1.2em;
+}
+
+#modal-registro .boton-accion-total {
+    padding: 12px;
 }
