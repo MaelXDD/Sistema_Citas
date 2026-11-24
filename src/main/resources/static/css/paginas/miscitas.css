@@ -20,7 +20,7 @@
 }
 
 .fila-cita.cancelada,
-.fila-cita.vencida {
+.fila-cita.completada {
     opacity: 0.75;
 }
 
@@ -80,11 +80,6 @@
 .estado-cita.confirmada {
     background-color: var(--exito-suave);
     color: var(--exito-oscuro);
-}
-
-.estado-cita.vencida {
-    background-color: var(--neutro-suave);
-    color: var(--neutro-oscuro);
 }
 
 .estado-cita.completada {
