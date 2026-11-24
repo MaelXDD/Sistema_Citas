@@ -10,9 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
 function configurarTarjetasEspecialidad() {
     const tarjetas = document.querySelectorAll('.tarjeta-icono[data-especialidad]');
     tarjetas.forEach(tarjeta => {
-        tarjeta.addEventListener('click', () => {
-            const criterio = tarjeta.getAttribute('data-especialidad');
+        const criterio = tarjeta.getAttribute('data-especialidad');
+
+        // Clic en la tarjeta: modal con la descripción (sigue como antes)
+        tarjeta.addEventListener('click', (e) => {
+            if (e.target.closest('.enlace-boton')) return;
             consultarEspecialidadPorNombre(criterio);
+        });
+
+        // Botón "Ver doctores": abre la vista pública con esa especialidad
+        tarjeta.querySelector('.enlace-boton')?.addEventListener('click', () => {
+            window.location.href = `/servicios.html?especialidad=${encodeURIComponent(criterio)}`;
         });
     });
 }
