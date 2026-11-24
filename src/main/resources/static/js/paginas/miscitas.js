@@ -39,13 +39,15 @@ function configurarFiltrosEstado(idPaciente) {
 
 /**
  * Estado que ve el paciente. Una cita pendiente o confirmada cuya hora ya pasó
- * se muestra como VENCIDA, porque ya no se puede atender ni cancelar.
+ * se muestra como COMPLETADA. ATENDIDA es el nombre que el modelo Cita
+ * documenta para ese mismo estado, así que se muestra igual.
  */
 function estadoDe(cita) {
     const estado = cita.estado || 'PENDIENTE';
-    const sigueActiva = ESTADOS_ACTIVOS.includes(estado);
+    if (estado === 'ATENDIDA') return 'COMPLETADA';
 
-    return sigueActiva && citaYaTermino(cita.fechaCita, cita.horaCita) ? 'VENCIDA' : estado;
+    const sigueActiva = ESTADOS_ACTIVOS.includes(estado);
+    return sigueActiva && citaYaTermino(cita.fechaCita, cita.horaCita) ? 'COMPLETADA' : estado;
 }
 
 /**
@@ -168,7 +170,7 @@ function dibujarCitas(idPaciente) {
             btnAnular.addEventListener('click', () => {
                 cancelarCita(cita.idCita, idPaciente);
             });
-        } else if (estado === 'COMPLETADA' || estado === 'VENCIDA') {
+        } else if (estado === 'COMPLETADA') {
             btnPdf.classList.remove('oculto');
         }
 
