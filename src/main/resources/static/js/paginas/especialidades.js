@@ -322,7 +322,6 @@ function configurarFormularioEspecialidades() {
         e.preventDefault();
 
         const idEsp    = document.getElementById('inputIdEspecialidad').value;
-        const idPrecio = document.getElementById('inputIdPrecio').value;
         const nombre   = document.getElementById('inputNombre').value.trim();
         const desc     = document.getElementById('inputDescripcion').value.trim();
         const precio   = document.getElementById('inputPrecio').value;
@@ -349,31 +348,7 @@ function configurarFormularioEspecialidades() {
             if (!resEsp.ok) {
                 throw new Error(await leerMensajeError(resEsp, 'No se pudieron registrar los datos de la especialidad.'));
             }
-            const espGuardada = await resEsp.json();
-
-            // Si se ingresó precio, registrar o actualizar en la tabla precios
-            if (precio && parseFloat(precio) > 0) {
-                const payloadPrecio = {
-                    especialidad: { idEspecialidad: espGuardada.idEspecialidad },
-                    descripcion: `Tarifa consulta ${espGuardada.nombre}`,
-                    monto: parseFloat(precio),
-                    activo: true
-                };
-
-                const urlPrecio = idPrecio ? `${CONFIG.API_URL}/precios/${idPrecio}` : `${CONFIG.API_URL}/precios`;
-                const metodoPrecio = idPrecio ? 'PUT' : 'POST';
-
-                const resPrecio = await fetch(urlPrecio, {
-                    method: metodoPrecio,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payloadPrecio)
-                });
-
-                if (!resPrecio.ok) {
-                    throw new Error(await leerMensajeError(resPrecio, 'La especialidad se guardó, pero no se pudo registrar su tarifa.'));
-                }
-            }
-
+            // La tarifa ya se guardó junto con la especialidad (campo monto)
             form.reset();
             document.getElementById('vistaFormulario').classList.add('oculto');
             document.getElementById('vistaTabla').classList.remove('oculto');
