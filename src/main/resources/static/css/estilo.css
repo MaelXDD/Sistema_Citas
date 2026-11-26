@@ -1635,3 +1635,120 @@ body {
 #modal-registro .boton-accion-total {
     padding: 12px;
 }
+/* ===== Navbar cómodo y estable ===== */
+.encabezado-navegacion {
+    justify-content: flex-start;
+    gap: 28px;
+    padding: 0.7rem 4%;
+}
+
+.logotipo {
+    flex-shrink: 0;
+    gap: 12px;
+}
+
+.logotipo img {
+    flex-shrink: 0;
+}
+
+.logotipo h1 {
+    font-size: 1.05rem;
+    line-height: 1.15;
+    max-width: 12em;
+}
+
+.menu-principal {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: auto;
+}
+
+.menu-principal a {
+    margin: 0;
+    padding: 8px 12px;
+    white-space: nowrap;
+    border-radius: 8px;
+}
+
+.menu-principal a:hover {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.menu-principal a.enlace-activo {
+    padding: 8px 12px 6px;
+    border-bottom: 2px solid var(--blanco);
+    border-radius: 8px 8px 0 0;
+}
+
+/* Zona de sesión */
+.botones-acceso {
+    flex-shrink: 0;
+    gap: 10px;
+}
+
+.sesion-usuario {
+    gap: 14px;
+}
+
+.sesion-usuario .texto-azul {
+    max-width: 170px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.encabezado-navegacion .boton-blanco,
+.encabezado-navegacion .boton-azul {
+    padding: 9px 18px;
+    white-space: nowrap;
+}
+
+@media (max-width: 1180px) {
+    .encabezado-navegacion {
+        flex-wrap: wrap;
+        row-gap: 8px;
+    }
+
+    .botones-acceso {
+        margin-left: auto;
+    }
+
+    .menu-principal {
+        order: 3;
+        width: 100%;
+        margin-right: 0;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+/* Celular: todo apilado y centrado (como ya estaba) */
+@media (max-width: 768px) {
+    .encabezado-navegacion {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .botones-acceso {
+        margin-left: 0;
+    }
+
+    .menu-principal {
+        order: 0;
+    }
+}
+#caja-sesion-invitado {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.encabezado-navegacion .boton-blanco,
+.encabezado-navegacion .boton-azul {
+    font-size: 1rem;
+    line-height: 1.2;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
